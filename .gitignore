@@ -1,0 +1,17 @@
+.DS_Store
+.ball.asm.swp
+.bitmap.asm.swp
+.choper.asm.swo
+.choper.asm.swp
+.main.asm.swm
+.main.asm.swn
+.main.asm.swo
+.main.asm.swp
+.makefile.swo
+.makefile.swp
+.out.lst.swp
+.rasterbar.asm.swp
+.scrolltext.asm.swp
+out.lst
+raster.png
+raster.prg
