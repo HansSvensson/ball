@@ -239,9 +239,10 @@ ball_hitTop:
 
 
 
+ball_bitfield .byte 0,1,2,4,8,16,32,64,128
 
 
-
+;x = 0,2,4,6,8,10,12,14   
 ball_inc_x:
     lda $d000,x         
     cmp #255
@@ -250,9 +251,17 @@ ball_inc_x:
     rts
 
 ball_inc_x_over:
-    inc $d010
+    txa
+    ror           ; 0,1,2,3,4,5,6,7
+    tay
+    lda ball_bitfield,y
+    ora $d010
+    sta $d010
     inc $d000,x
     rts
+;----------------------
+
+
 
 ball_dec_x:
     lda $d000,x         
@@ -262,6 +271,11 @@ ball_dec_x:
     rts
 
 ball_dec_x_over:
-    dec $d010
+    txa
+    ror           ; 0,1,2,3,4,5,6,7
+    tay
+    lda ball_bitfield,y
+    eor $d010
+    sta $d010
     dec $d000,x
     rts
