@@ -26,7 +26,7 @@ sprite_1:
 .byte $1f,$ff,$f8,$1f,$ff,$f8,$07,$ff
 .byte $e0,$03,$ff,$c0,$00,$7e,$00,$00
 
-balls_state  .byte 1,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1
+balls_state  .byte 1,0,2,1,0,1,0,1,0,1,0,1,0,1,0,1
 
 dir_0 = 4
 
@@ -54,11 +54,11 @@ fill:
             lda #0
             sta dir_0
 
-            lda #<ball_update   ;Set raster interrupt position
+            lda #<ball_isr   ;Set raster interrupt position
             sta $fffe
-            lda #>ball_update
+            lda #>ball_isr
             sta $ffff
-            lda #0 
+            lda #100 
             sta $d012
             rts
 
@@ -73,9 +73,19 @@ fill:
 ; 3  =  Left up 
 ; 4  =  Left down
 ;
-ball_update:
-    inc $d021
 
+ball_isr
+    inc $d021
+    ldx #0
+    jsr ball_update
+    ;ldx #2
+    ;jsr ball_update
+    dec $d021
+    asl $d019
+    rti
+
+
+ball_update:
     lda balls_state,x
 
     cmp RIGHT_DOWN
@@ -180,10 +190,10 @@ ball_leftUpChangeRight:
 
 
 ball_update_end:
-        dec $d021
-
-        asl $d019
-        rti
+     ;   dec $d021
+     ;   asl $d019
+     ;   rti
+     rts
 
 
 
@@ -199,19 +209,23 @@ ball_hit:
     beq ball_hitTop
     cmp #230
     beq ball_hitBottom
-    
 
-    lda $d010
-    and #$01
-    cmp #0
+    txa
+    ror           ; 0,1,2,3,4,5,6,7
+    tay
+    lda ball_bitfield,y
+    and $d010
     bne ball_hit_right
     lda $d000,x
     cmp #24
     beq ball_hitLeft
     
  ball_hit_right:   
-    lda $d010
-    and #$01
+    txa
+    ror           ; 0,1,2,3,4,5,6,7
+    tay
+    lda ball_bitfield,y
+    and $d010
     cmp #1
     bne ball_hit_none
     lda $d000,x
@@ -239,7 +253,7 @@ ball_hitTop:
 
 
 
-ball_bitfield .byte 0,1,2,4,8,16,32,64,128
+ball_bitfield .byte 1,2,4,8,16,32,64,128
 
 
 ;x = 0,2,4,6,8,10,12,14   
