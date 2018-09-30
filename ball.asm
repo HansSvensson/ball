@@ -26,7 +26,7 @@ sprite_1:
 .byte $1f,$ff,$f8,$1f,$ff,$f8,$07,$ff
 .byte $e0,$03,$ff,$c0,$00,$7e,$00,$00
 
-balls_state  .byte 1,0,2,1,0,1,0,1,0,1,0,1,0,1,0,1
+balls_state  .byte 1,0,2,1,3,1,4,1,0,1,0,1,0,1,0,1
 
 dir_0 = 4
 
@@ -34,15 +34,49 @@ dir_0 = 4
 
 
 ball_init:
-           lda #$01
+           lda #0
+           sta $d010    ; no sprites starts at right part screen
+
+           lda #$0f
            sta $d015    ; Turn sprite 0 on
            sta $d027    ; Make it white
+           lda #04
+           sta $d027
+           lda #05
+           sta $d028
+           lda #06
+           sta $d029
+           lda #07
+           sta $d02a
+
            lda #255
            sta $d000    ; set x coordinate to 40
            lda #40
            sta $d001    ; set y coordinate to 40
+
+           lda #128
+           sta $d002    ; set x coordinate to 40
+           lda #80
+           sta $d003    ; set y coordinate to 40
+
+           lda #40
+           sta $d004    ; set x coordinate to 40
+           lda #60
+           sta $d005    ; set y coordinate to 40
+           
+           lda #60
+           sta $d006    ; set x coordinate to 40
+           lda #160
+           sta $d007    ; set y coordinate to 40
+           
            lda #$80
            sta $07f8    ; set pointer: sprite data at $2000
+           lda #$80
+           sta $07f9    ; set pointer: sprite data at $2000
+           lda #$80
+           sta $07fa    ; set pointer: sprite data at $2000
+           lda #$80
+           sta $07fb    ; set pointer: sprite data at $2000
     
             ldx #63
 fill:
@@ -78,8 +112,12 @@ ball_isr
     inc $d021
     ldx #0
     jsr ball_update
-    ;ldx #2
-    ;jsr ball_update
+    ldx #2
+    jsr ball_update
+    ldx #4
+    jsr ball_update
+    ldx #6
+    jsr ball_update
     dec $d021
     asl $d019
     rti
@@ -211,7 +249,7 @@ ball_hit:
     beq ball_hitBottom
 
     txa
-    ror           ; 0,1,2,3,4,5,6,7
+    lsr  ;f
     tay
     lda ball_bitfield,y
     and $d010
@@ -222,12 +260,12 @@ ball_hit:
     
  ball_hit_right:   
     txa
-    ror           ; 0,1,2,3,4,5,6,7
+    lsr    ;f
     tay
     lda ball_bitfield,y
     and $d010
-    cmp #1
-    bne ball_hit_none
+    ;cmp #1
+    beq ball_hit_none
     lda $d000,x
     cmp #64
     bne ball_hit_none
@@ -266,7 +304,7 @@ ball_inc_x:
 
 ball_inc_x_over:
     txa
-    ror           ; 0,1,2,3,4,5,6,7
+    lsr          ;f
     tay
     lda ball_bitfield,y
     ora $d010
@@ -286,7 +324,7 @@ ball_dec_x:
 
 ball_dec_x_over:
     txa
-    ror           ; 0,1,2,3,4,5,6,7
+    lsr   ;f
     tay
     lda ball_bitfield,y
     eor $d010
