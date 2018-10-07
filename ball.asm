@@ -16,15 +16,30 @@ LEFT_UP    = #3
 LEFT_DOWN  = #4
 
 
+main_temp_pointer = 2
+main_temp_x       = 4
+main_temp_x_l2    = 5
+main_temp_y_l2    = 6
+
+;.byte $00,$7e,$00,$03,$ff,$c0,$07,$ff
+;.byte $e0,$1f,$ff,$f8,$1f,$ff,$f8,$3f
+;.byte $ff,$fc,$7f,$ff,$fe,$7f,$ff,$fe
+;.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+;.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$7f
+;.byte $ff,$fe,$7f,$ff,$fe,$3f,$ff,$fc
+;.byte $1f,$ff,$f8,$1f,$ff,$f8,$07,$ff
+;.byte $e0,$03,$ff,$c0,$00,$7e,$00,$00
 sprite_1:
-.byte $00,$7e,$00,$03,$ff,$c0,$07,$ff
-.byte $e0,$1f,$ff,$f8,$1f,$ff,$f8,$3f
-.byte $ff,$fc,$7f,$ff,$fe,$7f,$ff,$fe
-.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$7f
-.byte $ff,$fe,$7f,$ff,$fe,$3f,$ff,$fc
-.byte $1f,$ff,$f8,$1f,$ff,$f8,$07,$ff
-.byte $e0,$03,$ff,$c0,$00,$7e,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$3c,$00,$00,$7e,$00
+.byte $00,$ff,$00,$00,$ff,$00,$00,$ff
+.byte $00,$00,$ff,$00,$00,$7e,$00,$00
+.byte $3c,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+
+
 
 balls_state  .byte 1,0,2,1,3,1,4,1,0,1,0,1,0,1,0,1
 
@@ -49,7 +64,7 @@ ball_init:
            lda #07
            sta $d02a
 
-           lda #255
+           lda #55
            sta $d000    ; set x coordinate to 40
            lda #40
            sta $d001    ; set y coordinate to 40
@@ -112,12 +127,12 @@ ball_isr
     inc $d021
     ldx #0
     jsr ball_update
-    ldx #2
-    jsr ball_update
-    ldx #4
-    jsr ball_update
-    ldx #6
-    jsr ball_update
+  ;  ldx #2
+  ;  jsr ball_update
+  ;  ldx #4
+  ;  jsr ball_update
+  ;  ldx #6
+  ;  jsr ball_update
     dec $d021
     asl $d019
     rti
@@ -273,7 +288,8 @@ ball_hit:
     rts
 
 ball_hit_none:
-    lda NONE
+    ;lda NONE
+    jsr ball_hit_bg
     rts
 
 ball_hitLeft:
@@ -287,8 +303,113 @@ ball_hitBottom:
 ball_hitTop:
     lda TOP
     rts
+;--------------------------
+;                        0                                          9                                       19                                 
+;                        0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760, 800, 840, 880, 920, 960
+ball_hit_cord_Hi .byte   4,  4,  4,   4,   4,   4,   4,   5,   5,   5,   5,   5,   5,   6,   6,   6,   6,   6,   6,   6,   7,   7,   7,   7,   7
+ball_hit_cord_Lo .byte   0, 40, 80, 120, 160, 200, 240,  24,  64, 104, 144, 184, 224,   8,  48,  88, 128, 168, 208, 248,  32,  72, 112, 152, 192    
 
 
+;input x=col y=row function overwrites accl 
+ball_hit_char
+    stx main_temp_pointer
+    lda ball_hit_cord_Lo,y
+    clc
+    adc main_temp_pointer
+    sta main_temp_pointer
+    lda ball_hit_cord_Hi,y
+    adc #0
+    sta main_temp_pointer+1
+
+    sty main_temp_y_l2
+    ldy #0
+    lda (main_temp_pointer),y
+    ldy main_temp_y_l2
+    cmp #102
+    beq ball_hit_char_hit
+    lda #0
+    rts
+ball_hit_char_hit
+    lda #1    
+    rts
+;---------------------
+
+
+ball_hit_bg:
+    stx main_temp_x  ;pusha X till stacken!!!  
+    txa
+    lsr
+    tay        
+    lda ball_bitfield,y
+    and $d01f
+    beq ball_hit_bg_none
+
+         
+    ;sta main_temp_x
+    lda $d001,x
+    clc
+    adc #$D9  ;Screen start at 50, sprite center 11 pixel => 0xD9
+    ;dec main_temp_x
+    lsr
+    lsr
+    lsr
+    tay
+   
+    lda $d000,x
+    clc
+    adc #$F4  ;Screen start at 24, sprite center 12 pixel => 0xF4
+    lsr 
+    lsr 
+    lsr 
+    tax
+
+    dey
+    jsr ball_hit_char
+    cmp #1
+    bne ball_hit_bg_bottom
+    lda TOP
+    ldx main_temp_x    
+    rts
+ball_hit_bg_bottom:
+    iny
+    iny 
+    jsr ball_hit_char
+    cmp #1
+    bne ball_hit_bg_left
+    lda BOTTOM
+    ldx main_temp_x    
+    rts
+ball_hit_bg_left:
+    dey
+    dex 
+    jsr ball_hit_char
+    bne ball_hit_bg_right
+    lda LEFT
+    ldx main_temp_x    
+    rts
+ball_hit_bg_right:
+    inx 
+    inx 
+    jsr ball_hit_char
+    bne ball_hit_bg_top2
+    lda RIGHT
+    ldx main_temp_x    
+    rts
+ball_hit_bg_top2:
+    dex
+    jsr ball_hit_char
+    bne ball_hit_bg_none
+    lda TOP
+    ldx main_temp_x    
+    rts
+
+    ldx main_temp_x
+    rts
+ball_hit_bg_none:
+    lda NONE
+    ldx main_temp_x
+    rts
+;----------------
 
 
 ball_bitfield .byte 1,2,4,8,16,32,64,128

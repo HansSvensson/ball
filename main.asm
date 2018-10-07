@@ -18,6 +18,17 @@ clearing:
             inx
             bne clearing
 
+;-------------------------------
+            lda #102
+            ldx #20
+bg_tst:
+            sta $607,x
+            sta $da20,x
+            dex
+            bne bg_tst
+;----------------------------------
+
+
             lda #0
             sta $d021
             lda #1
