@@ -20,6 +20,7 @@ main_temp_pointer = 2
 main_temp_x       = 4
 main_temp_x_l2    = 5
 main_temp_y_l2    = 6
+ball_temp_d01f    .byte 0
 
 ;.byte $00,$7e,$00,$03,$ff,$c0,$07,$ff
 ;.byte $e0,$1f,$ff,$f8,$1f,$ff,$f8,$3f
@@ -125,14 +126,20 @@ fill:
 
 ball_isr
     inc $d021
+   lda $d01f
+   sta ball_temp_d01f
+    ldx #2
+    jsr ball_update
+    jsr ball_update
     ldx #0
     jsr ball_update
-  ;  ldx #2
-  ;  jsr ball_update
-  ;  ldx #4
-  ;  jsr ball_update
-  ;  ldx #6
-  ;  jsr ball_update
+    jsr ball_update
+    ldx #4
+    jsr ball_update
+    ldx #6
+    jsr ball_update
+    jsr ball_update
+    jsr ball_update
     dec $d021
     asl $d019
     rti
@@ -341,7 +348,8 @@ ball_hit_bg:
     lsr
     tay        
     lda ball_bitfield,y
-    and $d01f
+   ; and $d01f
+    and ball_temp_d01f
     beq ball_hit_bg_none
 
          
@@ -383,6 +391,7 @@ ball_hit_bg_left:
     dey
     dex 
     jsr ball_hit_char
+    cmp #1    
     bne ball_hit_bg_right
     lda LEFT
     ldx main_temp_x    
@@ -391,6 +400,7 @@ ball_hit_bg_right:
     inx 
     inx 
     jsr ball_hit_char
+    cmp #1    
     bne ball_hit_bg_top2
     lda RIGHT
     ldx main_temp_x    
@@ -398,6 +408,7 @@ ball_hit_bg_right:
 ball_hit_bg_top2:
     dex
     jsr ball_hit_char
+    cmp #1    
     bne ball_hit_bg_none
     lda TOP
     ldx main_temp_x    

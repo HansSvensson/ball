@@ -20,12 +20,34 @@ clearing:
 
 ;-------------------------------
             lda #102
-            ldx #20
+            ldx #30
 bg_tst:
             sta $607,x
             sta $da20,x
             dex
             bne bg_tst
+
+            ldx #40
+bg_tst2:
+            sta $3ff,x
+            sta $da20,x
+            dex
+            bne bg_tst2
+ 
+            sta $410,x
+            sta $438,x
+            sta $460,x
+            sta $488,x
+            sta $4b0,x
+            sta $4d8,x
+            sta $500,x
+            sta $41e,x
+            sta $446,x
+            sta $46e,x
+            sta $496,x
+            sta $4be,x
+
+ 
 ;----------------------------------
 
 
