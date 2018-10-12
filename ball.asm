@@ -67,7 +67,7 @@ ball_init:
 
            lda #55
            sta $d000    ; set x coordinate to 40
-           lda #40
+           lda #$20
            sta $d001    ; set y coordinate to 40
 
            lda #128
@@ -128,6 +128,7 @@ ball_isr
     inc $d021
    lda $d01f
    sta ball_temp_d01f
+   ;-----------------
     ldx #2
     jsr ball_update
     jsr ball_update
@@ -140,6 +141,9 @@ ball_isr
     jsr ball_update
     jsr ball_update
     jsr ball_update
+    ;---------------
+    jsr bat_update
+
     dec $d021
     asl $d019
     rti
