@@ -21,7 +21,7 @@ main_temp_x       = 4
 main_temp_x_l2    = 5
 main_temp_y_l2    = 6
 ball_temp_d01f    .byte 0
-
+ball_temp_d01e    .byte 0
 ;.byte $00,$7e,$00,$03,$ff,$c0,$07,$ff
 ;.byte $e0,$1f,$ff,$f8,$1f,$ff,$f8,$3f
 ;.byte $ff,$fc,$7f,$ff,$fe,$7f,$ff,$fe
@@ -125,9 +125,11 @@ fill:
 ;
 
 ball_isr
-    inc $d021
+    inc $d020
    lda $d01f
    sta ball_temp_d01f
+   lda $d01e
+   sta ball_temp_d01e
    ;-----------------
     ldx #2
     jsr ball_update
@@ -144,7 +146,7 @@ ball_isr
     ;---------------
     jsr bat_update
 
-    dec $d021
+    dec $d020
     asl $d019
     rti
 
@@ -301,6 +303,13 @@ ball_hit:
 ball_hit_none:
     ;lda NONE
     jsr ball_hit_bg
+    cmp NONE
+    bne ball_hit_none_ret
+    jsr bat_hit_1
+    cmp NONE
+    bne ball_hit_none_ret
+    jsr bat_hit_2
+ball_hit_none_ret:
     rts
 
 ball_hitLeft:
