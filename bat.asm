@@ -178,15 +178,29 @@ bat_update_bash_quit:
 
 ball_hit_mask .byte $01,$00, $02,$00, $04,$00, $08,$00, $10,$00, $20,$00, $40,$00, $80,$00
 bat_hit_d01e .byte 0
+
 bat_hit_1:
-           lda #%01000000
+           lda bat_bash_state
+           cmp #3
+           bcc bat_hit_1_left
+           ldy LEFT_BAT
+           jmp bat_hit1_exit
+bat_hit_1_left:
            ldy LEFT
-           jmp bat_hit
-bat_hit_2:
-           lda #%10000000
-           ldy RIGHT
+bat_hit1_exit:
+           lda #%01000000
            jmp bat_hit
 
+bat_hit_2:
+           lda bat_bash_state+2
+           cmp #3
+           bcc bat_hit_2_right
+           ldy RIGHT_BAT
+           jmp bat_hit2_exit
+bat_hit_2_right:
+           ldy RIGHT
+bat_hit2_exit:
+           lda #%10000000
 
 bat_hit:
             and ball_temp_d01e
