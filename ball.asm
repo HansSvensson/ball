@@ -25,6 +25,7 @@ main_temp_x_l2    = 5
 main_temp_y_l2    = 6
 ball_temp_d01f    .byte 0
 ball_temp_d01e    .byte 0
+ball_temp         .byte 0
 ;.byte $00,$7e,$00,$03,$ff,$c0,$07,$ff
 ;.byte $e0,$1f,$ff,$f8,$1f,$ff,$f8,$3f
 ;.byte $ff,$fc,$7f,$ff,$fe,$7f,$ff,$fe
@@ -370,7 +371,8 @@ ball_hit:
     lda $d000,x
     cmp #64
     bne ball_hit_none
-    lda RIGHT
+    ;lda RIGHT
+    lda NONE
     rts
 
 ball_hit_none:
@@ -386,7 +388,8 @@ ball_hit_none_ret:
     rts
 
 ball_hitLeft:
-    lda LEFT
+    ;lda LEFT
+    lda NONE
     rts
 
 ball_hitBottom:
@@ -397,75 +400,88 @@ ball_hitTop:
     lda TOP
     rts
 ;--------------------------
-;                        0                                          9                                       19                                 
-;                        0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760, 800, 840, 880, 920, 960
+
+
+;Tables for mapping X-Y coordinates (40*25) to C64 screen addresses for start of each row, TODO: one row to much?
+;Index(dec)              0                                          9                                           19                            25     
+;NR bytes(dec)           0, 40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760, 800, 840, 880, 920, 960
 ball_hit_cord_Hi .byte   4,  4,  4,   4,   4,   4,   4,   5,   5,   5,   5,   5,   5,   6,   6,   6,   6,   6,   6,   6,   7,   7,   7,   7,   7
 ball_hit_cord_Lo .byte   0, 40, 80, 120, 160, 200, 240,  24,  64, 104, 144, 184, 224,   8,  48,  88, 128, 168, 208, 248,  32,  72, 112, 152, 192    
 
 
-;input x=col y=row function overwrites accl 
-ball_hit_char
-    stx main_temp_pointer
-    lda ball_hit_cord_Lo,y
-    clc
+;Check if char at input X=col Y=row. This Function returnes in ACC.
+ball_hit_char:
+    stx main_temp_pointer         ;We must preserve the X-value, calling this functio 5 times.
+    lda ball_hit_cord_Lo,y        ;With Y-reg we want to get the start address for the line, then we add X-reg to that
+    clc                           ;that way we know which char the sprites is above. Remember C64 ACC 8bit, addresses 16bit :)
     adc main_temp_pointer
     sta main_temp_pointer
     lda ball_hit_cord_Hi,y
-    adc #0
+    adc #0                        ;If the previous ADC set the carry-flag, add it to the the high-part of address.
     sta main_temp_pointer+1
 
     sty main_temp_y_l2
     ldy #0
-    lda (main_temp_pointer),y
+    lda (main_temp_pointer),y     ;Use the pointer we just created.
     ldy main_temp_y_l2
-    cmp #102
+    cmp #102                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
     lda #0
     rts
-ball_hit_char_hit
+ball_hit_char_hit:
     lda #1    
     rts
 ;---------------------
 
 
+;------------Check if ball collides with a CHAR-----------------
 ball_hit_bg:
-    stx main_temp_x  ;pusha X till stacken!!!  
-    txa
+    stx main_temp_x          ;Pusha X till stacken!!!  
+    txa                      ;DO HW check if ball collides with ANY char                     
     lsr
     tay        
     lda ball_bitfield,y
-   ; and $d01f
     and ball_temp_d01f
     beq ball_hit_bg_none
 
-         
-    ;sta main_temp_x
-    lda $d001,x
+    lda $d010                ;If sprite is on the right part of the screen above pixel 255
+    and ball_bitfield,y
+    beq ball_hit_bg_less_FF
+    ldy #$1f                 ;256 equals 32 chars
+    sty ball_temp
+    jmp ball_hit_bg_calc_xy
+ball_hit_bg_less_FF:
+    ldy #0    
+    sty ball_temp
+
+ball_hit_bg_calc_xy    
+    lda $d001,x              ;We Want sprites Y value converted to Char cord (40*25) in REG Y
     clc
-    adc #$D9  ;Screen start at 50, sprite center 11 pixel => 0xD9
-    ;dec main_temp_x
+    adc #$D9                 ;Screen start at 50, sprite center 11 pixel => 0xD9
     lsr
     lsr
     lsr
     tay
+    
    
-    lda $d000,x
+    lda $d000,x              ;Also add sprite X value converted to Char cord (40*25) in Reg X
     clc
-    adc #$F4  ;Screen start at 24, sprite center 12 pixel => 0xF4
+    adc #$F4                 ;Screen start at 24, sprite center 12 pixel => 0xF4
     lsr 
     lsr 
     lsr 
+    adc ball_temp 
     tax
 
-    dey
-    jsr ball_hit_char
+    dey                      ;We start to search for at hit ABOVE the sprite
+    jsr ball_hit_char        
     cmp #1
     bne ball_hit_bg_bottom
     lda TOP
     ldx main_temp_x    
     rts
 ball_hit_bg_bottom:
-    iny
+    iny                      ;Move down and search BELOW the sprite
     iny 
     jsr ball_hit_char
     cmp #1
@@ -474,7 +490,7 @@ ball_hit_bg_bottom:
     ldx main_temp_x    
     rts
 ball_hit_bg_left:
-    dey
+    dey                      ;Check for hit to the LEFT
     dex 
     jsr ball_hit_char
     cmp #1    
@@ -483,7 +499,7 @@ ball_hit_bg_left:
     ldx main_temp_x    
     rts
 ball_hit_bg_right:
-    inx 
+    inx                      ;Check for hit RIGHT to the sprite
     inx 
     jsr ball_hit_char
     cmp #1    
@@ -492,7 +508,7 @@ ball_hit_bg_right:
     ldx main_temp_x    
     rts
 ball_hit_bg_top2:
-    dex
+    dex                      ;search for hit inside the sprite, TODO: needed??
     jsr ball_hit_char
     cmp #1    
     bne ball_hit_bg_none
@@ -506,7 +522,7 @@ ball_hit_bg_none:
     lda NONE
     ldx main_temp_x
     rts
-;----------------
+;----------------End Of BALL_HIT_BG-----------------
 
 
 ball_bitfield .byte 1,2,4,8,16,32,64,128

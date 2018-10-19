@@ -78,5 +78,11 @@ gameBg_fillBottom:
     sta $797
     sta $7BF
 
+    ;TODO remove, just som test in the middle
+    sta $5A4
+    sta $5cc
+    sta $5f4
+    sta $61c
+   
 
     rts
