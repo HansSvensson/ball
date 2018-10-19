@@ -57,7 +57,7 @@ ball_init:
            lda #0
            sta $d010    ; no sprites starts at right part screen
 
-           lda #$0f
+           lda #$3f
            sta $d015    ; Turn sprite 0 on
            sta $d027    ; Make it white
            lda #04
@@ -68,6 +68,10 @@ ball_init:
            sta $d029
            lda #07
            sta $d02a
+           lda #08
+           sta $d02b
+           lda #09
+           sta $d02c
 
            lda #55
            sta $d000    ; set x coordinate to 40
@@ -89,14 +93,24 @@ ball_init:
            lda #160
            sta $d007    ; set y coordinate to 40
            
+           lda #20
+           sta $d008    ; set x coordinate to 40
+           lda #100
+           sta $d009    ; set y coordinate to 40
+
+           lda #250
+           sta $d00a    ; set x coordinate to 40
+           lda #180
+           sta $d00b    ; set y coordinate to 40
+
+
            lda #$80
            sta $07f8    ; set pointer: sprite data at $2000
-           lda #$80
            sta $07f9    ; set pointer: sprite data at $2000
-           lda #$80
            sta $07fa    ; set pointer: sprite data at $2000
-           lda #$80
            sta $07fb    ; set pointer: sprite data at $2000
+           sta $07fc    ; set pointer: sprite data at $2000
+           sta $07fd    ; set pointer: sprite data at $2000
     
             ldx #63
 fill:
@@ -145,6 +159,12 @@ ball_isr
     jsr ball_update
     ldx #6
     jsr ball_update
+    jsr ball_update
+    jsr ball_update
+    ldx #8
+    jsr ball_update
+    jsr ball_update
+    ldx #10
     jsr ball_update
     jsr ball_update
     ;---------------
@@ -525,30 +545,53 @@ ball_hit_bg_none:
 ;----------------End Of BALL_HIT_BG-----------------
 
 
+
+;Bitfield for easier masking of D010   ;TODO: probably we have duplicates..
 ball_bitfield .byte 1,2,4,8,16,32,64,128
 
 
-;x = 0,2,4,6,8,10,12,14   
+;-------------Increase the X-position of a sprite-------------
 ball_inc_x:
     lda $d000,x         
     cmp #255
     beq ball_inc_x_over
     inc $d000,x         
+    jsr ball_inc_x_bounds   ;Check if ball out of bounds at right
     rts
 
 ball_inc_x_over:
     txa
-    lsr          ;f
+    lsr          
     tay
     lda ball_bitfield,y
     ora $d010
     sta $d010
     inc $d000,x
+ball_inc_x_over_quit:
     rts
-;----------------------
+
+;-------------If ball out of bounds at right side reset it to left side-------------
+ball_inc_x_bounds:
+    txa
+    lsr  
+    tay
+    lda ball_bitfield,y
+    and $d010
+    beq ball_inc_x_bounds_quit   ;Take jump if d010 NOT set
+    lda $d000,x
+    cmp #80
+    bcc ball_inc_x_bounds_quit
+    lda ball_bitfield,y
+    eor $d010
+    sta $d010
+    lda #12
+    sta $d000,x
+ball_inc_x_bounds_quit:
+    rts
+;---------------------
 
 
-
+;-------------Decrease the X-position of a sprite-------------
 ball_dec_x:
     lda $d000,x         
     cmp #0
@@ -558,10 +601,31 @@ ball_dec_x:
 
 ball_dec_x_over:
     txa
-    lsr   ;f
+    lsr  
     tay
+    jsr ball_dec_x_bounds          ;Check is out of bounds at left side
+    beq ball_dec_x_over_quit
     lda ball_bitfield,y
     eor $d010
     sta $d010
     dec $d000,x
+ball_dec_x_over_quit:
     rts
+
+
+
+;-------------If sprite gets outside field at left set it to right side-------------
+ ball_dec_x_bounds:
+    lda ball_bitfield,y
+    and $d010
+    bne ball_dec_x_bounds_quit   ;Take jump if d010 set -> zero bit not set 
+    lda ball_bitfield,y
+    ora $d010
+    sta $d010
+    lda #80
+    sta $d000,x
+    lda #0                       ;set the zero bit
+ball_dec_x_bounds_quit:
+    rts
+
+
