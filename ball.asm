@@ -371,7 +371,7 @@ ball_hit:
     beq ball_hitBottom
 
     txa
-    lsr  ;f
+    lsr a
     tay
     lda ball_bitfield,y
     and $d010
@@ -382,7 +382,7 @@ ball_hit:
     
  ball_hit_right:   
     txa
-    lsr    ;f
+    lsr a
     tay
     lda ball_bitfield,y
     and $d010
@@ -458,7 +458,7 @@ ball_hit_char_hit:
 ball_hit_bg:
     stx main_temp_x          ;Pusha X till stacken!!!  
     txa                      ;DO HW check if ball collides with ANY char                     
-    lsr
+    lsr a
     tay        
     lda ball_bitfield,y
     and ball_temp_d01f
@@ -478,18 +478,18 @@ ball_hit_bg_calc_xy
     lda $d001,x              ;We Want sprites Y value converted to Char cord (40*25) in REG Y
     clc
     adc #$D9                 ;Screen start at 50, sprite center 11 pixel => 0xD9
-    lsr
-    lsr
-    lsr
+    lsr a
+    lsr a
+    lsr a
     tay
     
    
     lda $d000,x              ;Also add sprite X value converted to Char cord (40*25) in Reg X
     clc
     adc #$F4                 ;Screen start at 24, sprite center 12 pixel => 0xF4
-    lsr 
-    lsr 
-    lsr 
+    lsr a
+    lsr a
+    lsr a
     adc ball_temp 
     tax
 
@@ -561,7 +561,7 @@ ball_inc_x:
 
 ball_inc_x_over:
     txa
-    lsr          
+    lsr a          
     tay
     lda ball_bitfield,y
     ora $d010
@@ -573,7 +573,7 @@ ball_inc_x_over_quit:
 ;-------------If ball out of bounds at right side reset it to left side-------------
 ball_inc_x_bounds:
     txa
-    lsr  
+    lsr a
     tay
     lda ball_bitfield,y
     and $d010
@@ -601,7 +601,7 @@ ball_dec_x:
 
 ball_dec_x_over:
     txa
-    lsr  
+    lsr a  
     tay
     jsr ball_dec_x_bounds          ;Check is out of bounds at left side
     beq ball_dec_x_over_quit
