@@ -1,4 +1,3 @@
-
 gameBg_init:
     
     ;---------score------------
@@ -85,4 +84,32 @@ gameBg_fillBottom:
     sta $61c
    
 
+    ;----------------set ut multicolor charset
+    lda $d018
+    ora #$d
+    sta $d018
+    lda $d016
+    ora #$10
+    sta $d016
+
+    
+    lda #12    ;MULTICOLOR 1
+    sta $d022
+    lda #8     ;ULTICOLOR 2
+    sta $d023
+    
+    lda #9     ;FOREGROUND COLOR
+    ldx #0
+gameBg_fill_foreground:
+    sta $d800,x
+    sta $d900,x
+    sta $da00,x
+    sta $db00,x
+    inx
+    bne gameBg_fill_foreground
+
+
     rts
+
+ * = $3000
+ .binary "resources/charsetBg.bin"
