@@ -446,8 +446,12 @@ ball_hit_char:
     ldy main_temp_y_l2
     cmp #102                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
+    cmp #$40
+    beq ball_hit_char_brick
     lda #0
     rts
+ball_hit_char_brick:
+    jsr gameBg_hit
 ball_hit_char_hit:
     lda #1    
     rts

@@ -82,8 +82,7 @@ gameBg_fillBottom:
     sta $5cc
     sta $5f4
     sta $61c
-   
-
+    
     ;----------------set ut multicolor charset
     lda $d018
     ora #$d
@@ -92,10 +91,14 @@ gameBg_fillBottom:
     ora #$10
     sta $d016
 
-    
+; Multicolor #1 = 01   d022
+; Background    = 00   d021
+; foreground    = 11   color ram
+; Multicolor #2 = 10   d023
+
     lda #12    ;MULTICOLOR 1
     sta $d022
-    lda #8     ;ULTICOLOR 2
+    lda #8     ;MULTICOLOR 2
     sta $d023
     
     lda #9     ;FOREGROUND COLOR
@@ -107,8 +110,76 @@ gameBg_fill_foreground:
     sta $db00,x
     inx
     bne gameBg_fill_foreground
+    
+    jsr gameBg_squareBg
 
 
+    rts
+
+
+;-------------Load one big squre background-----------------
+gameBg_squareBg:
+    lda #$40
+    ;row 4 starts @ 0x478 start 0x10 in 8 chars wide -> 488->490
+    ldx #0
+gameBg_squareBg_base:
+    sta $486,x
+    sta $4ae,x
+    sta $4d6,x
+    sta $4fe,x
+    sta $526,x
+    sta $54e,x
+    sta $576,x
+    sta $59e,x
+    sta $5c6,x
+    sta $5ee,x
+    sta $616,x
+    sta $63e,x
+    sta $666,x
+    sta $68e,x
+    sta $6b6,x
+    sta $6de,x
+    sta $706,x
+    sta $72e,x
+    sta $756,x
+    sta $77e,x
+    inx
+    cpx #12
+    bne gameBg_squareBg_base 
+
+    lda #13
+    ldx #0
+gameBg_squareBg_base_color:
+    sta $d886,x
+    sta $d8ae,x
+    sta $d8d6,x
+    sta $d8fe,x
+    sta $d926,x
+    sta $d94e,x
+    sta $d976,x
+    sta $d99e,x
+    sta $d9c6,x
+    sta $d9ee,x
+    sta $da16,x
+    sta $da3e,x
+    sta $da66,x
+    sta $da8e,x
+    sta $dab6,x
+    sta $dade,x
+    sta $db06,x
+    sta $db2e,x
+    sta $db56,x
+    sta $db7e,x
+    inx
+    cpx #12
+    bne gameBg_squareBg_base_color 
+
+    rts
+
+gameBg_hit:
+    lda #32
+    ldy #0    
+    sta (main_temp_pointer),y     ;Use the pointer we just created.
     rts
 
  * = $3000
