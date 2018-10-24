@@ -1,12 +1,12 @@
 bat_1:
-.byte $00,$18,$00,$00,$3c,$00,$00,$7e
-.byte $00,$00,$7e,$00,$00,$7e,$00,$00
-.byte $7e,$00,$00,$7e,$00,$00,$7e,$00
-.byte $00,$7e,$00,$00,$7e,$00,$00,$7e
-.byte $00,$00,$7e,$00,$00,$7e,$00,$00
-.byte $7e,$00,$00,$7e,$00,$00,$7e,$00
-.byte $00,$7e,$00,$00,$7e,$00,$00,$7e
-.byte $00,$00,$3c,$00,$00,$18,$00,$00
+.byte $00,$5c,$00,$00,$5c,$00,$02,$ba
+.byte $00,$02,$ba,$00,$02,$ba,$00,$00
+.byte $00,$00,$01,$d5,$00,$01,$d5,$00
+.byte $01,$d5,$00,$01,$d5,$00,$01,$d5
+.byte $00,$01,$d5,$00,$01,$d5,$00,$01
+.byte $d5,$00,$01,$d5,$00,$00,$00,$00
+.byte $02,$ba,$00,$02,$ba,$00,$02,$ba
+.byte $00,$00,$5c,$00,$00,$5c,$00,$82
 
 bat_1_cordX = $d00c
 bat_1_cordY = $d00d
@@ -49,17 +49,32 @@ bat_init:
            sta $07fe    ; set pointer: sprite data at $2040
            sta $07ff    ; set pointer: sprite data at $2040
            
+           lda $d01c
+           ora #$C0
+           sta $d01c
+           
+           lda #$06     ;sprite multicolor 1
+           sta $D025
+           lda #$01     ;sprite multicolor 2
+           sta $D026 
+           
+           lda #$05     ;sprite 6 individual
+           sta $D02d 
+           lda #$02     ;sprite 7 individual
+           sta $D02e 
+
            lda #0
            ldx #0
            sta bat_bash_state,x
            inx
            inx
            sta bat_bash_state,x
-           ldx #65           
+           ldx #0          
 bat_fill:
             lda bat_1,x
-            sta $203f,x
-            dex
+            sta $2040,x
+            inx
+            cmp #64
             bne bat_fill
 
             rts
