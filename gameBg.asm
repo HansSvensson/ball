@@ -125,62 +125,89 @@ gameBg_squareBg:
     lda #$40
     ;row 4 starts @ 0x478 start 0x10 in 8 chars wide -> 488->490
     ldx #0
-gameBg_squareBg_base:
+gameBg_squareBg_base_1:
     sta $486,x
-    sta $4ae,x
     sta $4d6,x
-    sta $4fe,x
     sta $526,x
-    sta $54e,x
     sta $576,x
-    sta $59e,x
     sta $5c6,x
-    sta $5ee,x
     sta $616,x
-    sta $63e,x
     sta $666,x
-    sta $68e,x
     sta $6b6,x
-    sta $6de,x
     sta $706,x
-    sta $72e,x
     sta $756,x
+    inx
+    cpx #12
+    bne gameBg_squareBg_base_1 
+    lda #$54
+    ldx #0
+gameBg_squareBg_base_2:
+    sta $4ae,x
+    sta $4fe,x
+    sta $54e,x
+    sta $59e,x
+    sta $5ee,x
+    sta $63e,x
+    sta $68e,x
+    sta $6de,x
+    sta $72e,x
     sta $77e,x
     inx
     cpx #12
-    bne gameBg_squareBg_base 
+    bne gameBg_squareBg_base_2
 
     lda #13
     ldx #0
-gameBg_squareBg_base_color:
+gameBg_squareBg_base_color_1:
     sta $d886,x
-    sta $d8ae,x
     sta $d8d6,x
-    sta $d8fe,x
     sta $d926,x
-    sta $d94e,x
     sta $d976,x
-    sta $d99e,x
     sta $d9c6,x
-    sta $d9ee,x
     sta $da16,x
-    sta $da3e,x
     sta $da66,x
-    sta $da8e,x
     sta $dab6,x
-    sta $dade,x
     sta $db06,x
-    sta $db2e,x
     sta $db56,x
+    inx
+    cpx #12
+    bne gameBg_squareBg_base_color_1 
+    
+    lda #12
+    ldx #0
+gameBg_squareBg_base_color_2:
+    sta $d8ae,x
+    sta $d8fe,x
+    sta $d94e,x
+    sta $d99e,x
+    sta $d9ee,x
+    sta $da3e,x
+    sta $da8e,x
+    sta $dade,x
+    sta $db2e,x
     sta $db7e,x
     inx
     cpx #12
-    bne gameBg_squareBg_base_color 
+    bne gameBg_squareBg_base_color_2 
+
+
 
     rts
 
-gameBg_hit:
+;-----------------------Check for hit between BG and sprite----------------
+gameBg_hit_1:
     lda #32
+    ldy #0    
+    sta (main_temp_pointer),y     ;Use the pointer we just created.
+    rts
+gameBg_hit_2:
+    clc
+    adc #$ff
+    cmp #$48
+    bne gameBg_hit_2_do 
+    lda #$40
+    
+gameBg_hit_2_do
     ldy #0    
     sta (main_temp_pointer),y     ;Use the pointer we just created.
     rts

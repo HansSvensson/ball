@@ -447,11 +447,24 @@ ball_hit_char:
     cmp #102                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
     cmp #$40
-    beq ball_hit_char_brick
+    beq ball_hit_char_brick_1
+    cmp #$58
+    bcc ball_hit_char_brick_2
     lda #0
     rts
-ball_hit_char_brick:
-    jsr gameBg_hit
+ball_hit_char_brick_1:
+    jsr gameBg_hit_1
+    jmp ball_hit_char_hit
+
+ball_hit_char_brick_2:
+    cmp #$40
+    bcs ball_hit_char_brick_2_do
+    lda #0
+    rts
+
+ball_hit_char_brick_2_do
+    jsr gameBg_hit_2
+
 ball_hit_char_hit:
     lda #1    
     rts
@@ -463,7 +476,10 @@ ball_hit_bg:
     stx main_temp_x          ;Pusha X till stacken!!!  
     txa                      ;DO HW check if ball collides with ANY char                     
     lsr a
-    tay        
+    tay  
+    lda $d01f
+    ora ball_temp_d01f
+    sta ball_temp_d01f      
     lda ball_bitfield,y
     and ball_temp_d01f
     beq ball_hit_bg_none
