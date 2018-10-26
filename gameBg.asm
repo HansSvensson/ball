@@ -1,3 +1,6 @@
+gameElframeCount .byte 0
+gameElframeState .byte 0
+
 gameBg_init:
     
     ;---------score------------
@@ -62,7 +65,6 @@ gameBg_fillBottom:
     sta $770
     sta $798
 
-
     ;---------fill right---------
     sta $477
     sta $49f
@@ -113,7 +115,8 @@ gameBg_fill_foreground:
     
     jsr gameBg_squareBg
 
-
+    jsr gameBgEl
+    
     rts
 
 
@@ -181,6 +184,54 @@ gameBg_hit:
     ldy #0    
     sta (main_temp_pointer),y     ;Use the pointer we just created.
     rts
+
+gameBgEl:
+    lda gameElframeCount
+    bne gameBgElQuit 
+    lda #10
+    sta gameElframeCount
+    lda gameElframeState
+    bne gameElframeStateOne
+    lda #1
+    sta gameElframeState
+    lda #96
+    ldx #97
+    jmp gameElframeStateCopy
+gameElframeStateOne:
+    lda #0
+    sta gameElframeState
+    lda #97
+    ldx #96
+
+gameElframeStateCopy:
+    sta $518
+    stx $540
+    sta $568
+    stx $590
+    sta $5b8
+    stx $5e0
+    sta $608
+    stx $630
+    sta $658
+    stx $680
+    sta $6a8
+
+    sta $53f
+    stx $567
+    sta $58f
+    stx $5b7
+    sta $5df
+    stx $607
+    sta $62f
+    stx $657
+    sta $67f
+    stx $6a7
+    stx $6cf
+
+gameBgElQuit:
+    dec gameElframeCount
+    rts     
+
 
  * = $3000
  .binary "resources/charsetBg.bin"

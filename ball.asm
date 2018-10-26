@@ -169,7 +169,7 @@ ball_isr
     jsr ball_update
     ;---------------
     jsr bat_update
-
+    jsr gameBgEl
     dec $d020
     asl $d019
     rti
