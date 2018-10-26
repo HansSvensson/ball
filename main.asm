@@ -53,7 +53,7 @@ clearing:
 
             lda #0
             sta $d021
-            lda #1
+            lda #0
             sta $d020
 
 ;interrupt init
