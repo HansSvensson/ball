@@ -26,27 +26,17 @@ main_temp_y_l2    = 6
 ball_temp_d01f    .byte 0
 ball_temp_d01e    .byte 0
 ball_temp         .byte 0
-;.byte $00,$7e,$00,$03,$ff,$c0,$07,$ff
-;.byte $e0,$1f,$ff,$f8,$1f,$ff,$f8,$3f
-;.byte $ff,$fc,$7f,$ff,$fe,$7f,$ff,$fe
-;.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-;.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$7f
-;.byte $ff,$fe,$7f,$ff,$fe,$3f,$ff,$fc
-;.byte $1f,$ff,$f8,$1f,$ff,$f8,$07,$ff
-;.byte $e0,$03,$ff,$c0,$00,$7e,$00,$00
 sprite_1:
 .byte $00,$00,$00,$00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$3c,$00,$00,$7e,$00
-.byte $00,$ff,$00,$00,$ff,$00,$00,$ff
-.byte $00,$00,$ff,$00,$00,$7e,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$3c,$00
+.byte $00,$eb,$00,$00,$eb,$00,$00,$eb
+.byte $00,$00,$eb,$00,$00,$eb,$00,$00
 .byte $3c,$00,$00,$00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$85
 
-
-
-balls_state  .byte 1,0,2,1,3,1,4,1,0,1,0,1,0,1,0,1
+balls_state  .byte 1,0,1,0,1,0,4,0,4,0,4,1,0,1,0,1
 
 dir_0 = 4
 
@@ -60,47 +50,48 @@ ball_init:
            lda #$3f
            sta $d015    ; Turn sprite 0 on
            sta $d027    ; Make it white
-           lda #04
+           lda #05
            sta $d027
            lda #05
            sta $d028
-           lda #06
+           lda #05
            sta $d029
-           lda #07
+           lda #02
            sta $d02a
-           lda #08
+           lda #02
            sta $d02b
-           lda #09
+           lda #02
            sta $d02c
 
-           lda #55
+           lda #50
            sta $d000    ; set x coordinate to 40
            lda #$40
            sta $d001    ; set y coordinate to 40
 
-           lda #128
+           lda #70
            sta $d002    ; set x coordinate to 40
-           lda #80
+           lda #$60
            sta $d003    ; set y coordinate to 40
 
-           lda #40
+           lda #90
            sta $d004    ; set x coordinate to 40
-           lda #60
+           lda #$80
            sta $d005    ; set y coordinate to 40
            
-           lda #60
+           
+           lda #215
            sta $d006    ; set x coordinate to 40
-           lda #160
+           lda #$80
            sta $d007    ; set y coordinate to 40
            
-           lda #20
+           lda #235
            sta $d008    ; set x coordinate to 40
-           lda #100
+           lda #$60
            sta $d009    ; set y coordinate to 40
 
-           lda #250
+           lda #255
            sta $d00a    ; set x coordinate to 40
-           lda #180
+           lda #$40
            sta $d00b    ; set y coordinate to 40
 
 
@@ -112,6 +103,10 @@ ball_init:
            sta $07fc    ; set pointer: sprite data at $2000
            sta $07fd    ; set pointer: sprite data at $2000
     
+           lda $d01c    ; enable multicolor sprites
+           ora #$3f
+           sta $d01c
+
             ldx #63
 fill:
             lda sprite_1,x
