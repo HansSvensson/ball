@@ -38,6 +38,12 @@ sprite_1:
 
 balls_state  .byte 1,0,1,0,1,0,4,0,4,0,4,1,0,1,0,1
 
+ball_player_1 = #1
+ball_player_2 = #2
+ball_owner  .byte 1,0,1,0,1,0,2,0,2,0,2,0,0,0,0,0
+ball_player_1_color = #5
+ball_player_2_color = #2
+
 dir_0 = 4
 
 
@@ -50,17 +56,17 @@ ball_init:
            lda #$3f
            sta $d015    ; Turn sprite 0 on
            sta $d027    ; Make it white
-           lda #05
+           lda ball_player_1_color
            sta $d027
-           lda #05
+           lda ball_player_1_color
            sta $d028
-           lda #05
+           lda ball_player_1_color
            sta $d029
-           lda #02
+           lda ball_player_2_color
            sta $d02a
-           lda #02
+           lda ball_player_2_color
            sta $d02b
-           lda #02
+           lda ball_player_2_color
            sta $d02c
 
            lda #50
@@ -601,6 +607,13 @@ ball_inc_x_bounds:
     sta $d010
     lda #12
     sta $d000,x
+    lda ball_player_1            ;Change balls owner since it changed side
+    sta ball_owner,x
+    txa
+    lsr a
+    tay
+    lda ball_player_1_color
+    sta $d027,y
 ball_inc_x_bounds_quit:
     rts
 ;---------------------
@@ -639,6 +652,14 @@ ball_dec_x_over_quit:
     sta $d010
     lda #80
     sta $d000,x
+    lda ball_player_2            ;Change balls owner since it changed side
+    sta ball_owner,x
+    txa
+    lsr a
+    tay
+    lda ball_player_2_color
+    sta $d027,y
+    
     lda #0                       ;set the zero bit
 ball_dec_x_bounds_quit:
     rts
