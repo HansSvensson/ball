@@ -199,7 +199,20 @@ gameBg_hit_1:
     lda #32
     ldy #0    
     sta (main_temp_pointer),y     ;Use the pointer we just created.
+    ldx main_temp_x
+    lda ball_owner,x
+    cmp ball_player_1
+    beq gameBg_hit_1_player_1
+    cmp ball_player_2
+    beq gameBg_hit_1_player_2
     rts
+gameBg_hit_1_player_1:
+    jsr score_increase_player_1
+    rts
+gameBg_hit_1_player_2:
+    jsr score_increase_player_2
+    rts
+
 gameBg_hit_2:
     clc
     adc #$ff

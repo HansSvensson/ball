@@ -158,14 +158,16 @@ ball_isr
     jsr ball_update
     ldx #4
     jsr ball_update
-    ldx #6
     jsr ball_update
+    jsr ball_update
+    ldx #6
     jsr ball_update
     jsr ball_update
     ldx #8
     jsr ball_update
     jsr ball_update
     ldx #10
+    jsr ball_update
     jsr ball_update
     jsr ball_update
     ;---------------

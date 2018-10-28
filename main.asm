@@ -86,4 +86,5 @@ loop:
 
 .include "bat.asm"
 .include "ball.asm"
+.include "score.asm"
 .include "gameBg.asm"
