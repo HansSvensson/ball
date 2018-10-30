@@ -75,6 +75,7 @@ clearing:
            sta $01      ; enable ram
 
            jsr ball_init
+           jsr game_init
            jsr bat_init
            ldx #0
 
@@ -84,6 +85,7 @@ loop:
            jmp loop
 
 
+.include "game.asm"
 .include "bat.asm"
 .include "ball.asm"
 .include "score.asm"

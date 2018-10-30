@@ -50,9 +50,6 @@ dir_0 = 4
 
 
 ball_init:
-           lda #0
-           sta $d010    ; no sprites starts at right part screen
-
            lda #$3f
            sta $d015    ; Turn sprite 0 on
            sta $d027    ; Make it white
@@ -68,6 +65,9 @@ ball_init:
            sta $d02b
            lda ball_player_2_color
            sta $d02c
+
+           lda #0
+           sta $d010    ; no sprites starts at right part screen
 
            lda #50
            sta $d000    ; set x coordinate to 40
@@ -123,12 +123,6 @@ fill:
             lda #0
             sta dir_0
 
-            lda #<ball_isr   ;Set raster interrupt position
-            sta $fffe
-            lda #>ball_isr
-            sta $ffff
-            lda #1 
-            sta $d012
             rts
 
 
@@ -142,41 +136,6 @@ fill:
 ; 3  =  Left up 
 ; 4  =  Left down
 ;
-
-ball_isr
-    inc $d020
-   lda $d01f
-   sta ball_temp_d01f
-   lda $d01e
-   sta ball_temp_d01e
-   ;-----------------
-    ldx #2
-    jsr ball_update
-    jsr ball_update
-    ldx #0
-    jsr ball_update
-    jsr ball_update
-    ldx #4
-    jsr ball_update
-    jsr ball_update
-    jsr ball_update
-    ldx #6
-    jsr ball_update
-    jsr ball_update
-    ldx #8
-    jsr ball_update
-    jsr ball_update
-    ldx #10
-    jsr ball_update
-    jsr ball_update
-    jsr ball_update
-    ;---------------
-    jsr bat_update
-    jsr gameBgEl
-    dec $d020
-    asl $d019
-    rti
-
 
 ball_update:
     lda balls_state,x
