@@ -80,9 +80,10 @@ bat_fill:
             rts
 
 
-
+bat_temp_x .byte 0
 
 bat_update:
+            stx bat_temp_x
             ;check up
             lda $DC01
             and #%00011111
@@ -98,14 +99,12 @@ bat_update1_up:
             bcc bat_update_2
             dec bat_1_cordY 
             dec bat_1_cordY 
-            dec bat_1_cordY 
             jmp bat_update_2
 
 bat_update1_down:
             lda bat_1_cordY
             cmp bat_bottom
             bcs bat_update_2
-            inc bat_1_cordY 
             inc bat_1_cordY 
             inc bat_1_cordY 
 
@@ -124,14 +123,12 @@ bat_update2_up:
             bcc bat_update_bash
             dec bat_2_cordY 
             dec bat_2_cordY 
-            dec bat_2_cordY 
             jmp bat_update_bash
 
 bat_update2_down:
             lda bat_2_cordY
             cmp bat_bottom
             bcs bat_update_bash
-            inc bat_2_cordY 
             inc bat_2_cordY 
             inc bat_2_cordY 
 
@@ -142,6 +139,7 @@ bat_update_bash
             ldx #2
             ldy #0
             jsr bat_update_bash_start
+            ldx bat_temp_x
             rts
 
 
@@ -164,12 +162,8 @@ bat_update_bash_in:
             cpx #2
             beq bat_update_bash_dec
             inc bat_1_cordX,x
-            inc bat_1_cordX,x
-            inc bat_1_cordX,x
             jmp bat_update_bash_quit
 bat_update_bash_dec:
-            dec bat_1_cordX,x
-            dec bat_1_cordX,x
             dec bat_1_cordX,x
             jmp bat_update_bash_quit
             
@@ -177,12 +171,8 @@ bat_update_bash_out:
             cpx #2
             beq bat_update_bash_inc
             dec bat_1_cordX,x
-            dec bat_1_cordX,x
-            dec bat_1_cordX,x
             jmp bat_update_bash_quit
 bat_update_bash_inc:
-            inc bat_1_cordX,x
-            inc bat_1_cordX,x
             inc bat_1_cordX,x
             jmp bat_update_bash_quit
 
@@ -225,6 +215,8 @@ bat_hit:
             and ball_temp_d01e
             beq ball_hit_quit
             lda ball_temp_d01e
+            ora $d01e
+            sta ball_temp_d01e
             and ball_hit_mask,x
             beq ball_hit_quit
             tya
