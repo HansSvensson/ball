@@ -43,7 +43,7 @@ score_increase_end:
 
 
 
-score_reset:
+score_init:
     ldx #0
     lda #48
 score_reset_loop:

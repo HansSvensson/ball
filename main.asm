@@ -18,39 +18,6 @@ clearing:
             inx
             bne clearing
 
-;-------------------------------
-             ;lda #102
-             ;ldx #30
- ;bg_tst:
-             ;sta $607,x
-             ;sta $da20,x
-             ;dex
-             ;bne bg_tst
-
-             ;ldx #40
- ;bg_tst2:
-             ;sta $3ff,x
-             ;sta $da20,x
-             ;dex
-             ;bne bg_tst2
- 
-             ;sta $410,x
-             ;sta $438,x
-             ;sta $460,x
-             ;sta $488,x
-             ;sta $4b0,x
-             ;sta $4d8,x
-             ;sta $500,x
-             ;sta $41e,x
-             ;sta $446,x
-             ;sta $46e,x
-             ;sta $496,x
-            ;sta $4be,x
-
-            jsr gameBg_init 
-;----------------------------------
-
-
             lda #0
             sta $d021
             lda #0
@@ -64,9 +31,6 @@ clearing:
            lda $dc0d    ; clear...
            lda $dd0d    ; clear...
 
-            lda #$01   ;this is how to tell the VICII to generate a raster interrupt
-            sta $d01a
-
             lda #$1b   ;as there are more than 256 rasterlines, the topmost bit of $d011 serves as
             sta $d011  ;the 9th bit for the rasterline we want our irq to be triggered.
                        ;here we simply set up a character screen, leaving the topmost bit 0.
@@ -74,14 +38,19 @@ clearing:
            lda #$35
            sta $01      ; enable ram
 
-           jsr ball_init
-           jsr game_init
-           jsr bat_init
            ldx #0
 
-           cli
+           ;cli
  
+           ;jsr intro
+
 loop:
+           ;jsr menu
+           jsr game_init
+loopGameRunning:           
+           lda game_running
+           beq loopGameRunning    ;If zero keep on playing the game
+           jsr gameOver
            jmp loop
 
 
@@ -90,3 +59,4 @@ loop:
 .include "ball.asm"
 .include "score.asm"
 .include "gameBg.asm"
+.include "gameOver.asm"

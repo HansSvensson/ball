@@ -23,6 +23,14 @@ gameBg_init:
     sta $405
     sta $422
 
+    lda #32
+    sta $406
+    sta $407
+    sta $408
+    sta $423
+    sta $424
+    sta $425
+
     ;---------TIME-------------
     lda #$14
     sta $410
@@ -122,6 +130,11 @@ gameBg_fill_foreground:
 
 ;-------------Load one big squre background-----------------
 gameBg_squareBg:
+    lda #0
+    sta gameBg_bricksHi
+    lda #80
+    sta gameBg_bricksLo
+    
     lda #$40
     ;row 4 starts @ 0x478 start 0x10 in 8 chars wide -> 488->490
     ldx #0
@@ -199,7 +212,8 @@ gameBg_hit_1:
     lda #32
     ldy #0    
     sta (main_temp_pointer),y     ;Use the pointer we just created.
-    ldx main_temp_x
+    jsr gameBg_bricksLeft
+    ldx main_temp_x               ;Give score!
     lda ball_owner,x
     cmp ball_player_1
     beq gameBg_hit_1_player_1
@@ -272,6 +286,36 @@ gameBgElQuit:
     dec gameElframeCount
     rts     
 
+gameBg_bricksHi .byte 0
+gameBg_bricksLo .byte 0
+
+;---------------Decrease number of bricks-----------------
+gameBg_bricksLeft:
+    lda gameBg_bricksLo
+    beq gameBg_bricksLeftHi
+    dec gameBg_bricksLo
+    rts
+gameBg_bricksLeftHi:
+    lda gameBg_bricksLeftHi
+    beq gameBg_bricksLeftEnd  ;if 0 and 0 just end
+    dec gameBg_bricksHi       ;
+    lda #$ff
+    sta gameBg_bricksLo
+
+gameBg_bricksLeftEnd:
+    rts
+
+;-------------Check if all bricks consumed 1=game finished 0=game still on---------------
+gameBg_empty:
+    lda gameBg_bricksHi
+    bne gameBg_empty_not
+    lda gameBg_bricksLo
+    bne gameBg_empty_not
+    lda #1
+    rts
+gameBg_empty_not:
+    lda #0
+    rts
 
  * = $3000
  .binary "resources/charsetBg.bin"
