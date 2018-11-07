@@ -1,8 +1,17 @@
 gameOverText .enc screen
-             .text "PLAYER X WON!"
+             .text "player x won!"
              
 
 gameOver:
+
+    lda $d018          ;set location of charset
+    and #$f1
+    ora #$5
+    sta $d018
+    lda $d016           ;Select singlecolor
+    and #%11101111
+    sta $d016
+
 
     ldx #0
     lda #32

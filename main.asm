@@ -45,11 +45,12 @@ clearing:
            ;jsr intro
 
 loop:
-           ;jsr menu
+           jsr menu
            jsr game_init
 loopGameRunning:           
            lda game_running
            beq loopGameRunning    ;If zero keep on playing the game
+           
            jsr gameOver
            jmp loop
 
@@ -60,3 +61,4 @@ loopGameRunning:
 .include "score.asm"
 .include "gameBg.asm"
 .include "gameOver.asm"
+.include "menu.asm"
