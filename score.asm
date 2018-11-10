@@ -5,6 +5,7 @@ score_player: .byte 48,48,48,48,48,48
 
 score_x_temp: .byte 0
 
+
 score_increase_player_1:
     stx score_x_temp
     ldx #0
@@ -38,7 +39,6 @@ score_increase_hundred:
     inc score_player+2,x
 
 score_increase_end:
-    jsr score_print 
     rts
 
 
@@ -51,7 +51,8 @@ score_reset_loop:
     inx
     cpx #6
     bne score_reset_loop
-        
+    lda #50
+    sta score_timeFCount
     rts
 
 
@@ -71,4 +72,56 @@ score_print:
     lda score_player+3
     sta $425
    
+    lda score_time
+    sta $415
+    lda score_time+1
+    sta $416
+    rts
+
+score_timeEndGame     .byte 0
+score_timeFCount      .byte 50
+score_time            .byte 48,48
+
+score_timeSet:
+    clc
+    adc #48
+    sta score_time
+    lda #48
+    sta score_time+1
+    sta score_timeEndGame
+    lda #50
+    sta score_timeFCount
+
+
+score_timeDec:
+    lda game_mode
+    bne score_timeDecMode
+    rts
+
+score_timeDecMode
+    lda score_timeFCount
+    beq score_timeFCountZero
+    dec score_timeFCount
+    rts
+score_timeFCountZero
+    lda #50
+    sta score_timeFCount
+    lda score_time+1
+    cmp #48
+    beq score_timeTenth
+    dec score_time+1
+    rts
+score_timeTenth:
+    lda score_time
+    cmp #48
+    beq score_timeEndGameSet
+    dec score_time
+    lda #57
+    sta score_time+1
+
+    dec score_timeEndGame
+    rts
+score_timeEndGameSet:
+    lda #1
+    sta score_timeEndGame
     rts

@@ -108,9 +108,13 @@ menu_mode_loop:
     cmp #1
     beq menue_mode_exit
     jsr menu_move
+    lda menu_position
+    sta game_mode
     jmp menu_mode_loop
 
 menue_mode_exit:
+    lda #3
+    jsr score_timeSet
     rts
 
 

@@ -3,8 +3,8 @@ game_mode     .byte 0
 game_running  .byte 0
 
 game_init:
-    lda #0
-    sta game_mode
+    ;lda #0
+    ;sta game_mode
     lda #<game_isr   ;Set raster interrupt position
     sta $fffe
     lda #>game_isr
@@ -68,9 +68,11 @@ game_isr
    jsr ball_update
    ;Update the rest-------
    jsr gameBgEl
+   jsr score_timeDec
+   jsr score_print 
    ;Check if game ended---
    jsr gameEnded
-   beq gameContiniue 
+   bne gameContiniue 
    jsr game_deinit
     
 gameContiniue:
@@ -84,6 +86,6 @@ gameEnded:
     lda game_mode
     bne gameEndedQuit
     jsr gameBg_empty      ;game mode 0 = all bricks must be destroyed
-    sta game_running
+   ; sta game_running
 gameEndedQuit:
     rts
