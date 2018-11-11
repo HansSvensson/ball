@@ -53,6 +53,8 @@ score_reset_loop:
     bne score_reset_loop
     lda #50
     sta score_timeFCount
+    lda #0
+    sta score_timeEndGame
     rts
 
 
@@ -78,7 +80,7 @@ score_print:
     sta $416
     rts
 
-score_timeEndGame     .byte 0
+score_timeEndGame     .byte 0        ; 0 = time has ended    1 = time is set
 score_timeFCount      .byte 50
 score_time            .byte 48,48
 
@@ -118,8 +120,6 @@ score_timeTenth:
     dec score_time
     lda #57
     sta score_time+1
-
-    dec score_timeEndGame
     rts
 score_timeEndGameSet:
     lda #1

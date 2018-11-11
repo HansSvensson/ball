@@ -45,8 +45,8 @@ menu_cleanFg:
     rts
 
 
-menu_position .byte 1
-
+menu_position .byte 1    ;starts at 0
+menu_time     .byte 0    ;equals the time in x*10 seconds
 
 ;------------------1=BrickMode 2=TimeMode--------------------- 
 menu_mode_titel .enc screen
@@ -106,14 +106,18 @@ menu_mode_loop:
     jsr menu_delay
     jsr menu_input
     cmp #1
-    beq menue_mode_exit
+    beq menu_mode_exit
     jsr menu_move
     lda menu_position
     sta game_mode
     jmp menu_mode_loop
 
-menue_mode_exit:
-    lda #3
+menu_mode_exit:
+    lda menu_position
+    bne menu_mode_exitSetTime
+    rts
+menu_mode_exitSetTime:
+    lda menu_time
     jsr score_timeSet
     rts
 
@@ -167,14 +171,14 @@ menu_move:
 
 menu_move_down:
     lda menu_position
-    cmp #4
+    cmp #3
     beq menu_move_not
     inc menu_position
     jmp menu_move_color
 
 menu_move_up:
     lda menu_position
-    cmp #1
+    cmp #0
     beq menu_move_not
     dec menu_position
 
@@ -182,13 +186,13 @@ menu_move_color:
     jsr menu_clearColor
     ldx #0
     lda menu_position
-    cmp #1
+    cmp #0
     beq menu_move_color_i1
-    cmp #2
+    cmp #1
     beq menu_move_color_i2
-    cmp #3
+    cmp #2
     beq menu_move_color_i3
-    cmp #4
+    cmp #3
     beq menu_move_color_i4
     rts
 
@@ -207,7 +211,9 @@ menu_move_color_i2_loop:
     sta $d400+menu_item2_pos,x
     inx
     cpx #40
-    bne menu_move_color_i2_loop    
+    bne menu_move_color_i2_loop
+    lda #3
+    sta menu_time    
     rts    
 
 menu_move_color_i3:
@@ -217,6 +223,8 @@ menu_move_color_i3_loop:
     inx
     cpx #40
     bne menu_move_color_i3_loop    
+    lda #6
+    sta menu_time    
     rts    
 
 menu_move_color_i4:
@@ -226,6 +234,8 @@ menu_move_color_i4_loop:
     inx
     cpx #40
     bne menu_move_color_i4_loop    
+    lda #9
+    sta menu_time    
     rts    
 
 menu_move_not:

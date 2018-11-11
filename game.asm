@@ -1,6 +1,6 @@
 
 game_mode     .byte 0
-game_running  .byte 0
+game_running  .byte 0   ;0=keep running the game    1=quit game
 
 game_init:
     ;lda #0
@@ -72,7 +72,7 @@ game_isr
    jsr score_print 
    ;Check if game ended---
    jsr gameEnded
-   bne gameContiniue 
+   beq gameContiniue 
    jsr game_deinit
     
 gameContiniue:
@@ -83,9 +83,12 @@ gameContiniue:
 
 ;------------------Check if game finished 0=run game, 1=Quit game----------
 gameEnded:
-    lda game_mode
-    bne gameEndedQuit
-    jsr gameBg_empty      ;game mode 0 = all bricks must be destroyed
-   ; sta game_running
-gameEndedQuit:
+    lda game_mode         ;game mode = 0 All bricks must be destroyes, otherwise time is used.
+    bne gameEndedTime
+    jsr gameBg_empty      ;Returns 0 if game should cont.
+    sta game_running
+    rts
+gameEndedTime:
+    lda score_timeEndGame ;loads zero if game should cont.
+    sta game_running
     rts
