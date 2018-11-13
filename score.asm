@@ -58,6 +58,42 @@ score_reset_loop:
     rts
 
 
+;     YES                             NO
+;             p1_100 < p2_100
+;    P2_WON                    p1_100 == p2_100
+;                         p1_10 < p2_10        P1_WON
+;                       P2_WON      p1_10 
+;
+;
+
+score_lead:
+    lda score_player+2
+    cmp score_player+5
+    bcc score_lead_p2Won  ; p1 < p2
+    beq score_lead_10     ; p2 == p1
+    jmp score_lead_p1Won  ; p1 >  p2
+score_lead_10:
+    lda score_player+1
+    cmp score_player+4
+    bcc score_lead_p2Won  ; p1 < p2
+    beq score_lead_1      ; p2 == p1
+    jmp score_lead_p1Won  ; p1 >  p2
+score_lead_1:
+    lda score_player
+    cmp score_player+3
+    bcc score_lead_p2Won  ; p1 < p2
+    beq score_lead_equal  ; p2 == p1
+    jmp score_lead_p1Won  ; p1 >  p2
+score_lead_p1Won:
+    lda #49
+    rts
+score_lead_p2Won:
+    lda #50
+    rts
+score_lead_equal:
+    lda #0
+    rts
+
 
 score_print:
     lda score_player+2

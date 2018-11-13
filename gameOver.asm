@@ -1,6 +1,7 @@
 gameOverText .enc screen
              .text "player x won!"
-             
+gameOverTextEqual .enc screen
+             .text "Equal, no winner!"
 
 gameOver:
 
@@ -23,13 +24,27 @@ gameOverClean:
     inx
     bne gameOverClean
 
+    jsr menu_clearColor
+    
+    jsr score_lead
+    tay
+    bne gameOverWinner
+
+gameOverEqual:
+    lda gameOverTextEqual,x
+    sta $5c6,x                   ;11rader = 440byte + 14byte = 454 = 256 + 128 + 64 + 4 + 2 = 0x1d6 => 0x5d1
+    inx
+    cpx #12
+    bne gameOverEqual
+
 gameOverWinner:
     lda gameOverText,x
     sta $5c6,x                   ;11rader = 440byte + 14byte = 454 = 256 + 128 + 64 + 4 + 2 = 0x1d6 => 0x5d1
     inx
     cpx #12
-    bne gameOverWinner
-    
+    bne gameOverWinner 
+    sty $5cd
+
     lda #0
     sta $d015                    ;turn off all sprites
 gameOverWaitJoy:    

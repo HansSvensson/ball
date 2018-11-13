@@ -66,8 +66,8 @@ ball_init:
            lda ball_player_2_color
            sta $d02c
 
-           lda #0
-           sta $d010    ; no sprites starts at right part screen
+           lda #$30
+           sta $d010    ; Pl2 sprites starts at right part screen
 
            lda #50
            sta $d000    ; set x coordinate to 40
@@ -85,17 +85,17 @@ ball_init:
            sta $d005    ; set y coordinate to 40
            
            
-           lda #215
+           lda #248
            sta $d006    ; set x coordinate to 40
            lda #$80
            sta $d007    ; set y coordinate to 40
            
-           lda #235
+           lda #17
            sta $d008    ; set x coordinate to 40
            lda #$60
            sta $d009    ; set y coordinate to 40
 
-           lda #255
+           lda #37      ; left is 27in -> right 316 = 255 + 61 -> -24 sprite width => 37
            sta $d00a    ; set x coordinate to 40
            lda #$40
            sta $d00b    ; set y coordinate to 40
