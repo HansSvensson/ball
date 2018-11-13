@@ -49,7 +49,15 @@ gameBg_init:
 gameBg_fillTop:
     sta $427,x
     dex
+    dex
     bne gameBg_fillTop
+    lda #103
+    ldx #40
+gameBg_fillTop2:
+    sta $426,x
+    dex
+    dex
+    bne gameBg_fillTop2
 
 
     ;---------fill bottom-------
