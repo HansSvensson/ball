@@ -44,30 +44,42 @@ gameBg_init:
     sta $414
     
     ;---------fill top----------
-    lda #102
-    ldx #40
+    ldx #0
 gameBg_fillTop:
-    sta $427,x
-    dex
-    dex
-    bne gameBg_fillTop
+    lda #102
+    sta $428,x
     lda #103
-    ldx #40
-gameBg_fillTop2:
-    sta $426,x
-    dex
-    dex
-    bne gameBg_fillTop2
+    sta $429,x
+    lda #104
+    sta $42A,x
+    inx
+    inx
+    inx
+    cpx #39
+    bne gameBg_fillTop
+    lda #102
+    sta $44f
 
 
     ;---------fill bottom-------
-    ldx #40
+    ldx #0
+    lda #102    
+    sta $7E7
 gameBg_fillBottom:
-    sta $7BF,x
-    dex
+    lda #102
+    sta $7C0,x
+    lda #103
+    sta $7C1,x
+    lda #104
+    sta $7C2,x
+    inx
+    inx
+    inx
+    cpx #39
     bne gameBg_fillBottom
 
     ;---------fill left--------
+    lda #102    
     sta $450
     sta $478
     sta $4A0
@@ -116,10 +128,10 @@ gameBg_fillBottom:
 
     lda #12    ;MULTICOLOR 1
     sta $d022
-    lda #8     ;MULTICOLOR 2
+    lda #10     ;MULTICOLOR 2
     sta $d023
     
-    lda #9     ;FOREGROUND COLOR
+    lda #10     ;FOREGROUND COLOR
     ldx #0
 gameBg_fill_foreground:
     sta $d800,x
