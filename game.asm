@@ -3,12 +3,6 @@ game_mode     .byte 0
 game_running  .byte 0   ;0=keep running the game    1=quit game
 
 game_init:
-    ;lda #0
-    ;sta game_mode
-    lda #<game_isr   ;Set raster interrupt position
-    sta $fffe
-    lda #>game_isr
-    sta $ffff
 
     jsr gameBg_init
     jsr ball_init
@@ -17,14 +11,24 @@ game_init:
 
     lda #0
     sta game_running
-    lda #1     ;this is how to tell the VICII to generate a raster interrupt
-    sta $d012
-    
+    jsr game_setIsr
+
     lda #$01   ;this is how to tell the VICII to generate a raster interrupt
     sta $d01a
 
     cli
     rts
+
+game_setIsr:
+    lda #<game_isr   ;Set raster interrupt position
+    sta $fffe
+    lda #>game_isr
+    sta $ffff
+    lda #180     ;this is how to tell the VICII to generate a raster interrupt
+    sta $d012
+    rts
+
+
 
 game_deinit:
     lda #$00   
@@ -76,6 +80,7 @@ game_isr
    jsr game_deinit
     
 gameContiniue:
+   jsr score_setIsr
    dec $d020
    asl $d019
    rti

@@ -2,47 +2,7 @@ gameElframeCount .byte 0
 gameElframeState .byte 0
 
 gameBg_init:
-    
-    ;---------score------------
-    lda #$13
-    sta $400
-    sta $41D
-    lda #$03
-    sta $401
-    sta $41E
-    lda #$0F
-    sta $402
-    sta $41F
-    lda #$12
-    sta $403
-    sta $420
-    lda #$05
-    sta $404
-    sta $421
-    lda #$3A
-    sta $405
-    sta $422
-
-    lda #32
-    sta $406
-    sta $407
-    sta $408
-    sta $423
-    sta $424
-    sta $425
-
-    ;---------TIME-------------
-    lda #$14
-    sta $410
-    lda #$9
-    sta $411
-    lda #$d
-    sta $412
-    lda #$5
-    sta $413
-    lda #$3A
-    sta $414
-    
+        
     ;---------fill top----------
     ldx #0
 gameBg_fillTop:
@@ -113,6 +73,91 @@ gameBg_fillBottom:
     sta $5f4
     sta $61c
     
+    jsr gameBg_setMulticolor
+    
+    lda #10     ;FOREGROUND COLOR
+    ldx #0
+gameBg_fill_foreground:
+    sta $d800,x
+    sta $d900,x
+    sta $da00,x
+    sta $db00,x
+    inx
+    bne gameBg_fill_foreground
+    
+    jsr gameBg_squareBg
+
+    jsr gameBgEl
+
+    jsr gameBg_printScore
+    
+    rts
+
+
+gameBg_printScore:
+    ;---------score------------
+    lda #$13
+    sta $400
+    sta $41F
+    lda #$03
+    sta $401
+    sta $420
+    lda #$0F
+    sta $402
+    sta $421
+    lda #$12
+    sta $403
+    sta $422
+    lda #$05
+    sta $404
+    sta $423
+    lda #$3A
+    sta $405
+    sta $424
+
+    lda #32
+    sta $406
+    sta $407
+    sta $408
+    sta $425
+    sta $426
+    sta $427
+
+    ;---------TIME-------------
+    lda #$14
+    sta $410
+    lda #$9
+    sta $411
+    lda #$d
+    sta $412
+    lda #$5
+    sta $413
+    lda #$3A
+    sta $414
+
+    ;---------Set color------
+    lda #1
+    ldx #0
+gameBg_printScoreColor:
+    sta $d800,x
+    inx
+    cpx #40
+    bne gameBg_printScoreColor
+
+    lda #15
+    sta $d806
+    sta $d807
+    sta $d808
+    sta $d825
+    sta $d826
+    sta $d827
+    sta $d815
+    sta $d816
+    rts
+
+
+
+gameBg_setMulticolor:
     ;----------------set ut multicolor charset
     lda $d018
     ora #$d
@@ -130,22 +175,8 @@ gameBg_fillBottom:
     sta $d022
     lda #10     ;MULTICOLOR 2
     sta $d023
-    
-    lda #10     ;FOREGROUND COLOR
-    ldx #0
-gameBg_fill_foreground:
-    sta $d800,x
-    sta $d900,x
-    sta $da00,x
-    sta $db00,x
-    inx
-    bne gameBg_fill_foreground
-    
-    jsr gameBg_squareBg
-
-    jsr gameBgEl
-    
     rts
+
 
 
 ;-------------Load one big squre background-----------------

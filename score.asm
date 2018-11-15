@@ -66,6 +66,42 @@ score_reset_loop:
 ;
 ;
 
+score_setIsr:
+    lda #<Score_isr   ;Set raster interrupt position
+    sta $fffe
+    lda #>Score_isr
+    sta $ffff
+    lda #50     ;this is how to tell the VICII to generate a raster interrupt
+    sta $d012
+    rts
+
+
+Score_isr:
+    ;change to single color
+    lda $d018          ;set location of charset
+    and #$f1
+    ora #$5
+    sta $d018
+    lda $d016           ;Select singlecolor
+    and #%11101111
+    sta $d016
+
+
+
+    ;print text
+    lda #<Score_isrEnd   ;Set raster interrupt position
+    sta $fffe
+    lda #>Score_isrEnd
+    sta $ffff
+    lda #55     ;this is how to tell the VICII to generate a raster interrupt
+    sta $d012
+    asl $d019
+
+    rti
+
+
+    
+
 score_lead:
     lda score_player+2
     cmp score_player+5
@@ -104,11 +140,11 @@ score_print:
     sta $408
     
     lda score_player+5
-    sta $423
-    lda score_player+4
-    sta $424
-    lda score_player+3
     sta $425
+    lda score_player+4
+    sta $426
+    lda score_player+3
+    sta $427
    
     lda score_time
     sta $415
@@ -161,3 +197,104 @@ score_timeEndGameSet:
     lda #1
     sta score_timeEndGame
     rts
+
+
+
+
+
+Score_isrEnd:
+    ;sta $400
+    ;stx $401
+    ;stx $402
+    lda #$1B
+    sta $d011
+    lda #$C8
+    sta $d016
+    lda #$15
+    sta $d018
+
+    lda #<Score_IsrEndStable   ; low part of address of interrupt handler code
+    ldx #>Score_IsrEndStable   ; high part of address of interrupt handler code
+    sta $fffe                  ; store in interrupt vector
+    stx $ffff
+    lda #56
+    sta $d012
+    asl $d019                  ; ACK interrupt (to re-enable it)
+    tsx                        ; store stack
+    cli                        
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+
+
+
+Score_IsrEndStable:
+    txs
+    ldx #$08
+    dex
+    bne *-1
+    bit $00
+
+    lda $d012
+    cmp $d012
+    beq *+2
+
+
+;stable
+    jsr game_setIsr
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    jsr gameBg_setMulticolor
+    asl $d019
+    rti
+    
