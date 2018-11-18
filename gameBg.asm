@@ -201,9 +201,31 @@ gameBg_squareBg_base_1:
     sta $706,x
     sta $756,x
     inx
+    inx
     cpx #12
     bne gameBg_squareBg_base_1 
-    lda #$54
+    lda #$41
+    ;row 4 starts @ 0x478 start 0x10 in 8 chars wide -> 488->490
+    ldx #0
+gameBg_squareBg_base_sec:
+    sta $487,x
+    sta $4d7,x
+    sta $527,x
+    sta $577,x
+    sta $5c7,x
+    sta $617,x
+    sta $667,x
+    sta $6b7,x
+    sta $707,x
+    sta $757,x
+    inx
+    inx
+    cpx #12
+    bne gameBg_squareBg_base_sec 
+
+
+
+    lda #$5e
     ldx #0
 gameBg_squareBg_base_2:
     sta $4ae,x
@@ -217,8 +239,26 @@ gameBg_squareBg_base_2:
     sta $72e,x
     sta $77e,x
     inx
+    inx
     cpx #12
     bne gameBg_squareBg_base_2
+    lda #$5f
+    ldx #0
+gameBg_squareBg_base_2_2:
+    sta $4af,x
+    sta $4ff,x
+    sta $54f,x
+    sta $59f,x
+    sta $5ef,x
+    sta $63f,x
+    sta $68f,x
+    sta $6df,x
+    sta $72f,x
+    sta $77f,x
+    inx
+    inx
+    cpx #12
+    bne gameBg_squareBg_base_2_2
 
     lda #13
     ldx #0
@@ -263,6 +303,23 @@ gameBg_hit_1:
     lda #32
     ldy #0    
     sta (main_temp_pointer),y     ;Use the pointer we just created.
+    lda main_temp_pointer         ;On even addresses the brick to the right should be removed.
+    and #1                                  
+    bne gameBg_hit_1_Uneven       ;On uneven addresses the brick to the left should be removed.
+    iny
+    lda #32
+    sta (main_temp_pointer),y
+    jmp gameBg_hit_1_score
+gameBg_hit_1_Uneven:       
+    lda main_temp_pointer         ;On even addresses the brick to the right should be removed.
+    clc
+    adc #$ff
+    sta main_temp_pointer
+    lda #32
+    sta (main_temp_pointer),y     ;Use the pointer we just created.
+
+gameBg_hit_1_score:
+    jsr gameBg_bricksLeft
     jsr gameBg_bricksLeft
     ldx main_temp_x               ;Give score!
     lda ball_owner,x
@@ -278,18 +335,39 @@ gameBg_hit_1_player_2:
     jsr score_increase_player_2
     rts
 
+
+;---------------------Blocks that handle many hits-----------------------
 gameBg_hit_2:
+    ldy #0    
     clc
-    adc #$ff
-    cmp #$48
-    bne gameBg_hit_2_do 
-    lda #$40
+    adc #$fe
+    cmp #$49
+    bcs gameBg_hit_2_do          ;if A is equal or larger then  cmp
+    jmp gameBg_hit_1
     
 gameBg_hit_2_do
-    ldy #0    
     sta (main_temp_pointer),y     ;Use the pointer we just created.
+    pha                           ;PUSH stack Acc on the stack
+    lda main_temp_pointer         ;On even addresses the brick to the right should be removed.
+    and #1                                  
+    bne gameBg_hit_2_Uneven       ;On uneven addresses the brick to the left should be removed.
+    iny
+    pla                          ;POP STACK
+    adc #$1                      ;We have the value for left but we want to store for right
+    sta (main_temp_pointer),y
+    rts
+gameBg_hit_2_Uneven:
+    lda main_temp_pointer         ;On even addresses the brick to the right should be removed.
+    clc
+    adc #$ff
+    sta main_temp_pointer
+    pla 
+    clc                           ;POP stack
+    adc #$ff                      ;We have the value for right but we want to store for left
+    sta (main_temp_pointer),y     ;Use the pointer we just created. 
     rts
 
+;------------------------Electric animation-------------------------
 gameBgEl:
     lda gameElframeCount
     bne gameBgElQuit 
