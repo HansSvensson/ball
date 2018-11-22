@@ -2,6 +2,8 @@ gameElframeCount .byte 0
 gameElframeState .byte 0
 
 gameBg_init:
+    
+    jsr gameBg_print
         
     ;---------fill top----------
     ldx #0
@@ -67,12 +69,6 @@ gameBg_fillBottom:
     sta $797
     sta $7BF
 
-    ;TODO remove, just som test in the middle
-    sta $5A4
-    sta $5cc
-    sta $5f4
-    sta $61c
-    
     jsr gameBg_setMulticolor
     
     lda #10     ;FOREGROUND COLOR
@@ -85,8 +81,8 @@ gameBg_fill_foreground:
     inx
     bne gameBg_fill_foreground
     
-    jsr gameBg_squareBg
-
+    ;jsr gameBg_squareBg
+    
     jsr gameBgEl
 
     jsr gameBg_printScore
@@ -445,6 +441,184 @@ gameBg_empty:
 gameBg_empty_not:
     lda #0
     rts
+
+
+;------------------------------Background generator-------------------------
+;ALL INDEX START AT 0, one INDEX = 1 char.
+;
+;0  = Blank
+;1  = Undestructable
+;2  = 1-brick color 1
+;3  = 1-brick color 2
+;4  = 3-brick color 1
+;5  = 3-brick color 2
+;6  = 6-brick color 1
+;7  = 6-brick color 2
+;10 = psycadelic 
+;11 = your bat bigger
+;12 = op bat smaller
+;13 = op bat reversed
+;14 = you get all balls
+;15 = ....
+
+gamebg_field_first: .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+
+gamebg_field_color: .byte    0,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12, 13
+gamebg_field_char:  .byte  $20, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40,$40
+gameBg_color: .byte 0
+gameBg_char:  .byte 0
+gamebg_field = 2
+gamebg_screen = $450
+gamebg_screen_color = $d850
+gameBg_tmpX: .byte 0
+
+gameBg_print:
+    lda #<gamebg_field_first
+    sta 2
+    lda #>gamebg_field_first
+    sta 3
+    ldy #0                    ;pick configuration
+    ldx #0                    ;store on screen
+    clc
+gameBg_print_l1:
+    lda (gamebg_field),y
+    jsr gameBg_colorConvert
+    jsr gameBg_charConvert
+    lda gameBg_char
+    sta gamebg_screen,x
+    inx
+    adc #1                    ;Get next char for the brick style.
+    sta gamebg_screen,x
+    lda gameBg_color
+    sta gamebg_screen_color,x
+    dex
+    sta gamebg_screen_color,x
+    inx
+    iny
+    inx
+    bne gameBg_print_l1
+
+gameBg_print2:
+    ;sta 2
+    ;ldy #0                    ;pick configuration
+    ldx #0                    ;store on screen
+    clc
+gameBg_print_l2:
+    lda (gamebg_field),y
+    jsr gameBg_colorConvert
+    jsr gameBg_charConvert
+    lda gameBg_char
+    sta gamebg_screen+256,x
+    inx
+    adc #1                    ;Get next char for the brick style.
+    sta gamebg_screen+256,x
+    lda gameBg_color
+    sta gamebg_screen_color+256,x
+    dex
+    sta gamebg_screen_color+256,x
+    inx
+    iny
+    inx
+    bne gameBg_print_l2
+
+gameBg_print3:
+    lda 3
+    adc #1
+    sta 3
+    ldy #0                    ;pick configuration
+    ldx #0                    ;store on screen
+    clc
+gameBg_print_l3:
+    lda (gamebg_field),y
+    jsr gameBg_colorConvert
+    jsr gameBg_charConvert
+    lda gameBg_char
+    sta gamebg_screen+512,x
+    inx
+    adc #1                    ;Get next char for the brick style.
+    sta gamebg_screen+512,x
+    lda gameBg_color
+    sta gamebg_screen_color+512,x
+    dex
+    sta gamebg_screen_color+512,x
+    inx
+    iny
+    inx
+    bne gameBg_print_l3
+
+gameBg_print4:
+    ;lda 2
+    ;adc #1
+    ;sta 2
+    ;ldy #0                    ;pick configuration
+    ldx #0                    ;store on screen
+    clc
+gameBg_print_l4:
+    lda (gamebg_field),y
+    jsr gameBg_colorConvert
+    jsr gameBg_charConvert
+    lda gameBg_char
+    sta gamebg_screen+768,x
+    inx
+    adc #1                    ;Get next char for the brick style.
+    sta gamebg_screen+768,x
+    lda gameBg_color
+    sta gamebg_screen_color+768,x
+    dex
+    sta gamebg_screen_color+768,x
+    inx
+    iny
+    inx
+    cpx #112
+    bne gameBg_print_l4
+
+    rts
+
+    
+
+gameBg_charConvert:
+    stx gameBg_tmpX
+    tax
+    pha
+    lda gamebg_field_char,x
+    sta gameBg_char
+    pla
+    ldx gameBg_tmpX
+    rts
+
+gameBg_colorConvert:
+    stx gameBg_tmpX
+    tax
+    pha
+    lda gamebg_field_color,x
+    sta gameBg_color
+    pla
+    ldx gameBg_tmpX
+    rts
+
+
 
  * = $3000
  .binary "resources/charsetBg.bin"
