@@ -3,6 +3,18 @@ gameElframeState .byte 0
 
 gameBg_init:
     
+
+    ;----------fill fg color-------
+    lda #10     ;FOREGROUND COLOR
+    ldx #0
+gameBg_fill_foreground:
+    sta $d800,x
+    sta $d900,x
+    sta $da00,x
+    sta $db00,x
+    inx
+    bne gameBg_fill_foreground
+
     jsr gameBg_print
         
     ;---------fill top----------
@@ -70,16 +82,6 @@ gameBg_fillBottom:
     sta $7BF
 
     jsr gameBg_setMulticolor
-    
-    lda #10     ;FOREGROUND COLOR
-    ldx #0
-gameBg_fill_foreground:
-    sta $d800,x
-    sta $d900,x
-    sta $da00,x
-    sta $db00,x
-    inx
-    bne gameBg_fill_foreground
     
     ;jsr gameBg_squareBg
     
@@ -461,31 +463,32 @@ gameBg_empty_not:
 ;14 = you get all balls
 ;15 = ....
 
-gamebg_field_first: .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
-                    .byte 0,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,0
+gamebg_field_first: .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
+                    .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
 
-gamebg_field_color: .byte    0,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12, 13
+                        ;    0    1    2    3    4    5    6    7    8    9   10   11  12
+gamebg_field_color: .byte    0,   3,   4,   5,   6,   7,   9,   8,   9,  10,  11,  12, 13
 gamebg_field_char:  .byte  $20, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40,$40
 gameBg_color: .byte 0
 gameBg_char:  .byte 0
@@ -504,6 +507,7 @@ gameBg_print:
     clc
 gameBg_print_l1:
     lda (gamebg_field),y
+    beq gameBg_print_l1_zero
     jsr gameBg_colorConvert
     jsr gameBg_charConvert
     lda gameBg_char
@@ -515,11 +519,11 @@ gameBg_print_l1:
     sta gamebg_screen_color,x
     dex
     sta gamebg_screen_color,x
+gameBg_print_l1_zero:
     inx
     iny
     inx
     bne gameBg_print_l1
-
 gameBg_print2:
     ;sta 2
     ;ldy #0                    ;pick configuration
@@ -527,6 +531,7 @@ gameBg_print2:
     clc
 gameBg_print_l2:
     lda (gamebg_field),y
+    beq gameBg_print_l2_zero
     jsr gameBg_colorConvert
     jsr gameBg_charConvert
     lda gameBg_char
@@ -538,6 +543,7 @@ gameBg_print_l2:
     sta gamebg_screen_color+256,x
     dex
     sta gamebg_screen_color+256,x
+gameBg_print_l2_zero:
     inx
     iny
     inx
@@ -552,6 +558,7 @@ gameBg_print3:
     clc
 gameBg_print_l3:
     lda (gamebg_field),y
+    beq gameBg_print_l3_zero
     jsr gameBg_colorConvert
     jsr gameBg_charConvert
     lda gameBg_char
@@ -563,6 +570,7 @@ gameBg_print_l3:
     sta gamebg_screen_color+512,x
     dex
     sta gamebg_screen_color+512,x
+gameBg_print_l3_zero:
     inx
     iny
     inx
@@ -577,6 +585,7 @@ gameBg_print4:
     clc
 gameBg_print_l4:
     lda (gamebg_field),y
+    beq gameBg_print_l4_zero
     jsr gameBg_colorConvert
     jsr gameBg_charConvert
     lda gameBg_char
@@ -588,6 +597,7 @@ gameBg_print_l4:
     sta gamebg_screen_color+768,x
     dex
     sta gamebg_screen_color+768,x
+gameBg_print_l4_zero:
     inx
     iny
     inx
