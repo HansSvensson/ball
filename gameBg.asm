@@ -83,8 +83,6 @@ gameBg_fillBottom:
 
     jsr gameBg_setMulticolor
     
-    ;jsr gameBg_squareBg
-    
     jsr gameBgEl
 
     jsr gameBg_printScore
@@ -175,126 +173,6 @@ gameBg_setMulticolor:
     sta $d023
     rts
 
-
-
-;-------------Load one big squre background-----------------
-gameBg_squareBg:
-    lda #0
-    sta gameBg_bricksHi
-    lda #80
-    sta gameBg_bricksLo
-    
-    lda #$40
-    ;row 4 starts @ 0x478 start 0x10 in 8 chars wide -> 488->490
-    ldx #0
-gameBg_squareBg_base_1:
-    sta $486,x
-    sta $4d6,x
-    sta $526,x
-    sta $576,x
-    sta $5c6,x
-    sta $616,x
-    sta $666,x
-    sta $6b6,x
-    sta $706,x
-    sta $756,x
-    inx
-    inx
-    cpx #12
-    bne gameBg_squareBg_base_1 
-    lda #$41
-    ;row 4 starts @ 0x478 start 0x10 in 8 chars wide -> 488->490
-    ldx #0
-gameBg_squareBg_base_sec:
-    sta $487,x
-    sta $4d7,x
-    sta $527,x
-    sta $577,x
-    sta $5c7,x
-    sta $617,x
-    sta $667,x
-    sta $6b7,x
-    sta $707,x
-    sta $757,x
-    inx
-    inx
-    cpx #12
-    bne gameBg_squareBg_base_sec 
-
-
-
-    lda #$5e
-    ldx #0
-gameBg_squareBg_base_2:
-    sta $4ae,x
-    sta $4fe,x
-    sta $54e,x
-    sta $59e,x
-    sta $5ee,x
-    sta $63e,x
-    sta $68e,x
-    sta $6de,x
-    sta $72e,x
-    sta $77e,x
-    inx
-    inx
-    cpx #12
-    bne gameBg_squareBg_base_2
-    lda #$5f
-    ldx #0
-gameBg_squareBg_base_2_2:
-    sta $4af,x
-    sta $4ff,x
-    sta $54f,x
-    sta $59f,x
-    sta $5ef,x
-    sta $63f,x
-    sta $68f,x
-    sta $6df,x
-    sta $72f,x
-    sta $77f,x
-    inx
-    inx
-    cpx #12
-    bne gameBg_squareBg_base_2_2
-
-    lda #13
-    ldx #0
-gameBg_squareBg_base_color_1:
-    sta $d886,x
-    sta $d8d6,x
-    sta $d926,x
-    sta $d976,x
-    sta $d9c6,x
-    sta $da16,x
-    sta $da66,x
-    sta $dab6,x
-    sta $db06,x
-    sta $db56,x
-    inx
-    cpx #12
-    bne gameBg_squareBg_base_color_1 
-    
-    lda #12
-    ldx #0
-gameBg_squareBg_base_color_2:
-    sta $d8ae,x
-    sta $d8fe,x
-    sta $d94e,x
-    sta $d99e,x
-    sta $d9ee,x
-    sta $da3e,x
-    sta $da8e,x
-    sta $dade,x
-    sta $db2e,x
-    sta $db7e,x
-    inx
-    cpx #12
-    bne gameBg_squareBg_base_color_2 
-
-
-
-    rts
 
 ;-----------------------Check for hit between BG and sprite----------------
 gameBg_hit_1:
