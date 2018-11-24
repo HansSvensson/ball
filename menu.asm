@@ -15,6 +15,7 @@ menu:
 
     jsr menu_move_color
     jsr menu_mode
+    jsr menu_level
     jsr menu_cleanChar
     rts
 
@@ -48,7 +49,7 @@ menu_cleanFg:
 menu_position .byte 1    ;starts at 0
 menu_time     .byte 0    ;equals the time in x*10 seconds
 
-;------------------1=BrickMode 2=TimeMode--------------------- 
+;------------------TIME MODE MENU--------------------- 
 menu_mode_titel .enc screen
                 .text "game modes"
 menu_mode_item1 .enc screen
@@ -61,9 +62,9 @@ menu_mode_item4 .enc screen
                 .text "90 seconds"
 
 menu_item1_pos = $525+$28
-menu_item2_pos = $54f+$28
-menu_item3_pos = $577+$28
-menu_item4_pos = $59f+$28
+menu_item2_pos = $525+$50
+menu_item3_pos = $525+$78
+menu_item4_pos = $525+$a0
 
 menu_mode:
     ldx #0
@@ -122,6 +123,71 @@ menu_mode_exitSetTime:
     rts
 
 
+;------------------LEVEL SELECT--------------------- 
+menu_level_titel .enc screen
+                .text "select level"
+menu_level_item1 .enc screen
+                .text "hack n trade"
+menu_level_item2 .enc screen
+                .text "iball"
+menu_level_item3 .enc screen
+                .text "random"
+;540 start char
+menu_level_item1_pos = $54e
+menu_level_item2_pos = $54e+$28
+menu_level_item3_pos = $54e+$50
+
+menu_level:
+    jsr menu_cleanChar
+    ldx #0
+menu_level_title:
+    lda menu_level_titel,x
+    sta $4fe,x                ;4f0 0 baseline
+    inx
+    cpx #12
+    bne menu_level_title   
+    ldx #0
+menu_level_i1:
+    lda menu_level_item1,x
+    sta menu_level_item1_pos,x
+    inx
+    cpx #12
+    bne menu_level_i1   
+    ldx #0
+menu_level_i2:
+    lda menu_level_item2,x
+    sta menu_level_item2_pos,x
+    inx
+    cpx #5
+    bne menu_level_i2   
+    ldx #0
+menu_level_i3:
+    lda menu_level_item3,x
+    sta menu_level_item3_pos,x
+    inx
+    cpx #6
+    bne menu_level_i3   
+    ldx #0
+
+menu_level_loop:
+    jsr menu_delay
+    jsr menu_input
+    cmp #1
+    beq menu_level_exit
+    jsr menu_move
+    lda menu_position
+    sta gameBg_level
+    jmp menu_level_loop
+
+menu_level_exit:
+    rts
+
+
+
+
+
+
+
 menu_delay:
     ldx #50
 menu_delay_loop:
@@ -134,6 +200,7 @@ menu_delay_loop:
     rts
 
 ;-------------------Check input 0=none 1=fire, 2=up, 3=down-----------------------
+menu_iput_fire .byte 0
 menu_input:
     lda $dC00
     and $dC01
@@ -147,10 +214,19 @@ menu_input:
     and $dC01
     and #%00000010
     beq menu_waitInput_down
+    lda menu_iput_fire
+    bne menu_waitInput_fireDep
     lda #0
+    rts
+menu_waitInput_fireDep:
+    lda #0
+    sta menu_iput_fire
+    lda #1
     rts
 menu_waitInput_fire:
     lda #1
+    sta menu_iput_fire
+    lda #0
     rts 
 menu_waitInput_up:
     lda #2

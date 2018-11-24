@@ -1,6 +1,7 @@
 gameElframeCount .byte 0
 gameElframeState .byte 0
 
+gameBg_level .byte 0
 gameBg_init:
     
 
