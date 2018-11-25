@@ -17,19 +17,29 @@ gameOver:
     ldx #0
     lda #32
 gameOverClean:
-    sta $400,x
+    sta $428,x
     sta $500,x
     sta $600,x
     sta $6E8,x
     inx
     bne gameOverClean
 
-    jsr menu_clearColor
+    lda #1     ;FOREGROUND COLOR
+    ldx #0
+gameOver_cleanColorLoop:
+    sta $d828,x
+    sta $d900,x
+    sta $da00,x
+    sta $dae8,x
+    inx
+    bne gameOver_cleanColorLoop
     
     jsr score_lead
     tay
+    jsr score_print
     bne gameOverWinner
 
+    ldx #0
 gameOverEqual:
     lda gameOverTextEqual,x
     sta $5c6,x                   ;11rader = 440byte + 14byte = 454 = 256 + 128 + 64 + 4 + 2 = 0x1d6 => 0x5d1
@@ -38,11 +48,13 @@ gameOverEqual:
     bne gameOverEqual
 
 gameOverWinner:
+    ldx #0
+gameOverWinnerLoop:
     lda gameOverText,x
     sta $5c6,x                   ;11rader = 440byte + 14byte = 454 = 256 + 128 + 64 + 4 + 2 = 0x1d6 => 0x5d1
     inx
     cpx #12
-    bne gameOverWinner 
+    bne gameOverWinnerLoop 
     sty $5cd
 
     lda #0
@@ -52,6 +64,11 @@ gameOverWaitJoy:
     and $DC01
     and #%00010000               ;Zero flag=0 if joystick pressed
     bne gameOverWaitJoy
+gameOverWaitJoyUp:    
+    lda $DC00
+    and $DC01
+    and #%00010000               ;Zero flag=0 if joystick pressed
+    beq gameOverWaitJoyUp
    
     lda #32
     ldx #0

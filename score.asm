@@ -2,10 +2,12 @@
 ;we use straight screen codes so it is easy to print 0=48 9=57
 ;player 1 = index 0,1,2    player 2 = index 3,4,5
 score_player: .byte 48,48,48,48,48,48
-
+score_wins_player: .byte 48,48,48,48
 score_x_temp: .byte 0
 
 
+
+;---------------------Increase score-------------------
 score_increase_player_1:
     stx score_x_temp
     ldx #0
@@ -40,6 +42,34 @@ score_increase_hundred:
 
 score_increase_end:
     rts
+
+
+;----------------------Increase wins-------------------
+score_increase_wins_player_1:
+    ldx #0
+    jsr score_wins_increase
+    rts
+score_increase_wins_player_2:
+    ldx #2
+    jsr score_wins_increase
+    rts
+
+score_wins_increase:
+    lda score_wins_player,x
+    cmp #57
+    beq score_wins_increase_ten
+    inc score_wins_player,x
+    jmp score_wins_increase_end
+score_wins_increase_ten:
+    lda #48
+    sta score_wins_player,x
+    inc score_wins_player+1,x
+
+score_wins_increase_end:
+    rts
+
+
+
 
 
 
@@ -121,9 +151,11 @@ score_lead_1:
     beq score_lead_equal  ; p2 == p1
     jmp score_lead_p1Won  ; p1 >  p2
 score_lead_p1Won:
+    jsr score_increase_wins_player_1
     lda #49
     rts
 score_lead_p2Won:
+    jsr score_increase_wins_player_2
     lda #50
     rts
 score_lead_equal:
@@ -139,6 +171,16 @@ score_print:
     lda score_player
     sta $408
     
+    lda score_wins_player+1
+    sta $40c
+    lda score_wins_player
+    sta $40d
+
+    lda score_wins_player+3
+    sta $41c
+    lda score_wins_player+2
+    sta $41d
+
     lda score_player+5
     sta $425
     lda score_player+4

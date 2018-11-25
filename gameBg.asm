@@ -111,7 +111,8 @@ gameBg_printScore:
     lda #$3A
     sta $405
     sta $424
-
+    sta $40b
+    sta $41b
     lda #32
     sta $406
     sta $407
@@ -119,7 +120,9 @@ gameBg_printScore:
     sta $425
     sta $426
     sta $427
-
+    lda #23
+    sta $40a
+    sta $41a
     ;---------TIME-------------
     lda #$14
     sta $410
@@ -150,6 +153,12 @@ gameBg_printScoreColor:
     sta $d827
     sta $d815
     sta $d816
+
+    lda #11
+    sta $d80c
+    sta $d80d
+    sta $d81c
+    sta $d81d
     rts
 
 
