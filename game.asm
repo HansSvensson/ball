@@ -1,7 +1,7 @@
 
-game_mode     .byte 0
-game_running  .byte 0   ;0=keep running the game    1=quit game
-
+game_mode        .byte 0
+game_running     .byte 0   ;0=keep running the game    1=quit game
+game_init_state: .byte 0
 game_init:
 
     jsr gameBg_init
@@ -12,6 +12,9 @@ game_init:
     lda #0
     sta game_running
     jsr game_setIsr
+    
+    lda #190
+    sta game_init_state
 
     lda #$01   ;this is how to tell the VICII to generate a raster interrupt
     sta $d01a
@@ -36,8 +39,57 @@ game_deinit:
     rts
 
 
-game_isr
+game_isr:
    inc $d020
+   jsr game_isr_prepare
+   bne game_isr_ret
+   jmp game_isr_game
+game_isr_ret:
+    jmp gameContiniue
+
+
+
+;-------------------print the ready steady go messages-----------------
+game_isr_prepare:
+   lda game_init_state
+   beq game_isr_prepare_cont
+   dec game_init_state
+
+   lda game_init_state
+   cmp #180
+   beq game_isr_ready 
+   cmp #120
+   beq game_isr_steady 
+   cmp #60
+   beq game_isr_go
+   cmp #0
+   beq game_init_score
+   lda #1
+   rts
+
+game_isr_ready:
+   jsr score_print_ready
+   lda #1
+   rts
+game_isr_steady:
+   jsr score_print_steady
+   lda #1
+   rts
+game_isr_go:
+   jsr score_print_go
+   lda #1
+   rts
+game_init_score:
+   jsr score_clean
+   jsr gameBg_printScore
+   lda #0
+   
+game_isr_prepare_cont:
+   rts    
+
+
+
+game_isr_game:
    lda $d01f
    sta ball_temp_d01f
    lda $d01e

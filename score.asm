@@ -297,4 +297,65 @@ Score_IsrEndStable:
     jsr gameBg_setMulticolor
     asl $d019
     rti
+
+
+
+;-------------------------Code for printing ready,steady,go---------------------------
+score_clean:
+    ldx #0
+    ldy #0
+score_clean_loop:
+    lda #32
+    sta $400,x
+    lda #0
+    sta $d800,x
+    inx
+    cpx #40
+    bne score_clean_loop
+    rts
+
+score_text_ready .enc screen
+                 .text "ready!"
+score_print_ready:
+    jsr score_clean
+    ldx #0
+score_print_ready_loop:
+    lda score_text_ready,x
+    sta $412,x
+    lda #2
+    sta $d812,x
+    inx
+    cpx #6
+    bne score_print_ready_loop
+    rts   
+    
+score_text_steady .enc screen
+                 .text "steady!"
+score_print_steady:
+    jsr score_clean
+    ldx #0
+score_print_steady_loop:
+    lda score_text_steady,x
+    sta $411,x
+    lda #7
+    sta $d811,x
+    inx
+    cpx #7
+    bne score_print_steady_loop
+    rts         
+
+score_text_go .enc screen
+              .text "go!"
+score_print_go:
+    jsr score_clean
+    ldx #0
+score_print_go_loop:
+    lda score_text_go,x
+    sta $413,x
+    lda #5
+    sta $d813,x
+    inx
+    cpx #3
+    bne score_print_go_loop
+    rts         
     

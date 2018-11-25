@@ -86,7 +86,7 @@ gameBg_fillBottom:
     
     jsr gameBgEl
 
-    jsr gameBg_printScore
+    ;jsr gameBg_printScore
     
     rts
 
@@ -366,6 +366,30 @@ gamebg_field_first: .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
                     .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
                     .byte 0,0,0,0,6,5,4,3,2,1,1,2,3,4,5,6,0,0,0,0
 
+gamebg_field_iball: .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,0,5,5,5,5,5,5,0,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,0,5,5,5,5,5,5,0,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0,0,0
+                    .byte 0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0,0,0
+                    .byte 0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0,0,0
+                    .byte 0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,0,5,5,5,5,5,5,0,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,0,5,5,5,5,5,5,0,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                    .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
                         ;    0    1    2    3    4    5    6    7    8    9   10   11  12
 gamebg_field_color: .byte    0,   3,   4,   5,   6,   7,   9,   8,   9,  10,  11,  12, 13
 gamebg_field_char:  .byte  $20, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40,$40
@@ -377,10 +401,29 @@ gamebg_screen_color = $d850
 gameBg_tmpX: .byte 0
 
 gameBg_print:
+    lda gameBg_level
+    cmp #0
+    beq gameBq_print_ht
+    cmp #1
+    beq gameBq_print_iball
+    cmp #2
+    beq gameBq_print_ht
+
+gameBq_print_ht:     
     lda #<gamebg_field_first
     sta 2
     lda #>gamebg_field_first
     sta 3
+    jmp gameBg_print_start
+
+gameBq_print_iball:     
+    lda #<gamebg_field_iball
+    sta 2
+    lda #>gamebg_field_iball
+    sta 3
+    jmp gameBg_print_start
+
+gameBg_print_start:
     ldy #0                    ;pick configuration
     ldx #0                    ;store on screen
     clc
