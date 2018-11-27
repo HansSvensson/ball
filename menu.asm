@@ -25,12 +25,16 @@ menu_clearColor:
     lda #1     ;FOREGROUND COLOR
     ldx #0
 menu_cleanColorLoop:
-    sta $d800,x
-    sta $d900,x
-    sta $da00,x
-    sta $dae8,x
+    sta $d810,x
     inx
     bne menu_cleanColorLoop
+    lda #11          ;Put grey in the selectable menus.
+menu_cleanColorLoop_2:
+    sta $d918,x
+    sta $d9f0,x
+    sta $dae8,x
+    inx
+    bne menu_cleanColorLoop_2
     rts
 
 menu_cleanChar:
@@ -48,7 +52,7 @@ menu_cleanFg:
 
 menu_position .byte 1    ;starts at 0
 menu_time     .byte 0    ;equals the time in x*10 seconds
-
+menu_nr_alt   .byte 0
 ;------------------TIME MODE MENU--------------------- 
 menu_mode_titel .enc screen
                 .text "game modes"
@@ -67,6 +71,8 @@ menu_item3_pos = $525+$78
 menu_item4_pos = $525+$a0
 
 menu_mode:
+    lda #3
+    sta menu_nr_alt
     ldx #0
 menu_mode_title:
     lda menu_mode_titel,x
@@ -138,6 +144,8 @@ menu_level_item2_pos = $54e+$28
 menu_level_item3_pos = $54e+$50
 
 menu_level:
+    lda #2
+    sta menu_nr_alt
     jsr menu_cleanChar
     ldx #0
 menu_level_title:
@@ -247,7 +255,7 @@ menu_move:
 
 menu_move_down:
     lda menu_position
-    cmp #3
+    cmp menu_nr_alt
     beq menu_move_not
     inc menu_position
     jmp menu_move_color
