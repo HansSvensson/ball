@@ -43,6 +43,7 @@ ball_player_2 = #2
 ball_owner  .byte 1,0,1,0,1,0,2,0,2,0,2,0,0,0,0,0
 ball_player_1_color = #5
 ball_player_2_color = #2
+ball_current .byte 0
 
 dir_0 = 4
 
@@ -138,6 +139,8 @@ fill:
 ;
 
 ball_update:
+    stx ball_current
+
     lda balls_state,x
 
     cmp RIGHT_DOWN
@@ -406,6 +409,8 @@ ball_hit_char:
     ldy #0
     lda (main_temp_pointer),y     ;Use the pointer we just created.
     ldy main_temp_y_l2
+    cmp #128
+    beq ball_hit_bonus_1
     cmp #102                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
     cmp #$41
@@ -419,7 +424,9 @@ ball_hit_char:
 ball_hit_char_brick_1:
     jsr gameBg_hit_1
     jmp ball_hit_char_hit
-
+ball_hit_bonus_1:
+    jsr gameBg_hit_bonus_1
+    jmp ball_hit_char_hit
 ball_hit_char_brick_2:
     cmp #$40
     bcs ball_hit_char_brick_2_do

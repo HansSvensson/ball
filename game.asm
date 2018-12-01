@@ -123,6 +123,7 @@ game_isr_game:
    ldx #10
    jsr ball_update
    ;Update the rest-------
+   jsr bonus_update
    jsr gameBgEl
    jsr score_timeDec
    jsr score_print 

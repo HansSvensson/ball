@@ -62,3 +62,4 @@ loopGameRunning:
 .include "gameBg.asm"
 .include "gameOver.asm"
 .include "menu.asm"
+.include "bonus.asm"

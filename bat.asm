@@ -8,6 +8,17 @@ bat_1:
 .byte $02,$ba,$00,$02,$ba,$00,$02,$ba
 .byte $00,$00,$5c,$00,$00,$5c,$00,$82
 
+bat_small:
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$5c,$00,$00,$5c,$00
+.byte $02,$ba,$00,$02,$ba,$00,$00,$00
+.byte $00,$02,$ba,$00,$02,$ba,$00,$00
+.byte $5c,$00,$00,$5c,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$82
+
+
 bat_1_cordX = $d00c
 bat_1_cordY = $d00d
 bat_2_cordX = $d00e
@@ -74,8 +85,15 @@ bat_fill:
             lda bat_1,x
             sta $2040,x
             inx
-            cmp #64
+            cpx #64
             bne bat_fill
+            ldx #0
+bat_small_fill:
+            lda bat_small,x
+            sta $2080,x
+            inx
+            cpx #64
+            bne bat_small_fill
 
             rts
 
@@ -224,4 +242,36 @@ bat_hit:
 
 ball_hit_quit:
             lda NONE
-            rts           
+            rts    
+            
+;---------------Code for bonus logic--------------
+bat_bonus_smaller:
+    cpx ball_player_1
+    beq bat_bonus_smaller_pl1
+    cpx ball_player_2
+    beq bat_bonus_smaller_pl2
+    rts
+bat_bonus_smaller_pl1:
+    lda #$82
+    sta $07ff
+    rts
+bat_bonus_smaller_pl2:
+    lda #$82
+    sta $07fe
+    rts
+
+bat_bonus_smaller_end:
+    cpx ball_player_1
+    beq bat_bonus_smaller_end_pl1
+    cpx ball_player_2
+    beq bat_bonus_smaller_end_pl2
+    rts
+bat_bonus_smaller_end_pl1:
+    lda #$81
+    sta $07ff
+    rts
+bat_bonus_smaller_end_pl2:
+    lda #$81
+    sta $07fe
+    rts
+     

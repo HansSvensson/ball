@@ -159,6 +159,10 @@ gameBg_printScoreColor:
     sta $d80d
     sta $d81c
     sta $d81d
+
+    lda #2
+    sta $d80f
+    sta $d817
     rts
 
 
@@ -252,6 +256,16 @@ gameBg_hit_2_Uneven:
     adc #$ff                      ;We have the value for right but we want to store for left
     sta (main_temp_pointer),y     ;Use the pointer we just created. 
     rts
+
+;------------------------Hit with bonus blocks----------------------
+gameBg_hit_bonus_1:
+    ldx ball_current
+    lda ball_owner,x
+    tax
+    lda #$80
+    jsr bonus_activate
+ 
+    jmp gameBg_hit_1
 
 ;------------------------Electric animation-------------------------
 gameBgEl:
@@ -384,7 +398,7 @@ gamebg_field_iball: .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
                     .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
                     .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
                     .byte 0,0,0,0,0,0,5,5,5,5,5,5,5,5,0,0,0,0,0,0
-                    .byte 0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0,0,0
+                    .byte 0,0,0,0,0,5,5,5,8,5,5,5,5,5,5,0,0,0,0,0
                     .byte 0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0,0,0
                     .byte 0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0,0,0
                     .byte 0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0,0,0
@@ -401,7 +415,7 @@ gamebg_field_iball: .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
                         ;    0    1    2    3    4    5    6    7    8    9   10   11  12
 gamebg_field_color: .byte    0,   3,   4,   5,   6,   7,   9,   8,   9,  10,  11,  12, 13
-gamebg_field_char:  .byte  $20, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40, $40,$40
+gamebg_field_char:  .byte  $20, $40, $40, $40, $40, $40, $40, $40, $80, $40, $40, $40,$40
 gameBg_color: .byte 0
 gameBg_char:  .byte 0
 gamebg_field = 2
