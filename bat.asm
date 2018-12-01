@@ -274,4 +274,39 @@ bat_bonus_smaller_end_pl2:
     lda #$81
     sta $07fe
     rts
+
+;----larger----
+bat_bonus_larger:
+    cpx ball_player_1
+    beq bat_bonus_larger_pl1
+    cpx ball_player_2
+    beq bat_bonus_larger_pl2
+    rts
+bat_bonus_larger_pl1:
+    lda $d017
+    ora #%01000000
+    sta $d017
+    rts
+bat_bonus_larger_pl2:
+    lda $d017
+    ora #%10000000
+    sta $d017
+    rts
+
+bat_bonus_larger_end:
+    cpx ball_player_1
+    beq bat_bonus_larger_end_pl1
+    cpx ball_player_2
+    beq bat_bonus_larger_end_pl2
+    rts
+bat_bonus_larger_end_pl1:
+    lda $d017
+    and #%10111111
+    sta $d017
+    rts
+bat_bonus_larger_end_pl2:
+    lda $d017
+    and #%01111111
+    sta $d017
+    rts
      

@@ -28,7 +28,6 @@ bonus_update:
     beq bonus_update_pl_end
     rts
 bonus_update_pl_end:
-    ldx #1
     jsr bonus_deactivate
     lda #0
     sta bonus_active,x
@@ -42,7 +41,6 @@ bonus_update_p2:
     beq bonus_update_p2_end
     rts
 bonus_update_p2_end:
-    lda bonus_active,x
     jsr bonus_deactivate
     lda #0
     sta bonus_active,x
@@ -61,12 +59,23 @@ bonus_activate:
     sta bonus_active,x
     cmp #$80
     beq bonus_op_smaller
+    cmp #$81
+    beq bonus_op_smaller
+    cmp #$82
+    beq bonus_op_larger
+    cmp #$83
+    beq bonus_op_larger
     rts
 
 bonus_op_smaller:
     lda #255
     sta bonus_timer,x
     jsr bat_bonus_smaller
+    rts
+bonus_op_larger:
+    lda #255
+    sta bonus_timer,x
+    jsr bat_bonus_larger
     rts
 
 
@@ -76,13 +85,20 @@ bonus_deactivate:
     lda bonus_active,x
     cmp #$80
     beq bonus_smaller_end
+    cmp #$81
+    beq bonus_smaller_end
+    cmp #$82
+    beq bonus_larger_end
+    cmp #$83
+    beq bonus_larger_end
     rts
 
 bonus_smaller_end:
     jsr bat_bonus_smaller_end
     rts
-    
-
+bonus_larger_end:
+    jsr bat_bonus_larger_end    
+    rts
 ;--------------Draw timer text-----------------------
 bonus_print:
     ldx ball_player_1

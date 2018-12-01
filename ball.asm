@@ -411,6 +411,13 @@ ball_hit_char:
     ldy main_temp_y_l2
     cmp #128
     beq ball_hit_bonus_1
+    cmp #129
+    beq ball_hit_bonus_1
+    cmp #130
+    beq ball_hit_bonus_1
+    cmp #131
+    beq ball_hit_bonus_1
+
     cmp #102                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
     cmp #$41
