@@ -113,7 +113,24 @@ ball_init:
            lda $d01c    ; enable multicolor sprites
            ora #$3f
            sta $d01c
-
+           
+           lda ball_player_1
+           sta ball_owner
+           sta ball_owner+2
+           sta ball_owner+4
+           lda #1
+           sta balls_state
+           sta balls_state+2
+           sta balls_state+4
+           lda ball_player_2
+           sta ball_owner+6
+           sta ball_owner+8
+           sta ball_owner+10
+           lda #4
+           sta balls_state+6
+           sta balls_state+8
+           sta balls_state+10
+           
             ldx #63
 fill:
             lda sprite_1,x
@@ -420,6 +437,10 @@ ball_hit_char:
 
     cmp #102                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
+    cmp #103                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #104                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
     cmp #$41
     beq ball_hit_char_brick_1
     cmp #$40
@@ -461,7 +482,7 @@ ball_hit_bg:
     lda ball_bitfield,y
     and ball_temp_d01f
     beq ball_hit_bg_none
-
+    
     lda $d010                ;If sprite is on the right part of the screen above pixel 255
     and ball_bitfield,y
     beq ball_hit_bg_less_FF
@@ -485,9 +506,14 @@ ball_hit_bg_calc_xy
     lda $d000,x              ;Also add sprite X value converted to Char cord (40*25) in Reg X
     clc
     adc #$F4                 ;Screen start at 24, sprite center 12 pixel => 0xF4
+    bcs ball_hit_bg_calc_xy_div
+    lda #$ff
+    jmp ball_hit_bg_calc_xy_add
+ball_hit_bg_calc_xy_div:    
     lsr a
     lsr a
     lsr a
+ball_hit_bg_calc_xy_add:    
     adc ball_temp 
     tax
 

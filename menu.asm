@@ -3,6 +3,8 @@ menu:
     
     ;Clean up
     jsr menu_cleanChar
+    lda #1
+    sta menu_position
     ;init
     ;Set charset
     lda $d018          ;set location of charset
@@ -15,6 +17,8 @@ menu:
 
     jsr menu_move_color
     jsr menu_mode
+    lda #1
+    sta menu_position
     jsr menu_level
     jsr menu_cleanChar
     rts
@@ -176,6 +180,8 @@ menu_level_i3:
     cpx #6
     bne menu_level_i3   
     ldx #0
+    ldx menu_position
+    jsr menu_move_color
 
 menu_level_loop:
     jsr menu_delay
