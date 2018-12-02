@@ -197,7 +197,9 @@ leftDownChangeRight:
 
 leftDownChangeToStraight:
     lda RIGHT_STRAIGHT
-    sta balls_state,x       
+    sta balls_state,x   
+    jsr ball_changeOwner_2_to_1 
+
     jmp ball_update_end
 
 ;-------------------------------
@@ -220,7 +222,8 @@ rightDownChangeToUp:
 
 rightDownChangeToStraight:
     lda LEFT_STRAIGHT
-    sta balls_state,x       
+    sta balls_state,x
+    jsr ball_changeOwner_1_to_2 
     jmp ball_update_end
     
 rightDownChangeRight:
@@ -251,7 +254,8 @@ rightUpChangeToLeft:
 
 rightUpChangeToStraight:
     lda LEFT_STRAIGHT
-    sta balls_state,x       
+    sta balls_state,x
+    jsr ball_changeOwner_1_to_2 
     jmp ball_update_end
 
 rightUpChangeToDown:
@@ -280,7 +284,8 @@ ball_leftUpChangeDown:
 
 ball_leftUpChangeStraight:
     lda RIGHT_STRAIGHT
-    sta balls_state,x       
+    sta balls_state,x 
+    jsr ball_changeOwner_2_to_1      
     jmp ball_update_end
 
 ball_leftUpChangeRight:
@@ -305,7 +310,9 @@ ball_leftStraightChangeRight:
     jmp ball_update_end
 ball_leftStraightChangeStraight:
     lda RIGHT_STRAIGHT
-    sta balls_state,x       
+    sta balls_state,x  
+    jsr ball_changeOwner_2_to_1 
+         
     jmp ball_update_end
 
 ;------------------------------
@@ -325,7 +332,8 @@ rightStraightChangeToLeft:
     jmp ball_update_end
 rightStraightChangeToStraight:
     lda LEFT_STRAIGHT
-    sta balls_state,x       
+    sta balls_state,x
+    jsr ball_changeOwner_1_to_2 
     jmp ball_update_end
 
 
@@ -667,4 +675,24 @@ ball_dec_x_over_quit:
 ball_dec_x_bounds_quit:
     rts
 
+
+ball_changeOwner_1_to_2:
+    txa 
+    lsr a
+    tay
+    lda ball_player_2_color
+    sta $d027,y
+    lda ball_player_2
+    sta ball_owner,x
+    rts
+
+ball_changeOwner_2_to_1:
+    txa 
+    lsr a
+    tay
+    lda ball_player_1_color
+    sta $d027,y
+    lda ball_player_1
+    sta ball_owner,x
+    rts
 

@@ -40,7 +40,7 @@ game_deinit:
 
 
 game_isr:
-   inc $d020
+   ;inc $d020
    jsr game_isr_prepare
    bne game_isr_ret
    jmp game_isr_game
@@ -134,7 +134,7 @@ game_isr_game:
     
 gameContiniue:
    jsr score_setIsr
-   dec $d020
+   ;dec $d020
    asl $d019
    rti
 
