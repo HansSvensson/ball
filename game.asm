@@ -109,30 +109,30 @@ game_isr_game:
    jsr bat_update
    ldx #2
    jsr ball_update
-   ldx #0
-   jsr ball_update
-   ldx #4
-   jsr ball_update
-   ldx #6
-   jsr ball_update
-   ldx #8
-   jsr ball_update
-   ldx #10
-   jsr ball_update
+;   ldx #0
+;   jsr ball_update
+;   ldx #4
+;   jsr ball_update
+;   ldx #6
+;   jsr ball_update
+;   ldx #8
+;   jsr ball_update
+;   ldx #10
+;   jsr ball_update
    ;Round 2---------------
-   jsr bat_update
+;   jsr bat_update
    ldx #2
    jsr ball_update
-   ldx #0
-   jsr ball_update
-   ldx #4
-   jsr ball_update
-   ldx #6
-   jsr ball_update
-   ldx #8
-   jsr ball_update
-   ldx #10
-   jsr ball_update
+;   ldx #0
+;   jsr ball_update
+;   ldx #4
+;   jsr ball_update
+;   ldx #6
+;   jsr ball_update
+;   ldx #8
+;   jsr ball_update
+;   ldx #10
+;   jsr ball_update
    ;Update the rest-------
    jsr bonus_update
    jsr gameBgEl
