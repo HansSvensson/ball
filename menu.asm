@@ -137,11 +137,11 @@ menu_mode_exitSetTime:
 menu_level_titel .enc screen
                 .text "select level"
 menu_level_item1 .enc screen
-                .text "hack n trade"
+                .text "bashball"
 menu_level_item2 .enc screen
                 .text "iball"
 menu_level_item3 .enc screen
-                .text "random"
+                .text "technical"
 ;540 start char
 menu_level_item1_pos = $54e
 menu_level_item2_pos = $54e+$28
@@ -163,7 +163,7 @@ menu_level_i1:
     lda menu_level_item1,x
     sta menu_level_item1_pos,x
     inx
-    cpx #12
+    cpx #8
     bne menu_level_i1   
     ldx #0
 menu_level_i2:
@@ -177,7 +177,7 @@ menu_level_i3:
     lda menu_level_item3,x
     sta menu_level_item3_pos,x
     inx
-    cpx #6
+    cpx #9
     bne menu_level_i3   
     ldx #0
     ldx menu_position

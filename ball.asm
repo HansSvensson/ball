@@ -67,9 +67,6 @@ ball_init:
            lda ball_player_2_color
            sta $d02c
 
-           lda #$30
-           sta $d010    ; Pl2 sprites starts at right part screen
-
            jsr ball_resetCord
 
            lda #$80
@@ -89,17 +86,10 @@ ball_init:
            sta ball_owner+2
            sta ball_owner+4
            lda #1
-           sta balls_state
-           sta balls_state+2
-           sta balls_state+4
            lda ball_player_2
            sta ball_owner+6
            sta ball_owner+8
            sta ball_owner+10
-           lda #4
-           sta balls_state+6
-           sta balls_state+8
-           sta balls_state+10
            
             ldx #63
 fill:
@@ -115,33 +105,46 @@ fill:
 
 
 ball_resetCord:
-           lda #50
+           lda #1
+           sta balls_state
+           sta balls_state+2
+           sta balls_state+4
+           lda #4
+           sta balls_state+6
+           sta balls_state+8
+           sta balls_state+10
+           lda $d010
+           and #$C0
+           ora #$38
+           sta $d010    ; Pl2 sprites starts at right part screen
+
+           lda #30
            sta $d000    ; set x coordinate to 40
            lda #$40
            sta $d001    ; set y coordinate to 40
 
-           lda #70
+           lda #50
            sta $d002    ; set x coordinate to 40
            lda #$60
            sta $d003    ; set y coordinate to 40
 
-           lda #90
+           lda #70
            sta $d004    ; set x coordinate to 40
            lda #$80
            sta $d005    ; set y coordinate to 40
            
            
-           lda #248
+           lda #18
            sta $d006    ; set x coordinate to 40
            lda #$80
            sta $d007    ; set y coordinate to 40
            
-           lda #17
+           lda #38
            sta $d008    ; set x coordinate to 40
            lda #$60
            sta $d009    ; set y coordinate to 40
 
-           lda #37      ; left is 27in -> right 316 = 255 + 61 -> -24 sprite width => 37
+           lda #58      ; left is 27in -> right 316 = 255 + 61 -> -24 sprite width => 37
            sta $d00a    ; set x coordinate to 40
            lda #$40
            sta $d00b    ; set y coordinate to 40
