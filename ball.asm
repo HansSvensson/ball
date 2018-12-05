@@ -529,26 +529,27 @@ ball_hit_bg_calc_xy_div:
     lsr a
 ball_hit_bg_calc_xy_add:    
     adc ball_temp 
+    pha                      ;push the calulated x to the stack
+  ;------------------
+
+    lda main_temp_x
+    tax
+    lda balls_state,x
+
+    cmp #3
+    bcs ball_hit_check
+
+    pla
+    tax
+    dex
+    jmp ball_hit_check_2
+
+ball_hit_check:
+    pla
     tax
 
-    dey                      ;We start to search for at hit ABOVE the sprite
-    jsr ball_hit_char        
-    cmp #1
-    bne ball_hit_bg_bottom
-    lda TOP
-    ldx main_temp_x    
-    rts
-ball_hit_bg_bottom:
-    iny                      ;Move down and search BELOW the sprite
-    iny 
-    jsr ball_hit_char
-    cmp #1
-    bne ball_hit_bg_left
-    lda BOTTOM
-    ldx main_temp_x    
-    rts
+ball_hit_check_2:
 ball_hit_bg_left:
-    dey                      ;Check for hit to the LEFT
     dex 
     jsr ball_hit_char
     cmp #1    
@@ -561,8 +562,25 @@ ball_hit_bg_right:
     inx 
     jsr ball_hit_char
     cmp #1    
-    bne ball_hit_bg_top2
+    bne ball_hit_bg_top
     lda RIGHT
+    ldx main_temp_x    
+    rts
+ball_hit_bg_bottom:
+    iny                      ;Move down and search BELOW the sprite
+    dex
+    jsr ball_hit_char
+    cmp #1
+    bne ball_hit_bg_left
+    lda BOTTOM
+    ldx main_temp_x    
+    rts
+ball_hit_bg_top:
+    dey                      ;We start to search for at hit ABOVE the sprite
+    jsr ball_hit_char        
+    cmp #1
+    bne ball_hit_bg_top2
+    lda TOP
     ldx main_temp_x    
     rts
 ball_hit_bg_top2:
