@@ -193,12 +193,16 @@ ball_update:
     
  leftDownChangeToUp
     lda LEFT_UP
-    sta balls_state,x       
+    sta balls_state,x  
+    jsr ball_dec_x
+    dec $d001,x
     jmp ball_update_end
 
 leftDownChangeRight:
     lda RIGHT_DOWN      ;left hit -> rightDown
-    sta balls_state,x       
+    sta balls_state,x  
+    jsr ball_inc_x
+    inc $d001,x     
     jmp ball_update_end
 
 leftDownChangeToStraight:
@@ -224,6 +228,8 @@ ball_rightDown:
 rightDownChangeToUp:
     lda RIGHT_UP
     sta balls_state,x       
+    jsr ball_inc_x
+    dec $d001,x
     jmp ball_update_end
 
 rightDownChangeToStraight:
@@ -235,7 +241,8 @@ rightDownChangeToStraight:
 rightDownChangeRight:
     lda LEFT_DOWN
     sta balls_state,x       
-           
+    jsr ball_dec_x
+    inc $d001,x          
     jmp ball_update_end
 
 
@@ -255,7 +262,9 @@ ball_rightUp:
 
 rightUpChangeToLeft:
     lda LEFT_UP
-    sta balls_state,x       
+    sta balls_state,x 
+    jsr ball_dec_x
+    dec $d001,x          
     jmp ball_update_end
 
 rightUpChangeToStraight:
@@ -286,6 +295,8 @@ ball_leftUp:
 ball_leftUpChangeDown:
     lda LEFT_DOWN
     sta balls_state,x       
+    jsr ball_dec_x
+    inc $d001,x          
     jmp ball_update_end
 
 ball_leftUpChangeStraight:

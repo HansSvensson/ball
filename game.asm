@@ -119,6 +119,9 @@ game_isr_game:
    jsr ball_update
    ldx #10
    jsr ball_update
+   lda $d01f
+   sta ball_temp_d01f   ;Every one has moved once, dont remember the old moves!
+
    ;Round 2---------------
    jsr bat_update
    ldx #2

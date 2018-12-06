@@ -246,6 +246,7 @@ gameBg_hit_2_do
     bne gameBg_hit_2_Uneven       ;On uneven addresses the brick to the left should be removed.
     iny
     pla                          ;POP STACK
+    clc
     adc #$1                      ;We have the value for left but we want to store for right
     sta (main_temp_pointer),y
     rts
