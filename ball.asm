@@ -460,6 +460,44 @@ ball_hit_char:
     cmp #131
     beq ball_hit_bonus_1
 
+
+    cmp #$a0                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$a1                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$a2                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$a3                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$a4                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$a5                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$a6                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$a7                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$a8                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$a9                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$aa                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$ab                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$ac                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$ad                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$ae                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$af                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$b0                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+    cmp #$b1                      ;TODO: this must support more kinds of 
+    beq ball_hit_char_hit
+
     cmp #102                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
     cmp #103                      ;TODO: this must support more kinds of 
