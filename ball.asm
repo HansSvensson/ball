@@ -29,14 +29,15 @@ ball_temp         .byte 0
 sprite_1:
 .byte $00,$00,$00,$00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$3c,$00
+.byte $00,$00,$00,$3c,$00,$00,$eb,$00
 .byte $00,$eb,$00,$00,$eb,$00,$00,$eb
 .byte $00,$00,$eb,$00,$00,$eb,$00,$00
-.byte $3c,$00,$00,$00,$00,$00,$00,$00
+.byte $eb,$00,$00,$3c,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$85
 
-balls_state  .byte 1,0,1,0,1,0,4,0,4,0,4,1,0,1,0,1
+
+balls_state  .byte 1,0,2,0,1,0,4,0,4,0,4,1,0,1,0,1
 
 ball_player_1 = #1
 ball_player_2 = #2
@@ -276,6 +277,8 @@ rightUpChangeToStraight:
 rightUpChangeToDown:
     lda RIGHT_DOWN
     sta balls_state,x       
+    jsr ball_inc_x
+    inc $d001,x
     jmp ball_update_end
 
 
@@ -308,6 +311,8 @@ ball_leftUpChangeStraight:
 ball_leftUpChangeRight:
     lda RIGHT_UP
     sta balls_state,x       
+    jsr ball_inc_x
+    dec $d001,x          
     jmp ball_update_end
 
 ;------------------------------
@@ -471,30 +476,30 @@ ball_hit_char:
     beq ball_hit_char_hit
     cmp #$a4                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
-    cmp #$a5                      ;TODO: this must support more kinds of 
-    beq ball_hit_char_hit
+    ;cmp #$a5                      ;TODO: this must support more kinds of 
+    ;beq ball_hit_char_hit
     cmp #$a6                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
-    cmp #$a7                      ;TODO: this must support more kinds of 
-    beq ball_hit_char_hit
+    ;cmp #$a7                      ;TODO: this must support more kinds of 
+    ;beq ball_hit_char_hit
     cmp #$a8                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
-    cmp #$a9                      ;TODO: this must support more kinds of 
-    beq ball_hit_char_hit
+    ;cmp #$a9                      ;TODO: this must support more kinds of 
+    ;beq ball_hit_char_hit
     cmp #$aa                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
     cmp #$ab                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
-    cmp #$ac                      ;TODO: this must support more kinds of 
-    beq ball_hit_char_hit
+    ;cmp #$ac                      ;TODO: this must support more kinds of 
+    ;beq ball_hit_char_hit
     cmp #$ad                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
-    cmp #$ae                      ;TODO: this must support more kinds of 
-    beq ball_hit_char_hit
+    ;cmp #$ae                      ;TODO: this must support more kinds of 
+    ;beq ball_hit_char_hit
     cmp #$af                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
-    cmp #$b0                      ;TODO: this must support more kinds of 
-    beq ball_hit_char_hit
+    ;cmp #$b0                      ;TODO: this must support more kinds of 
+    ;beq ball_hit_char_hit
     cmp #$b1                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
 
@@ -549,7 +554,7 @@ ball_hit_bg:
     lda $d010                ;If sprite is on the right part of the screen above pixel 255
     and ball_bitfield,y
     beq ball_hit_bg_less_FF
-    ldy #$1f                 ;256 equals 32 chars
+    ldy #$20                 ;256 equals 32 chars
     sty ball_temp
     jmp ball_hit_bg_calc_xy
 ball_hit_bg_less_FF:
@@ -559,7 +564,7 @@ ball_hit_bg_less_FF:
 ball_hit_bg_calc_xy    
     lda $d001,x              ;We Want sprites Y value converted to Char cord (40*25) in REG Y
     clc
-    adc #$D9                 ;Screen start at 50, sprite center 11 pixel => 0xD9
+    adc #$D8                 ;Screen start at 50, sprite center 11 pixel => 0xD9
     lsr a
     lsr a
     lsr a
@@ -585,64 +590,117 @@ ball_hit_bg_calc_xy_add:
     tax
     lda balls_state,x
 
-    cmp #3
-    bcs ball_hit_check
+    cmp RIGHT_DOWN
+    beq ball_hit_check_right_down
+    cmp RIGHT_UP
+    beq ball_hit_check_right_up
+    cmp LEFT_UP
+    beq ball_hit_check_left_up
+    cmp LEFT_DOWN
+    beq ball_hit_check_left_down
+    cmp LEFT_STRAIGHT
+    beq ball_hit_check_left_straight
+    cmp RIGHT_STRAIGHT
+    beq ball_hit_check_right_straight
 
+    lda NONE
+    rts
+
+
+ball_hit_check_right_down:
     pla
     tax
     dex
-    jmp ball_hit_check_2
-
-ball_hit_check:
+    jsr ball_hit_bg_right
+    cmp NONE
+    bne ball_hit_check_end
+    jsr ball_hit_bg_bottom
+    jmp ball_hit_check_end
+ball_hit_check_right_up:
     pla
     tax
+    dex
+    jsr ball_hit_bg_right
+    cmp NONE
+    bne ball_hit_check_end
+    jsr ball_hit_bg_top
+    jmp ball_hit_check_end
+ball_hit_check_left_up:
+    pla
+    tax
+    jsr ball_hit_bg_left
+    cmp NONE
+    bne ball_hit_check_end
+    jsr ball_hit_bg_top
+    jmp ball_hit_check_end
+ball_hit_check_left_down:
+    pla
+    tax
+    jsr ball_hit_bg_left
+    cmp NONE
+    bne ball_hit_check_end
+    jsr ball_hit_bg_bottom
+    jmp ball_hit_check_end
+ball_hit_check_left_straight:
+    pla
+    tax
+    jsr ball_hit_bg_left
+    jmp ball_hit_check_end
+ball_hit_check_right_straight:
+    pla
+    tax
+    jsr ball_hit_bg_right
+    jmp ball_hit_check_end
 
-ball_hit_check_2:
+
+
+ball_hit_check_end
+    ldx main_temp_x           ; TODO this one returns 0 but shohould be NONW!!!
+    rts
+
+ball_hit_bg_no:
+    lda NONE                    ;NONE         ; TODO: WAS ZERO CHANGED TO NONE!!!!!!
+    rts
+
 ball_hit_bg_left:
     dex 
     jsr ball_hit_char
+    inx
     cmp #1    
-    bne ball_hit_bg_right
+    bne ball_hit_bg_no
     lda LEFT
-    ldx main_temp_x    
     rts
 ball_hit_bg_right:
-    inx                      ;Check for hit RIGHT to the sprite
     inx 
     jsr ball_hit_char
+    dex
     cmp #1    
-    bne ball_hit_bg_top
+    bne ball_hit_bg_no
     lda RIGHT
-    ldx main_temp_x    
     rts
 ball_hit_bg_bottom:
     iny                      ;Move down and search BELOW the sprite
-    dex
     jsr ball_hit_char
+    dey
     cmp #1
-    bne ball_hit_bg_left
+    bne ball_hit_bg_no
     lda BOTTOM
-    ldx main_temp_x    
     rts
 ball_hit_bg_top:
     dey                      ;We start to search for at hit ABOVE the sprite
     jsr ball_hit_char        
+    iny
     cmp #1
-    bne ball_hit_bg_top2
+    bne ball_hit_bg_no
     lda TOP
-    ldx main_temp_x    
     rts
 ball_hit_bg_top2:
-    dex                      ;search for hit inside the sprite, TODO: needed??
     jsr ball_hit_char
     cmp #1    
-    bne ball_hit_bg_none
+    bne ball_hit_bg_no
     lda TOP
-    ldx main_temp_x    
     rts
 
-    ldx main_temp_x
-    rts
 ball_hit_bg_none:
     lda NONE
     ldx main_temp_x
