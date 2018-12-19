@@ -106,7 +106,7 @@ bonus_print:
     sta $40f
     ldx ball_player_2
     jsr bonus_print_eval
-    sta $417
+    sta $418
     rts
 
 bonus_print_eval:

@@ -3,7 +3,7 @@ menu:
     
     ;Clean up
     jsr menu_cleanChar
-    lda #1
+    lda #0
     sta menu_position
     ;init
     ;Set charset
@@ -17,7 +17,7 @@ menu:
 
     jsr menu_move_color
     jsr menu_mode
-    lda #1
+    lda #0
     sta menu_position
     jsr menu_level
     jsr menu_cleanChar
@@ -59,20 +59,20 @@ menu_time     .byte 0    ;equals the time in x*10 seconds
 menu_nr_alt   .byte 0
 ;------------------TIME MODE MENU--------------------- 
 menu_mode_titel .enc screen
-                .text "game modes"
+                .text "game time"
 menu_mode_item1 .enc screen
-                .text "unlimited time"
+                .text " 30 seconds"
 menu_mode_item2 .enc screen
-                .text "30 seconds"
+                .text " 60 seconds"
 menu_mode_item3 .enc screen
-                .text "60 seconds"
+                .text " 90 seconds"
 menu_mode_item4 .enc screen
-                .text "90 seconds"
+                .text "120 seconds"
 
-menu_item1_pos = $525+$28
-menu_item2_pos = $525+$50
-menu_item3_pos = $525+$78
-menu_item4_pos = $525+$a0
+menu_item1_pos = $526+$28
+menu_item2_pos = $526+$50
+menu_item3_pos = $526+$78
+menu_item4_pos = $526+$a0
 
 menu_mode:
     lda #3
@@ -89,28 +89,28 @@ menu_mode_i1:
     lda menu_mode_item1,x
     sta menu_item1_pos,x
     inx
-    cpx #14
+    cpx #11
     bne menu_mode_i1   
     ldx #0
 menu_mode_i2:
     lda menu_mode_item2,x
     sta menu_item2_pos,x
     inx
-    cpx #10
+    cpx #11
     bne menu_mode_i2   
     ldx #0
 menu_mode_i3:
     lda menu_mode_item3,x
     sta menu_item3_pos,x
     inx
-    cpx #10
+    cpx #11
     bne menu_mode_i3   
     ldx #0
 menu_mode_i4:
     lda menu_mode_item4,x
     sta menu_item4_pos,x
     inx
-    cpx #10
+    cpx #11
     bne menu_mode_i4   
 
 menu_mode_loop:
@@ -124,10 +124,6 @@ menu_mode_loop:
     jmp menu_mode_loop
 
 menu_mode_exit:
-    lda menu_position
-    bne menu_mode_exitSetTime
-    rts
-menu_mode_exitSetTime:
     lda menu_time
     jsr score_timeSet
     rts
@@ -293,6 +289,8 @@ menu_move_color_i1_loop:
     inx
     cpx #40
     bne menu_move_color_i1_loop
+    lda #3
+    sta menu_time    
     rts    
 
 menu_move_color_i2:
@@ -302,7 +300,7 @@ menu_move_color_i2_loop:
     inx
     cpx #40
     bne menu_move_color_i2_loop
-    lda #3
+    lda #6
     sta menu_time    
     rts    
 
@@ -313,7 +311,7 @@ menu_move_color_i3_loop:
     inx
     cpx #40
     bne menu_move_color_i3_loop    
-    lda #6
+    lda #9
     sta menu_time    
     rts    
 
@@ -324,7 +322,7 @@ menu_move_color_i4_loop:
     inx
     cpx #40
     bne menu_move_color_i4_loop    
-    lda #9
+    lda #0
     sta menu_time    
     rts    
 

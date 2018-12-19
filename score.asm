@@ -192,29 +192,46 @@ score_print:
     sta $415
     lda score_time+1
     sta $416
+    lda score_time+2
+    sta $417
     rts
 
 score_timeEndGame     .byte 0        ; 0 = time has ended    1 = time is set
 score_timeFCount      .byte 50
-score_time            .byte 48,48
+score_time            .byte 48,48, 48
 
 score_timeSet:
+    bne score_timeSetLow
+    lda #49
+    sta score_time
+    lda #50
+    sta score_time+1
+    lda #48
+    sta score_time+2
+    lda #0
+    sta score_timeEndGame
+    rts
+score_timeSetLow:
     clc
     adc #48
-    sta score_time
-    lda #48
     sta score_time+1
-    sta score_timeEndGame
+    lda #48
+    sta score_time
+    sta score_time+2
     lda #50
     sta score_timeFCount
-
-
-score_timeDec:
-    lda game_mode
-    bne score_timeDecMode
+    lda #0
+    sta score_timeEndGame
     rts
 
-score_timeDecMode
+score_timeDec:
+    clc
+    lda score_time
+    adc score_time+1
+    adc score_time+2
+    cmp #144   ;48*3
+    beq score_timeEndGameSet
+    
     lda score_timeFCount
     beq score_timeFCountZero
     dec score_timeFCount
@@ -222,19 +239,29 @@ score_timeDecMode
 score_timeFCountZero
     lda #50
     sta score_timeFCount
-    lda score_time+1
+    lda score_time+2
     cmp #48
     beq score_timeTenth
-    dec score_time+1
+    dec score_time+2
     rts
 score_timeTenth:
+    lda #57
+    sta score_time+2    
+    lda score_time+1
+    cmp #48
+    beq score_timeHundred
+    dec score_time+1
+    rts
+score_timeHundred:
     lda score_time
     cmp #48
     beq score_timeEndGameSet
-    dec score_time
     lda #57
-    sta score_time+1
+    sta score_time+1    
+    sta score_time+2    
+    dec score_time
     rts
+
 score_timeEndGameSet:
     lda #1
     sta score_timeEndGame

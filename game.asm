@@ -156,12 +156,12 @@ gameContiniue:
 
 ;------------------Check if game finished 0=run game, 1=Quit game----------
 gameEnded:
-    lda game_mode         ;game mode = 0 All bricks must be destroyes, otherwise time is used.
-    bne gameEndedTime
-    jsr gameBg_empty      ;Returns 0 if game should cont.
-    sta game_running
-    rts
-gameEndedTime:
+   ; lda game_mode         ;game mode = 0 All bricks must be destroyes, otherwise time is used.
+   ; bne gameEndedTime
+   ; jsr gameBg_empty      ;Returns 0 if game should cont.
+   ; sta game_running
+   ; rts
+;gameEndedTime:
     lda score_timeEndGame ;loads zero if game should cont.
     sta game_running
     rts

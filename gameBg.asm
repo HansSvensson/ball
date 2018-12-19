@@ -156,6 +156,7 @@ gameBg_printScoreColor:
     sta $d827
     sta $d815
     sta $d816
+    sta $d817
 
     lda #11
     sta $d80c
@@ -165,7 +166,7 @@ gameBg_printScoreColor:
 
     lda #2
     sta $d80f
-    sta $d817
+    sta $d818
     rts
 
 
