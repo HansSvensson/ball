@@ -65,6 +65,10 @@ bonus_activate:
     beq bonus_op_larger
     cmp #$83
     beq bonus_op_larger
+    cmp #$84
+    beq bonus_op_ownAll
+    cmp #$85
+    beq bonus_op_ownAll
     rts
 
 bonus_op_smaller:
@@ -78,6 +82,9 @@ bonus_op_larger:
     jsr bat_bonus_larger
     rts
 
+bonus_op_ownAll:
+    jsr ball_changeOwnerAll
+    rts
 
 
 ;-----------------DeActivate Bonus--------------------

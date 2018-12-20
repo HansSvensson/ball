@@ -464,6 +464,10 @@ ball_hit_char:
     beq ball_hit_bonus_1
     cmp #131
     beq ball_hit_bonus_1
+    cmp #132
+    beq ball_hit_bonus_1
+    cmp #133
+    beq ball_hit_bonus_1
 
 
     cmp #$a0                      ;TODO: this must support more kinds of 
@@ -825,5 +829,54 @@ ball_changeOwner_2_to_1:
     sta $d027,y
     lda ball_player_1
     sta ball_owner,x
+    rts
+
+
+
+;--------------Reset all balls--------------------
+ball_changeOwnerAll:
+    txa
+    pha
+    tya
+    pha
+
+    lda ball_owner,x
+    cmp #2
+    beq ball_changeOwnerAll_2
+
+    ldx #0
+    jsr ball_changeOwner_1_to_2
+    ldx #2
+    jsr ball_changeOwner_1_to_2
+    ldx #4
+    jsr ball_changeOwner_1_to_2
+    ldx #6
+    jsr ball_changeOwner_1_to_2
+    ldx #8
+    jsr ball_changeOwner_1_to_2
+    ldx #10
+    jsr ball_changeOwner_1_to_2     
+
+    jmp ball_changeOwnerAll_end
+
+ball_changeOwnerAll_2
+    ldx #0
+    jsr ball_changeOwner_2_to_1
+    ldx #2
+    jsr ball_changeOwner_2_to_1
+    ldx #4
+    jsr ball_changeOwner_2_to_1
+    ldx #6
+    jsr ball_changeOwner_2_to_1
+    ldx #8
+    jsr ball_changeOwner_2_to_1
+    ldx #10
+    jsr ball_changeOwner_2_to_1     
+
+ball_changeOwnerAll_end:    
+    pla
+    tay
+    pla
+    tax
     rts
 
