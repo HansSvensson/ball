@@ -2,6 +2,7 @@
 game_mode        .byte 0
 game_running     .byte 0   ;0=keep running the game    1=quit game
 game_init_state: .byte 0
+game_speedCnt    .byte 0
 
 game_init:
 
@@ -13,6 +14,9 @@ game_init:
     lda #0
     sta game_running
     jsr game_setIsr
+   
+    lda #2
+    sta game_speedCnt
     
     lda #190
     sta game_init_state
@@ -123,6 +127,10 @@ game_isr_game:
    sta ball_temp_d01f   ;Every one has moved once, dont remember the old moves!
 
    ;Round 2---------------
+   dec game_speedCnt
+   bne game_rest
+   lda #2
+   sta game_speedCnt
    jsr bat_update
    ldx #2
    jsr ball_update
@@ -137,6 +145,7 @@ game_isr_game:
    ldx #10
    jsr ball_update
    ;Update the rest-------
+game_rest:
    jsr bonus_update
    jsr gameBgEl
    jsr score_timeDec
