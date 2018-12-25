@@ -7,6 +7,11 @@ LEFT   = #3
 RIGHT_BAT  = #4
 LEFT_BAT   = #5
 NONE   = #6
+RIGHT_BAT_UP   = #7
+RIGHT_BAT_DOWN = #8
+LEFT_BAT_UP    = #9
+LEFT_BAT_DOWN  = #10
+
 
 ; 1  =  Right down
 ; 2  =  Right up
@@ -92,11 +97,12 @@ ball_init:
            sta ball_owner+8
            sta ball_owner+10
            
-            ldx #63
+            ldx #0
 fill:
             lda sprite_1,x
             sta $2000,x
-            dex
+            inx
+            cpx #63
             bne fill
 
             lda #0
@@ -188,6 +194,10 @@ ball_update:
     beq leftDownChangeToUp
     cmp LEFT_BAT
     beq leftDownChangeToStraight
+    cmp LEFT_BAT_UP
+    beq leftDownChangeToBack
+    cmp LEFT_BAT_UP
+    beq leftDownChangeRight
     jsr ball_dec_x
     inc $d001,x
     jmp ball_update_end
@@ -206,6 +216,13 @@ leftDownChangeRight:
     inc $d001,x     
     jmp ball_update_end
 
+leftDownChangeToBack:
+    lda RIGHT_UP
+    sta balls_state,x  
+    jsr ball_inc_x
+    dec $d001,x     
+    jmp ball_update_end
+
 leftDownChangeToStraight:
     lda RIGHT_STRAIGHT
     sta balls_state,x   
@@ -222,6 +239,11 @@ ball_rightDown:
     beq rightDownChangeToUp
     cmp RIGHT_BAT
     beq rightDownChangeToStraight
+    cmp RIGHT_BAT_UP
+    beq rightDownChangeToBack
+    cmp RIGHT_BAT_DOWN
+    beq rightDownChangeRight
+
     jsr ball_inc_x
     inc $d001,x
     jmp ball_update_end
@@ -246,6 +268,13 @@ rightDownChangeRight:
     inc $d001,x          
     jmp ball_update_end
 
+rightDownChangeToBack:
+    lda LEFT_UP
+    sta balls_state,x       
+    jsr ball_dec_x
+    dec $d001,x
+    jmp ball_update_end
+
 
 
 ;------------------------------
@@ -257,6 +286,10 @@ ball_rightUp:
     beq rightUpChangeToDown
     cmp RIGHT_BAT
     beq rightUpChangeToStraight
+    cmp RIGHT_BAT_UP
+    beq rightUpChangeToLeft
+    cmp RIGHT_BAT_DOWN
+    beq rightUpChangeToBack
     jsr ball_inc_x
     dec $d001,x
     jmp ball_update_end
@@ -281,6 +314,13 @@ rightUpChangeToDown:
     inc $d001,x
     jmp ball_update_end
 
+rightUpChangeToBack:
+    lda LEFT_DOWN
+    sta balls_state,x       
+    jsr ball_dec_x
+    inc $d001,x
+    jmp ball_update_end
+
 
 ;------------------------------
 ball_leftUp:
@@ -291,6 +331,10 @@ ball_leftUp:
     beq ball_leftUpChangeRight
     cmp LEFT_BAT
     beq ball_leftUpChangeStraight
+    cmp LEFT_BAT_DOWN
+    beq ball_leftUpChangeBack
+    cmp LEFT_BAT_UP
+    beq ball_leftUpChangeRight
     jsr ball_dec_x
     dec $d001,x       
     jmp ball_update_end
@@ -313,6 +357,13 @@ ball_leftUpChangeRight:
     sta balls_state,x       
     jsr ball_inc_x
     dec $d001,x          
+    jmp ball_update_end
+
+ball_leftUpChangeBack:
+    lda RIGHT_DOWN
+    sta balls_state,x       
+    jsr ball_inc_x
+    inc $d001,x          
     jmp ball_update_end
 
 ;------------------------------

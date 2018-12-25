@@ -214,6 +214,16 @@ bat_hit_1:
            jmp bat_hit1_exit
 bat_hit_1_left:
            ldy LEFT
+           lda $DC01              ;if bat moves counter the ball move
+           and #%00000001
+           bne bat_hit1_down
+           ldy LEFT_BAT_UP
+           jmp bat_hit1_exit
+bat_hit1_down:           
+           lda $DC01
+           and #%00000010
+           bne bat_hit1_exit
+           ldy LEFT_BAT_DOWN            
 bat_hit1_exit:
            lda #%01000000
            jmp bat_hit
@@ -226,8 +236,19 @@ bat_hit_2:
            jmp bat_hit2_exit
 bat_hit_2_right:
            ldy RIGHT
+           lda $DC00
+           and #%00000001
+           bne bat_hit2_down
+           ldy RIGHT_BAT_UP
+           jmp bat_hit2_exit
+bat_hit2_down:           
+           lda $DC00
+           and #%00000010
+           bne bat_hit2_exit
+           ldy RIGHT_BAT_DOWN            
 bat_hit2_exit:
            lda #%10000000
+           jmp bat_hit
 
 bat_hit:
             and ball_temp_d01e
