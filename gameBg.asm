@@ -63,7 +63,9 @@ gameBg_fillBottom:
     sta $4A0
     sta $4C8
     sta $4F0
+    sta $518
 
+    sta $6a8
     sta $6D0
     sta $6F8
     sta $720
@@ -77,7 +79,9 @@ gameBg_fillBottom:
     sta $4C7
     sta $4ef
     sta $517
+    sta $53f
 
+    sta $6cf
     sta $6F7
     sta $71F
     sta $747
@@ -87,6 +91,27 @@ gameBg_fillBottom:
 
     jsr gameBg_setMulticolor
     
+    ;-----------set el color and chars------------
+    lda #11
+    sta $d940
+    sta $d968
+    sta $d990
+    sta $d9b8
+    sta $d9e0
+    sta $da08
+    sta $da30
+    sta $da58
+    sta $da80
+    sta $d967
+    sta $d98f
+    sta $d9b7
+    sta $d9df
+    sta $da07
+    sta $da2f
+    sta $da57
+    sta $da7f
+    sta $daa7
+
     jsr gameBgEl
 
     ;jsr gameBg_printScore
@@ -293,7 +318,7 @@ gameElframeStateOne:
     ldx #96
 
 gameElframeStateCopy:
-    sta $518
+   ; sta $518
     stx $540
     sta $568
     stx $590
@@ -303,9 +328,9 @@ gameElframeStateCopy:
     stx $630
     sta $658
     stx $680
-    sta $6a8
+   ; sta $6a8
 
-    sta $53f
+   ; sta $53f
     stx $567
     sta $58f
     stx $5b7
@@ -315,7 +340,7 @@ gameElframeStateCopy:
     stx $657
     sta $67f
     stx $6a7
-    stx $6cf
+   ; stx $6cf
 
 gameBgElQuit:
     dec gameElframeCount

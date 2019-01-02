@@ -56,7 +56,7 @@ bat_init:
            lda #05
            sta $d02E
 
-           lda #$1c
+           lda #$1a
            sta bat_1_cordX    ; set x coordinate to 40
            lda #100
            sta bat_1_cordY    ; set y coordinate to 40
@@ -127,12 +127,14 @@ bat_update1_up:
             bcc bat_update_2
             dec bat_1_cordY 
             dec bat_1_cordY 
+            dec bat_1_cordY 
             jmp bat_update_2
 
 bat_update1_down:
             lda bat_1_cordY
             cmp bat_bottom
             bcs bat_update_2
+            inc bat_1_cordY 
             inc bat_1_cordY 
             inc bat_1_cordY 
 
@@ -151,12 +153,14 @@ bat_update2_up:
             bcc bat_update_bash
             dec bat_2_cordY 
             dec bat_2_cordY 
+            dec bat_2_cordY 
             jmp bat_update_bash
 
 bat_update2_down:
             lda bat_2_cordY
             cmp bat_bottom
             bcs bat_update_bash
+            inc bat_2_cordY 
             inc bat_2_cordY 
             inc bat_2_cordY 
 
