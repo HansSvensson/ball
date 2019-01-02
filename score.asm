@@ -268,7 +268,10 @@ score_timeEndGameSet:
     rts
 
 
-
+score_lastTenSec:
+    lda score_time+1
+    cmp #48
+    rts
 
 
 Score_isrEnd:

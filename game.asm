@@ -181,13 +181,15 @@ gameEnded:
 game_levelChange_sec .byte 0
 game_levelChange_frm .byte 0
 game_levelChange_cnt .byte 0
-game_levelChagne_lim = #20
+game_levelChagne_lim = #30
 
 game_levelChange:
+    jsr score_lastTenSec
+    beq game_levelChangeEnd        ;then the game is ending we dont chagne background!
     dec game_levelChange_frm       ;run frame counter to get seconds
     lda game_levelChange_frm
     bne game_levelChangeEnd
-    lda #50
+    lda #51
     sta game_levelChange_frm
     dec game_levelChange_sec       ;One second has elapsed
     lda game_levelChange_sec
