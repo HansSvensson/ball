@@ -1,12 +1,22 @@
 bat_1:
-.byte $00,$5c,$00,$00,$5c,$00,$02,$ba
-.byte $00,$02,$ba,$00,$02,$ba,$00,$00
-.byte $00,$00,$01,$d5,$00,$01,$d5,$00
-.byte $01,$d5,$00,$01,$d5,$00,$01,$d5
-.byte $00,$01,$d5,$00,$01,$d5,$00,$01
-.byte $d5,$00,$01,$d5,$00,$00,$00,$00
-.byte $02,$ba,$00,$02,$ba,$00,$02,$ba
-.byte $00,$00,$5c,$00,$00,$5c,$00,$82
+.byte $00,$ff,$00,$03,$aa,$c0,$03,$aa
+.byte $c0,$03,$ff,$c0,$03,$aa,$c0,$03
+.byte $aa,$c0,$03,$aa,$c0,$03,$aa,$c0
+.byte $03,$aa,$c0,$03,$aa,$c0,$03,$aa
+.byte $c0,$03,$aa,$c0,$03,$aa,$c0,$03
+.byte $aa,$c0,$03,$aa,$c0,$03,$aa,$c0
+.byte $03,$aa,$c0,$03,$ff,$c0,$03,$aa
+.byte $c0,$03,$aa,$c0,$00,$ff,$00,$8f
+;.byte $00,$5c,$00,$00,$5c,$00,$02,$ba
+;.byte $00,$02,$ba,$00,$02,$ba,$00,$00
+;.byte $00,$00,$01,$d5,$00,$01,$d5,$00
+;.byte $01,$d5,$00,$01,$d5,$00,$01,$d5
+;.byte $00,$01,$d5,$00,$01,$d5,$00,$01
+;.byte $d5,$00,$01,$d5,$00,$00,$00,$00
+;.byte $02,$ba,$00,$02,$ba,$00,$02,$ba
+;.byte $00,$00,$5c,$00,$00,$5c,$00,$82
+
+
 
 bat_small:
 .byte $00,$00,$00,$00,$00,$00,$00,$00
@@ -64,14 +74,14 @@ bat_init:
            ora #$C0
            sta $d01c
            
-           lda #$06     ;sprite multicolor 1
+           lda #12     ;sprite multicolor 1
            sta $D025
-           lda #$01     ;sprite multicolor 2
+           lda #11     ;sprite multicolor 2
            sta $D026 
            
-           lda #$05     ;sprite 6 individual
+           lda #15     ;sprite 6 individual
            sta $D02d 
-           lda #$02     ;sprite 7 individual
+           lda #12     ;sprite 7 individual
            sta $D02e 
 
            lda #0
