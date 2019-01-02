@@ -812,13 +812,13 @@ ball_inc_x_bounds:
     sta $d010
     lda #12
     sta $d000,x
-    lda ball_player_1            ;Change balls owner since it changed side
-    sta ball_owner,x
-    txa
-    lsr a
-    tay
-    lda ball_player_1_color
-    sta $d027,y
+    ;lda ball_player_1            ;Change balls owner since it changed side
+    ;sta ball_owner,x
+    ;txa
+    ;lsr a
+    ;tay
+    ;lda ball_player_1_color
+    ;sta $d027,y
 ball_inc_x_bounds_quit:
     rts
 ;---------------------
@@ -857,13 +857,13 @@ ball_dec_x_over_quit:
     sta $d010
     lda #80
     sta $d000,x
-    lda ball_player_2            ;Change balls owner since it changed side
-    sta ball_owner,x
-    txa
-    lsr a
-    tay
-    lda ball_player_2_color
-    sta $d027,y
+    ;lda ball_player_2            ;Change balls owner since it changed side
+    ;sta ball_owner,x
+    ;txa
+    ;lsr a
+    ;tay
+    ;lda ball_player_2_color
+    ;sta $d027,y
     
     lda #0                       ;set the zero bit
 ball_dec_x_bounds_quit:
