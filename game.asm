@@ -10,6 +10,7 @@ game_init:
     jsr ball_init
     jsr bat_init
     jsr score_init
+    jsr sound_init_game
 
     lda #0
     sta game_running

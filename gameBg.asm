@@ -398,7 +398,7 @@ gameBg_empty_not:
 
                         ;    0    1    2    3    4    5    6    7    8    9    a    b   c   d  e  f   10  11  12
 gamebg_field_color: .byte    0,  $6,   3,   5,   6,   7,   9,   8,   9,  $1,  13,  13, 13, 13, 13,13, 13, 13, 13
-gamebg_field_char:  .byte  $20, $4e, $4e, $40, $40, $40, $84, $40, $80, $82, $a0, $a2,$a4,$a6,$a8,$aa,$ac,$ae,$b0
+gamebg_field_char:  .byte  $20, $4e, $40, $40, $40, $40, $84, $40, $80, $82, $a0, $a2,$a4,$a6,$a8,$aa,$ac,$ae,$b0
 gameBg_color: .byte 0
 gameBg_char:  .byte 0
 gamebg_field = 2

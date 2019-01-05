@@ -1,6 +1,5 @@
 ;-------------------Does init and function blocking---------------------
 menu:
-    
     ;Clean up
     jsr menu_cleanChar
     lda #0
@@ -199,13 +198,11 @@ menu_level_exit:
 
 
 menu_delay:
-    ldx #50
+    lda #0
+    sta sound_delay_cnt
 menu_delay_loop:
-    lda $d012
-    cmp #1
-    bne menu_delay_loop
-    dex
-    cpx #0
+    lda sound_delay_cnt
+    cmp sound_delay_lim
     bne menu_delay_loop
     rts
 

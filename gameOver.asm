@@ -4,7 +4,7 @@ gameOverTextEqual .enc screen
              .text "Equal, no winner!"
 
 gameOver:
-
+    jsr sound_init_menu
     lda $d018          ;set location of charset
     and #$f1
     ora #$5

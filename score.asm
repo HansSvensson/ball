@@ -355,7 +355,7 @@ Score_IsrEndStable:
 
 
 ;stable
-    jsr game_setIsr
+    jsr sound_setIsr
     nop
     nop
     nop

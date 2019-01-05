@@ -43,7 +43,7 @@ clearing:
            ;cli
  
            ;jsr intro
-
+           jsr sound_init_menu
 loop:
            jsr menu
            jsr game_init
@@ -63,3 +63,4 @@ loopGameRunning:
 .include "gameOver.asm"
 .include "menu.asm"
 .include "bonus.asm"
+.include "sound.asm"
