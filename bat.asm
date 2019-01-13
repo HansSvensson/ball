@@ -1,12 +1,12 @@
 bat_1:
-.byte $00,$ff,$00,$03,$aa,$c0,$03,$aa
-.byte $c0,$03,$ff,$c0,$03,$aa,$c0,$03
-.byte $aa,$c0,$03,$aa,$c0,$03,$aa,$c0
-.byte $03,$aa,$c0,$03,$aa,$c0,$03,$aa
-.byte $c0,$03,$aa,$c0,$03,$aa,$c0,$03
-.byte $aa,$c0,$03,$aa,$c0,$03,$aa,$c0
-.byte $03,$aa,$c0,$03,$ff,$c0,$03,$aa
-.byte $c0,$03,$aa,$c0,$00,$ff,$00,$8f
+.byte $00,$fc,$00,$03,$ab,$00,$03,$ab
+.byte $00,$03,$ff,$00,$03,$ab,$00,$03
+.byte $ab,$00,$03,$ab,$00,$03,$ab,$00
+.byte $03,$ab,$00,$03,$ab,$00,$03,$ab
+.byte $00,$03,$ab,$00,$03,$ab,$00,$03
+.byte $ab,$00,$03,$ab,$00,$03,$ab,$00
+.byte $03,$ab,$00,$03,$ff,$00,$03,$ab
+.byte $00,$03,$ab,$00,$00,$fc,$00,$8f
 ;.byte $00,$5c,$00,$00,$5c,$00,$02,$ba
 ;.byte $00,$02,$ba,$00,$02,$ba,$00,$00
 ;.byte $00,$00,$01,$d5,$00,$01,$d5,$00
@@ -56,12 +56,12 @@ bat_init:
            lda #05
            sta $d02E
 
-           lda #$1a
+           lda #$18
            sta bat_1_cordX    ; set x coordinate to 40
            lda #100
            sta bat_1_cordY    ; set y coordinate to 40
 
-           lda #$3e
+           lda #$40
            sta bat_2_cordX    ; set x coordinate to 40
            lda #100
            sta bat_2_cordY    ; set y coordinate to 40

@@ -1,6 +1,6 @@
 
 sound_delay_cnt: .byte 0
-sound_delay_lim = 20
+sound_delay_lim = #15
 
 sound_init_game:
     lda #0
