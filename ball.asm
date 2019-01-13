@@ -50,7 +50,7 @@ sprite_1:
 .byte $00,$00,$00,$00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$8f
 
-balls_state  .byte 1,0,2,0,1,0,4,0,4,0,4,1,0,1,0,1
+balls_state  .byte 1,0,1,0,1,0,4,0,4,0,4,1,0,1,0,1
 
 ball_player_1 = #1
 ball_player_2 = #2
@@ -638,7 +638,7 @@ ball_hit_bg_calc_xy
     clc
     adc #$F4                 ;Screen start at 24, sprite center 12 pixel => 0xF4
     bcs ball_hit_bg_calc_xy_div
-    lda #$ff
+    lda #$0                 ;TODO: WHY do I subtract??? :)
     jmp ball_hit_bg_calc_xy_add
 ball_hit_bg_calc_xy_div:    
     lsr a
@@ -646,7 +646,11 @@ ball_hit_bg_calc_xy_div:
     lsr a
 ball_hit_bg_calc_xy_add:    
     adc ball_temp 
+    cmp #0                  ; we are outside of field!
+    beq ball_hit_bg_none
     pha                      ;push the calulated x to the stack
+    
+
   ;------------------
 
     lda main_temp_x
