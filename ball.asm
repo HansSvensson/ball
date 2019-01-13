@@ -612,7 +612,7 @@ ball_hit_bg:
     sta ball_temp_d01f      
     lda ball_bitfield,y
     and ball_temp_d01f
-    beq ball_hit_bg_none
+  ;  beq ball_hit_bg_none
     
     lda $d010                ;If sprite is on the right part of the screen above pixel 255
     and ball_bitfield,y
