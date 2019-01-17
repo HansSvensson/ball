@@ -164,6 +164,7 @@ game_isrAfterUpdate:
 gameContiniue:
    jsr score_setIsr
    ;dec $d020
+   jsr sound_setIsr
    asl $d019
    rti
 
