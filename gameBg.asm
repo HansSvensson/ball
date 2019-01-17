@@ -7,6 +7,7 @@ gameBg_init:
     
     lda #0
     sta gameBg_levelSub
+    jsr gameBg_init_bg
 
     ;----------fill fg color-------
     lda #10     ;FOREGROUND COLOR
@@ -18,6 +19,35 @@ gameBg_fill_foreground:
     sta $db00,x
     inx
     bne gameBg_fill_foreground
+
+    lda #6     ;FOREGROUND COLOR
+    ldx #1
+gameBg_fill_foreground_2:
+    sta $d850,x
+    sta $d878,x
+    sta $d8a0,x
+    sta $d8c8,x
+    sta $d8f0,x
+    sta $d918,x
+    sta $d940,x
+    sta $d968,x
+    sta $d990,x
+    sta $d9b8,x
+    sta $d9e0,x
+    sta $da08,x
+    sta $da30,x
+    sta $da58,x
+    sta $da80,x
+    sta $daa8,x
+    sta $dad0,x
+    sta $daf8,x
+    sta $db20,x
+    sta $db48,x
+    sta $db70,x
+    sta $db98,x
+    inx
+    cpx #39
+    bne gameBg_fill_foreground_2
 
     jsr gameBg_print
         
@@ -112,6 +142,8 @@ gameBg_fillBottom:
     sta $da7f
     sta $daa7
 
+    lda #0
+    sta gameElframeCount
     jsr gameBgEl
 
     ;jsr gameBg_printScore
@@ -196,6 +228,18 @@ gameBg_printScoreColor:
 
 
 
+gameBg_init_bg:
+    ldx #$0
+    lda #32
+gameBg_init_bg_clearing:
+    sta $400,x
+    sta $500,x
+    sta $600,x
+    sta $700,x
+    inx
+    bne gameBg_init_bg_clearing
+    rts
+
 gameBg_setMulticolor:
     ;----------------set ut multicolor charset
     lda $d018
@@ -217,25 +261,41 @@ gameBg_setMulticolor:
     rts
 
 
+main_temp_pointer_2 = 8
 ;-----------------------Check for hit between BG and sprite----------------
 gameBg_hit_1:
     lda #32
     ldy #0    
     sta (main_temp_pointer),y     ;Use the pointer we just created.
+  
+    lda main_temp_pointer  
+    sta main_temp_pointer_2  
+    lda main_temp_pointer+1       ;clear background color
+    clc
+    adc #$d4
+    sta main_temp_pointer_2+1 
+    lda #6
+    sta (main_temp_pointer_2),y
+
     lda main_temp_pointer         ;On even addresses the brick to the right should be removed.
     and #1                                  
     bne gameBg_hit_1_Uneven       ;On uneven addresses the brick to the left should be removed.
     iny
     lda #32
     sta (main_temp_pointer),y
+    lda #6
+    sta (main_temp_pointer_2),y
     jmp gameBg_hit_1_score
 gameBg_hit_1_Uneven:       
     lda main_temp_pointer         ;On even addresses the brick to the right should be removed.
     clc
     adc #$ff
     sta main_temp_pointer
+    sta main_temp_pointer_2
     lda #32
     sta (main_temp_pointer),y     ;Use the pointer we just created.
+    lda #6
+    sta (main_temp_pointer_2),y
 
 gameBg_hit_1_score:
     jsr gameBg_bricksLeft

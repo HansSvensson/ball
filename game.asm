@@ -10,6 +10,9 @@ game_init:
     jsr ball_init
     jsr bat_init
     jsr score_init
+    lda #24
+    sta game_anim_delay
+    jsr game_anim
     jsr sound_init_game
 
     lda #0
@@ -151,6 +154,7 @@ game_rest:
    jsr gameBgEl
    jsr score_timeDec
    jsr score_print    
+   jsr game_anim
    ;Check if game ended---
 game_isrAfterUpdate:   
    jsr gameEnded
@@ -176,6 +180,47 @@ gameEnded:
     sta game_running
     rts
 
+
+;------------------------------Animate background-----------------------
+game_anim_delay .byte 0
+game_anim_cnt: .byte 0
+game_anim:
+    inc game_anim_delay
+    lda game_anim_delay
+    cmp #25
+    bne game_anim_ret
+    lda #0
+    sta game_anim_delay
+    inc game_anim_cnt
+    lda game_anim_cnt
+    cmp #5
+    bne game_anim_update
+    lda #1
+    sta game_anim_cnt
+game_anim_update:
+    clc
+    rol a     ; 1 -> 2   3 -> 6
+    rol a     ; 2 -> 4   6 -> 12
+    rol a     ; 4 -> 8  12 -> 24
+    tax
+    lda $3120,x
+    sta $3100
+    lda $3121,x
+    sta $3101
+    lda $3122,x
+    sta $3102
+    lda $3123,x
+    sta $3103
+    lda $3124,x
+    sta $3104
+    lda $3125,x
+    sta $3105
+    lda $3126,x
+    sta $3106
+    lda $3127,x
+    sta $3107
+game_anim_ret:    
+    rts
 
 
 ;-------------------Check if we should redraw----------------
