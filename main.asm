@@ -8,7 +8,7 @@
 
 
 
-            lda #32
+            lda #35
             ldx #$0
 clearing:
             sta $400,x

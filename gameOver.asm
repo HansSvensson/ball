@@ -1,21 +1,21 @@
 gameOverText .enc screen
-             .text "player x won!"
+             .text "player#x#won!"
 gameOverTextEqual .enc screen
-             .text "Equal, no winner!"
+             .text "Equal,#no#winner!"
 
 gameOver:
     jsr sound_init_menu
-    lda $d018          ;set location of charset
-    and #$f1
-    ora #$5
-    sta $d018
-    lda $d016           ;Select singlecolor
-    and #%11101111
-    sta $d016
+    ;lda $d018          ;set location of charset
+    ;and #$f1
+    ;ora #$5
+    ;sta $d018
+    ;lda $d016           ;Select singlecolor
+    ;and #%11101111
+    ;sta $d016
 
 
     ldx #0
-    lda #32
+    lda #35
 gameOverClean:
     sta $428,x
     sta $500,x

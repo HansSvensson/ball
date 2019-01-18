@@ -245,7 +245,7 @@ score_clean:
     ldx #0
     ldy #0
 score_clean_loop:
-    lda #32
+    lda #35
     sta $400,x
     lda #0
     sta $d800,x
@@ -255,7 +255,7 @@ score_clean_loop:
     rts
 
 score_text_ready .enc screen
-                 .text "ready!"
+                 .text "ready"
 score_print_ready:
     jsr score_clean
     ldx #0
@@ -265,12 +265,12 @@ score_print_ready_loop:
     lda #2
     sta $d812,x
     inx
-    cpx #6
+    cpx #5
     bne score_print_ready_loop
     rts   
     
 score_text_steady .enc screen
-                 .text "steady!"
+                 .text "steady"
 score_print_steady:
     jsr score_clean
     ldx #0
@@ -280,12 +280,12 @@ score_print_steady_loop:
     lda #7
     sta $d811,x
     inx
-    cpx #7
+    cpx #6
     bne score_print_steady_loop
     rts         
 
 score_text_go .enc screen
-              .text "go!"
+              .text "go"
 score_print_go:
     jsr score_clean
     ldx #0
@@ -295,7 +295,7 @@ score_print_go_loop:
     lda #5
     sta $d813,x
     inx
-    cpx #3
+    cpx #2
     bne score_print_go_loop
     rts         
     

@@ -173,7 +173,7 @@ gameBg_printScore:
     sta $424
     sta $40b
     sta $41b
-    lda #32
+    lda #35
     sta $406
     sta $407
     sta $408
@@ -204,7 +204,7 @@ gameBg_printScoreColor:
     cpx #40
     bne gameBg_printScoreColor
 
-    lda #15
+    lda #7
     sta $d806
     sta $d807
     sta $d808
@@ -215,7 +215,7 @@ gameBg_printScoreColor:
     sta $d816
     sta $d817
 
-    lda #11
+    lda #3
     sta $d80c
     sta $d80d
     sta $d81c

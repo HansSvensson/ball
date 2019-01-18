@@ -6,9 +6,12 @@ menu:
     sta menu_position
     ;init
     ;Set charset
-    lda $d018          ;set location of charset
-    and #$f1
-    ora #$5
+    ;lda $d018          ;set location of charset
+    ;and #$f1
+    ;ora #$5
+    ;sta $d018
+    lda $d018
+    ora #$d
     sta $d018
     lda $d016           ;Select singlecolor
     and #%11101111
@@ -42,7 +45,7 @@ menu_cleanColorLoop_2:
 
 menu_cleanChar:
     ldx #0
-    lda #32
+    lda #35
 menu_cleanFg:
     sta $400,x
     sta $500,x
@@ -58,15 +61,15 @@ menu_time     .byte 0    ;equals the time in x*10 seconds
 menu_nr_alt   .byte 0
 ;------------------TIME MODE MENU--------------------- 
 menu_mode_titel .enc screen
-                .text "game time"
+                .text "game#time"
 menu_mode_item1 .enc screen
-                .text " 30 seconds"
+                .text "#30#seconds"
 menu_mode_item2 .enc screen
-                .text " 60 seconds"
+                .text "#60#seconds"
 menu_mode_item3 .enc screen
-                .text " 90 seconds"
+                .text "#90#seconds"
 menu_mode_item4 .enc screen
-                .text "120 seconds"
+                .text "120#seconds"
 
 menu_item1_pos = $526+$28
 menu_item2_pos = $526+$50
@@ -130,7 +133,7 @@ menu_mode_exit:
 
 ;------------------LEVEL SELECT--------------------- 
 menu_level_titel .enc screen
-                .text "select level"
+                .text "select#level"
 menu_level_item1 .enc screen
                 .text "bashball"
 menu_level_item2 .enc screen

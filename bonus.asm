@@ -128,7 +128,7 @@ bonus_print_eval:
     bcs bonus_print_2
     cmp #1
     bcs bonus_print_1
-    lda #32
+    lda #35
     rts
 
 bonus_print_5:

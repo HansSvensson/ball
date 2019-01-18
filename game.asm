@@ -162,7 +162,6 @@ game_isrAfterUpdate:
    jsr game_deinit
     
 gameContiniue:
-   jsr score_setIsr
    ;dec $d020
    jsr sound_setIsr
    asl $d019
