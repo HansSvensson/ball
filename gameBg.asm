@@ -457,10 +457,13 @@ gameBg_empty_not:
 ;15 = ....
 
                         ;    0    1    2    3    4    5    6    7    8    9    a    b   c   d  e  f   10  11  12
-gamebg_field_color: .byte    0,  $6,   3,   5,   6,   7,   9,   8,   9,  $1,  13,  13, 13, 13, 13,13, 13, 13, 13
-gamebg_field_char:  .byte  $20, $4e, $40, $40, $20, $40, $84, $40, $80, $82, $a0, $a2,$a4,$a6,$a8,$aa,$ac,$ae,$b0
-gameBg_color: .byte 0
-gameBg_char:  .byte 0
+gamebg_dubble_brick:.byte    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   1,   1,   0,   2,   2,   2
+gamebg_field_color: .byte    0,  $6,   3,   5,   6,   7,   9,   8,   9,  $1,  13,  13,  13,  13,  13,  13,  13,  13,  13
+gamebg_field_char:  .byte  $20, $4e, $40, $40, $20, $40, $84, $40, $80, $82, $a0, $a2, $a4, $a6, $a8, $aa, $ad, $af, $b1
+gameBg_color:  .byte 0
+gameBg_color_2:.byte 0
+gameBg_char:   .byte 0
+gameBg_char_2: .byte 0
 gamebg_field = 2
 gamebg_screen = $450
 gamebg_screen_color = $d850
@@ -567,11 +570,12 @@ gameBg_print_l1:
     lda gameBg_char
     sta gamebg_screen,x
     inx
-    adc #1                    ;Get next char for the brick style.
+    lda gameBg_char_2
     sta gamebg_screen,x
-    lda gameBg_color
+    lda gameBg_color_2
     sta gamebg_screen_color,x
     dex
+    lda gameBg_color
     sta gamebg_screen_color,x
 gameBg_print_l1_zero:
     inx
@@ -591,11 +595,12 @@ gameBg_print_l2:
     lda gameBg_char
     sta gamebg_screen+256,x
     inx
-    adc #1                    ;Get next char for the brick style.
+    lda gameBg_char_2
     sta gamebg_screen+256,x
-    lda gameBg_color
+    lda gameBg_color_2
     sta gamebg_screen_color+256,x
     dex
+    lda gameBg_color
     sta gamebg_screen_color+256,x
 gameBg_print_l2_zero:
     inx
@@ -618,11 +623,12 @@ gameBg_print_l3:
     lda gameBg_char
     sta gamebg_screen+512,x
     inx
-    adc #1                    ;Get next char for the brick style.
+    lda gameBg_char_2
     sta gamebg_screen+512,x
-    lda gameBg_color
+    lda gameBg_color_2
     sta gamebg_screen_color+512,x
     dex
+    lda gameBg_color
     sta gamebg_screen_color+512,x
 gameBg_print_l3_zero:
     inx
@@ -645,11 +651,12 @@ gameBg_print_l4:
     lda gameBg_char
     sta gamebg_screen+768,x
     inx
-    adc #1                    ;Get next char for the brick style.
+    lda gameBg_char_2
     sta gamebg_screen+768,x
-    lda gameBg_color
+    lda gameBg_color_2
     sta gamebg_screen_color+768,x
     dex
+    lda gameBg_color
     sta gamebg_screen_color+768,x
 gameBg_print_l4_zero:
     inx
@@ -666,18 +673,68 @@ gameBg_charConvert:
     stx gameBg_tmpX
     tax
     pha
+    lda gamebg_dubble_brick,x
+    beq gameBg_charConvert_double        ;True double brick
+    cmp #1
+    beq gameBg_charConvert_single_left   ;Single brick empty right side
+
+    lda #32                                     ;Signle brick empty left side
+    sta gameBg_char    
+    lda gamebg_field_char,x
+    sta gameBg_char_2
+    jmp gameBg_charConver_end
+
+gameBg_charConvert_single_left:
+    lda #32                                     ;Signle brick empty left side
+    sta gameBg_char_2    
     lda gamebg_field_char,x
     sta gameBg_char
+    jmp gameBg_charConver_end
+    
+gameBg_charConvert_double:
+    lda gamebg_field_char,x
+    sta gameBg_char
+    clc
+    adc #1
+    sta gameBg_char_2
+   
+gameBg_charConver_end:
     pla
     ldx gameBg_tmpX
     rts
+
+
 
 gameBg_colorConvert:
     stx gameBg_tmpX
     tax
     pha
+
+    lda gamebg_dubble_brick,x
+    beq gameBg_colorConvert_double        ;True double brick
+    cmp #1
+    beq gameBg_colorConvert_single_left   ;Single brick empty right side
+    
+    ;Signle brick empty left side
+    lda #6
+    sta gameBg_color
+    lda gamebg_field_color,x
+    sta gameBg_color_2
+    jmp gameBg_colorConver_end
+
+gameBg_colorConvert_single_left:
+    lda #6
+    sta gameBg_color_2
     lda gamebg_field_color,x
     sta gameBg_color
+    jmp gameBg_colorConver_end
+
+gameBg_colorConvert_double:
+    lda gamebg_field_color,x
+    sta gameBg_color
+    sta gameBg_color_2
+
+gameBg_colorConver_end:
     pla
     ldx gameBg_tmpX
     rts
