@@ -457,7 +457,7 @@ gameBg_empty_not:
 ;15 = ....
 
                         ;    0    1    2    3    4    5    6    7    8    9    a    b   c   d  e  f   10  11  12
-gamebg_dubble_brick:.byte    0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   1,   1,   0,   2,   2,   2
+gamebg_dubble_brick:.byte    0,   0,   0,   0,   1,   0,   0,   0,   0,   0,   0,   0,   1,   1,   1,   0,   2,   2,   2
 gamebg_field_color: .byte    0,  $6,   3,   5,   6,   7,   9,   8,   9,  $1,  13,  13,  13,  13,  13,  13,  13,  13,  13
 gamebg_field_char:  .byte  $20, $4e, $40, $40, $20, $40, $84, $40, $80, $82, $a0, $a2, $a4, $a6, $a8, $aa, $ad, $af, $b1
 gameBg_color:  .byte 0
@@ -609,6 +609,7 @@ gameBg_print_l2_zero:
     bne gameBg_print_l2
 
 gameBg_print3:
+    clc
     lda 3
     adc #1
     sta 3
