@@ -203,7 +203,7 @@ game_anim_update:
     rol a     ; 2 -> 4   6 -> 12
     rol a     ; 4 -> 8  12 -> 24
     tax
-    lda $3120,x
+    lda $3120,x    ;120 = 288 = 8*36   
     sta $3100
     lda $3121,x
     sta $3101
@@ -219,6 +219,126 @@ game_anim_update:
     sta $3106
     lda $3127,x
     sta $3107
+
+    ;bonus animation
+    clc
+    txa
+    rol a
+    tax
+    lda $3460,x  ;8*141 = 1128 = 0x468
+    sta $3400+0
+    sta $3400+16
+    sta $3400+32
+    sta $3400+48
+    sta $3400+64
+
+    lda $3461,x
+    sta $3401+0
+    sta $3401+16
+    sta $3401+32
+    sta $3401+48
+    sta $3401+64
+
+    lda $3462,x
+    sta $3402+0
+    sta $3402+16
+    sta $3402+32
+    sta $3402+48
+    sta $3402+64
+
+    lda $3463,x
+    sta $3403+0
+    sta $3403+16
+    sta $3403+32
+    sta $3403+48
+    sta $3403+64
+
+    lda $3464,x
+    sta $3404+0
+    sta $3404+16
+    sta $3404+32
+    sta $3404+48
+    sta $3404+64
+
+    lda $3465,x
+    sta $3405+0
+    sta $3405+16
+    sta $3405+32
+    sta $3405+48
+    sta $3405+64
+
+    lda $3466,x
+    sta $3406+0
+    sta $3406+16
+    sta $3406+32
+    sta $3406+48
+    sta $3406+64
+
+    lda $3467,x
+    sta $3407+0
+    sta $3407+16
+    sta $3407+32
+    sta $3407+48
+    sta $3407+64
+
+    ;second char
+    lda $3468,x  ;8*141 = 1128 = 0x468
+    sta $3408+0
+    sta $3408+16
+    sta $3408+32
+    sta $3408+48
+    sta $3400+64
+
+    lda $3469,x
+    sta $3409+0  
+    sta $3409+16
+    sta $3409+32
+    sta $3409+48
+    sta $3409+64
+
+    lda $346a,x
+    sta $340a+0  
+    sta $340a+16
+    sta $340a+32
+    sta $340a+48
+    sta $340a+64
+
+    lda $346b,x
+    sta $340b+0
+    sta $340b+16
+    sta $340b+32
+    sta $340b+48
+    sta $340b+64
+
+    lda $346c,x
+    sta $340c+0
+    sta $340c+16
+    sta $340c+32
+    sta $340c+48
+    sta $340c+64
+
+    lda $346d,x
+    sta $340d+0
+    sta $340d+16
+    sta $340d+32
+    sta $340d+48
+    sta $340d+64
+
+    lda $346e,x
+    sta $340e+0
+    sta $340e+16
+    sta $340e+32
+    sta $340e+48
+    sta $340e+64
+
+    lda $346f,x
+    sta $340f+0
+    sta $340f+16
+    sta $340f+32
+    sta $340f+48
+    sta $340f+64
+
+
 game_anim_ret:    
     rts
 
