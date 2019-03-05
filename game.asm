@@ -10,6 +10,7 @@ game_init:
     jsr ball_init
     jsr bat_init
     jsr score_init
+    jsr bullet_init
     lda #24
     sta game_anim_delay
     jsr game_anim
@@ -148,8 +149,14 @@ game_isr_game:
    jsr ball_update
    ldx #10
    jsr ball_update
+   jmp game_rest_every
    ;Update the rest-------
 game_rest:
+   jsr bullet_add_pl1
+   jsr bullet_add_pl2
+   jsr bullet_update_pl1
+   jsr bullet_update_pl2
+game_rest_every:
    jsr bonus_update
    jsr gameBgEl
    jsr score_timeDec

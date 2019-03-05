@@ -515,6 +515,7 @@ ball_hit_char:
     ldy #0
     lda (main_temp_pointer),y     ;Use the pointer we just created.
     ldy main_temp_y_l2
+ball_hit_char_adc:    
     cmp #128
     beq ball_hit_bonus_1
     cmp #129

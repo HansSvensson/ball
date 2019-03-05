@@ -64,3 +64,4 @@ loopGameRunning:
 .include "menu.asm"
 .include "bonus.asm"
 .include "sound.asm"
+.include "bullet.asm"
