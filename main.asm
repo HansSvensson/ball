@@ -8,7 +8,7 @@
 
 
 
-            lda #35
+            lda #32
             ldx #$0
 clearing:
             sta $400,x
@@ -42,7 +42,7 @@ clearing:
 
            ;cli
  
-           ;jsr intro
+           jsr howto_init
            jsr sound_init_menu
 loop:
            jsr menu
@@ -65,3 +65,4 @@ loopGameRunning:
 .include "bonus.asm"
 .include "sound.asm"
 .include "bullet.asm"
+.include "howto.asm"
