@@ -1,13 +1,13 @@
 howto_joy_ctrl   .enc screen
                  .text "controls"
 howto_joy_up     .enc screen
-                 .text "joystick up########move#bat#up"
+                 .text "joystick up     ########move#bat#up"
 howto_joy_down   .enc screen
-                 .text "joystick#down######move#bat#down"
+                 .text "joystick#down     ######move#bat#down"
 howto_joy_left   .enc screen
-                 .text "joystick#left######shoot#bullets"
+                 .text "joystick#left     ######shoot a bullet"
 howto_joy_button .enc screen
-                 .text "joystick#button####bash#"
+                 .text "joystick#button     ####bash#"
 
 howto_rules_cap  .enc screen
                  .text "rules"
@@ -25,18 +25,18 @@ howto_quit       .enc screen
                  .text "press fire"
 
 
-row1start = $436
-row2start = row1start + $1c + $28+ $28
+row1start = $438
+row2start = row1start + $19 + $28+ $28
 row3start = row2start + $28 
 row4start = row3start + $28
 row5start = row4start + $28
-row6start = row5start + $28+ $28 + $28 + 14
-row7start = row6start + $1a + $28 + $28
+row6start = row5start + $28+ $28 + $28 + $28 + $28 + 16
+row7start = row6start + $18 + $28 + $28
 row8start = row7start + $28
 row9start = row8start + $28
 row10start = row9start + $28
 row11start = row10start + $28
-row12start = row11start + $28 + $28 + $28 + $28 + 12
+row12start = row11start + $28 + $28 + $28 + $28 + 14
 
 
 
@@ -77,7 +77,7 @@ howto_up:
     lda howto_joy_up,y
     sta row2start,y
     iny
-    cpy #30
+    cpy #35
     bne howto_up
     
     ldy #0
@@ -86,7 +86,7 @@ howto_down:
     lda howto_joy_down,y
     sta row3start,y
     iny
-    cpy #32
+    cpy #37
     bne howto_down
     
     ldy #0
@@ -95,7 +95,7 @@ howto_left:
     lda howto_joy_left,y
     sta row4start,y
     iny
-    cpy #32
+    cpy #38
     bne howto_left
 
     ldy #0
@@ -104,7 +104,7 @@ howto_button:
     lda howto_joy_button,y
     sta row5start,y
     iny
-    cpy #24
+    cpy #29
     bne howto_button
     
     ldy #0
