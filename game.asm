@@ -156,6 +156,8 @@ game_rest:
    jsr bullet_add_pl2
    jsr bullet_update_pl1
    jsr bullet_update_pl2
+   jsr bullet_update_pl1
+   jsr bullet_update_pl2
 game_rest_every:
    jsr bonus_update
    jsr gameBgEl
