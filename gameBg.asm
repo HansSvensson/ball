@@ -1,6 +1,5 @@
 gameElframeCount .byte 0
 gameElframeState .byte 0
-
 gameBg_level .byte 0
 gameBg_levelSub .byte 0
 gameBg_init:
@@ -465,7 +464,7 @@ gameBg_empty_not:
                         ;    0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F   10   11   12     13
 gamebg_dubble_brick:.byte    0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   2,   0,   0,   0,     0  
 gamebg_field_color: .byte    0,   6,   1,   3,   4,   5,   7,   1,   3,   4,   5,   7,   2,  15,  15,  15,   9,   9,   9,     5
-gamebg_field_char:  .byte  $20, $20, $40, $40, $40, $40, $40, $42, $42, $42, $42, $42, $4e, $a0, $a6, $af, $80, $82, $84,   $40
+gamebg_field_char:  .byte  $20, $20, $40, $C0, $C2, $C4, $C6, $42, $42, $42, $42, $42, $4e, $a0, $a6, $af, $80, $82, $84,   $40
 
 ;C64 färger:              CHARS
 ;-----------              -----
@@ -491,6 +490,7 @@ gamebg_field_char:  .byte  $20, $20, $40, $40, $40, $40, $40, $42, $42, $42, $42
 ;-----
 ;2 = röda
 
+gameBg_redPaintColors .byte 0,0,0,0,0,0,0,0
 
 gameBg_color:  .byte 0
 gameBg_color_2:.byte 0
@@ -500,6 +500,8 @@ gamebg_field = 2
 gamebg_screen = $450
 gamebg_screen_color = $d850
 gameBg_tmpX: .byte 0
+gameBg_activeBg: .byte 0,0
+gamebg_colorCounterPnt: .byte 0,0
 
 gameBg_print:
     lda gameBg_level
@@ -512,7 +514,7 @@ gameBg_print:
 
 gameBq_print_bashball:
     lda gameBg_levelSub
-    beq gameBq_print_bashball_0
+    beq gameBq_print_bashball_1
     cmp #1
     beq gameBq_print_bashball_1
     cmp #2
@@ -591,6 +593,10 @@ gameBq_print_iball_2:
 
 
 gameBg_print_start:
+    lda 2
+    sta gameBg_activeBg
+    lda 3
+    sta gameBg_activeBg+1
     ldy #0                    ;pick configuration
     ldx #0                    ;store on screen
     clc
@@ -698,6 +704,29 @@ gameBg_print_l4_zero:
     cpx #112
     bne gameBg_print_l4
 
+    ;---------copy counters-----------
+gameBg_createPnt:    
+    lda gamebg_field+1               ;get the pointer to the counters
+    sta gamebg_colorCounterPnt+1
+    lda gamebg_field
+    sta gamebg_colorCounterPnt
+    tya
+    adc gamebg_colorCounterPnt
+    sta gamebg_colorCounterPnt
+    lda #0
+    adc gamebg_colorCounterPnt+1
+    sta gamebg_colorCounterPnt+1
+    clc
+    
+    ldx #0
+    ;ldy #0
+gameBg_print_copyCounter:
+    lda (gamebg_field),y
+    sta gameBg_redPaintColors,x
+    inx
+    iny
+    cpx #8
+    bne gameBg_print_copyCounter
     rts
 
     
@@ -772,6 +801,201 @@ gameBg_colorConver_end:
     ldx gameBg_tmpX
     rts
 
+
+
+;------------Draw single color block--------------
+;y = pekare matris
+;x = pekare minne
+;gameBg_colorRePaint = color to repaint
+gameBg_colorRePaint: .byte 0
+
+gameBg_drawSingleColor:
+
+    ;----test-----
+
+    lda gameBg_activeBg
+    sta 2
+    lda gameBg_activeBg+1
+    sta 3
+    
+    clc
+    ldy #0
+    ldx #0
+gameBg_drawSingleColor1:
+    lda (2),y
+    cmp gameBg_colorRePaint
+    bne gameBg_drawSingleColor1_cont
+    jsr gameBg_colorConvert
+    jsr gameBg_charConvert
+    lda gameBg_char
+    sta gamebg_screen+0,x
+    inx
+    lda gameBg_char_2
+    sta gamebg_screen+0,x
+    lda gameBg_color_2
+    sta gamebg_screen_color+0,x
+    dex
+    lda gameBg_color
+    sta gamebg_screen_color+0,x    
+gameBg_drawSingleColor1_cont:
+    iny
+    inx
+    inx
+    bne gameBg_drawSingleColor1
+
+    ldx #0
+gameBg_drawSingleColor2:
+    lda (2),y
+    cmp gameBg_colorRePaint
+    bne gameBg_drawSingleColor2_cont
+    jsr gameBg_colorConvert
+    jsr gameBg_charConvert
+    lda gameBg_char
+    sta gamebg_screen+256,x
+    inx
+    lda gameBg_char_2
+    sta gamebg_screen+256,x
+    lda gameBg_color_2
+    sta gamebg_screen_color+256,x
+    dex
+    lda gameBg_color
+    sta gamebg_screen_color+256,x    
+gameBg_drawSingleColor2_cont:
+    iny
+    inx
+    inx
+    bne gameBg_drawSingleColor2
+
+
+gameBg_drawSingleColor3:
+    clc
+    lda 3
+    adc #1
+    sta 3
+    ldy #0                    ;pick configuration
+    ldx #0                    ;store on screen
+    clc
+gameBg_drawSingleColor3_loop:
+    lda (2),y
+    cmp gameBg_colorRePaint
+    bne gameBg_drawSingleColor3_cont
+    jsr gameBg_colorConvert
+    jsr gameBg_charConvert
+    lda gameBg_char
+    sta gamebg_screen+512,x
+    inx
+    lda gameBg_char_2
+    sta gamebg_screen+512,x
+    lda gameBg_color_2
+    sta gamebg_screen_color+512,x
+    dex
+    lda gameBg_color
+    sta gamebg_screen_color+512,x    
+gameBg_drawSingleColor3_cont:
+    iny
+    inx
+    inx
+    bne gameBg_drawSingleColor3_loop
+
+    ldx #0
+gameBg_drawSingleColor4:
+    lda (2),y
+    cmp gameBg_colorRePaint
+    bne gameBg_drawSingleColor4_cont
+    jsr gameBg_colorConvert
+    jsr gameBg_charConvert
+    lda gameBg_char
+    sta gamebg_screen+768,x
+    inx
+    lda gameBg_char_2
+    sta gamebg_screen+768,x
+    lda gameBg_color_2
+    sta gamebg_screen_color+768,x
+    dex
+    lda gameBg_color
+    sta gamebg_screen_color+768,x    
+gameBg_drawSingleColor4_cont:
+    iny
+    inx
+    inx
+    bne gameBg_drawSingleColor4
+
+    rts
+
+
+;-------Check repaint------
+gameBg_checkRepaint:
+    lda gameBg_redPaintColors
+    bne gameBg_checkRepaint_1
+    lda #2
+    sta gameBg_colorRePaint
+    jsr gameBg_drawSingleColor
+
+gameBg_checkRepaint_1:
+    lda gameBg_redPaintColors+1
+    bne gameBg_checkRepaint_2
+    lda #3
+    sta gameBg_colorRePaint
+    jsr gameBg_drawSingleColor
+
+gameBg_checkRepaint_2:
+    lda gameBg_redPaintColors+2
+    bne gameBg_checkRepaint_3
+    lda #4
+    sta gameBg_colorRePaint
+    jsr gameBg_drawSingleColor
+
+gameBg_checkRepaint_3:
+    lda gameBg_redPaintColors+3
+    bne gameBg_checkRepaint_4
+    lda #5
+    sta gameBg_colorRePaint
+    jsr gameBg_drawSingleColor
+
+gameBg_checkRepaint_4:
+    lda gameBg_redPaintColors+4
+    bne gameBg_checkRepaint_5
+    lda #6
+    sta gameBg_colorRePaint
+    jsr gameBg_drawSingleColor
+
+gameBg_checkRepaint_5:
+    lda gameBg_redPaintColors+5
+    bne gameBg_checkRepaint_end
+    lda #7
+    sta gameBg_colorRePaint
+    jsr gameBg_drawSingleColor
+
+gameBg_checkRepaint_end:
+    jsr gameBg_refillColorCounter
+    rts
+
+
+gameBg_refillColorCounter:
+    tya
+    pha
+    ldy #0
+    lda gamebg_colorCounterPnt
+    sta 2
+    dec 2
+    lda gamebg_colorCounterPnt+1
+    sta 3
+gameBg_refillColorCounterLoop:
+    lda gameBg_redPaintColors,y
+    bne gameBg_refillColorCounterInc
+    lda (2),y
+    sta gameBg_redPaintColors,y
+gameBg_refillColorCounterInc    
+    iny
+    cpy #8
+    bne gameBg_refillColorCounterLoop
+    pla
+    tay
+    rts
+
+
+
+    
 ;--------------------------Change background for this level-------------------------
 gamebg_change:
     sta gameBg_levelSub
@@ -806,6 +1030,7 @@ gamebg_field_tech0: .byte  $0, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $
                     .byte  $0, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $0
                     .byte  $0, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $0
                     .byte  $0, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $0
+                    .byte  $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 
 gamebg_field_tech1: .byte  $0, $1, $1, $1, $e, $2, $2, $2, $2, $2, $2, $2, $2, $2, $2, $f, $1, $1, $1, $0
                     .byte  $0, $1, $1, $1, $e, $2, $2, $2, $2, $2, $2, $2, $2, $2, $2, $f, $1, $1, $1, $0
@@ -830,6 +1055,7 @@ gamebg_field_tech1: .byte  $0, $1, $1, $1, $e, $2, $2, $2, $2, $2, $2, $2, $2, $
                     .byte  $0, $1, $1, $1, $e, $1, $3, $3, $3, $3, $3, $3, $3, $3, $1, $f, $1, $1, $1, $0
                     .byte  $0, $1, $1, $1, $e, $2, $2, $2, $2, $2, $2, $2, $2, $2, $2, $f, $1, $1, $1, $0
                     .byte  $0, $1, $1, $1, $e, $2, $2, $2, $2, $2, $2, $2, $2, $2, $2, $f, $1, $1, $1, $0
+                    .byte  $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 
 gamebg_field_tech2: .byte  $0, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $0
                     .byte  $0, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $0
@@ -854,30 +1080,58 @@ gamebg_field_tech2: .byte  $0, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $
                     .byte  $0, $1, $c, $c, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $c, $c, $1, $0
                     .byte  $0, $1, $12, $c,$c, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $c, $c, $12,$1, $0
                     .byte  $0, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $1, $0
+                    .byte  $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 
-gamebg_field_bashball_1: .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
-                         .byte 0,0,0,0,0,5, 19,3,0,4,2,0,3,19, 5, 0,0,0,0,0
+;gamebg_field_bashball_1: .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         .byte 0,0,0,0,0,5, 0, 3,0,4,2,0,3,0,  5, 0,0,0,0,0
+;                         .byte 0,0,0,0,0,12,0, 6,0,2,4,0,6,0, 12,0,0,0,0,0
+;                         ;.byte 0,0,0,0,0,5, 19,3,0,4,2,0,3,19, 5, 0,0,0,0,0
+;                         .byte  $3, $ff, $ff, $5, $ff, $ff, $ff, $ff
+
+gamebg_field_bashball_1: .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0, 0,0,0,0,0
+                         .byte 0,0,0,0,0,5,0, 0,0,0,0,0,0,0, 0,0,0,0,0,0
+;                         ;.byte 0,0,0,0,0,5, 19,3,0,4,2,0,3,19, 5, 0,0,0,0,0
+                         .byte  $ff, $ff, $ff, $16, $ff, $ff, $ff, $ff
+
 
 gamebg_field_bashball_2: .byte 0,0,0,0,0,12,0,4,0,2, 2, 0,4,0,12,0,0,0,0,0
                          .byte 0,0,0,0,0,12,0,6,0,2, 2, 0,6,0,12,0,0,0,0,0
@@ -901,7 +1155,8 @@ gamebg_field_bashball_2: .byte 0,0,0,0,0,12,0,4,0,2, 2, 0,4,0,12,0,0,0,0,0
                          .byte 0,0,0,0,0,12,0,6,0,2, 2, 0,6,0,12,0,0,0,0,0
                          .byte 0,0,0,0,0,12,0,4,0,2, 2, 0,4,0,12,0,0,0,0,0
                          .byte 0,0,0,0,0,12,0,6,0,2, 2, 0,6,0,12,0,0,0,0,0
-                         .byte 0,0,0,0,0,12,0,4,0,2, 2, 0,4,0,12,0,0,0,0,0
+                         ;.byte 0,0,0,0,0,12,0,4,0,2, 2, 0,4,0,12,0,0,0,0,0
+                         .byte  $2, $ff, $ff, $3, $ff, $ff, $ff, $ff
 
 gamebg_field_bashball_0: .byte 0,1,1,1,1,2,1,4,1,6,6,1,4,1,2,0,0,0,0,0
                          .byte 0,1,1,1,1,3,1,4,1,5,5,1,4,1,3,0,0,0,0,0
@@ -925,7 +1180,8 @@ gamebg_field_bashball_0: .byte 0,1,1,1,1,2,1,4,1,6,6,1,4,1,2,0,0,0,0,0
                          .byte 0,1,1,1,1,3,1,4,1,5,5,1,4,1,3,0,0,0,0,0
                          .byte 0,1,1,1,1,2,1,4,1,6,6,1,4,1,2,0,0,0,0,0
                          .byte 0,1,1,1,1,3,1,4,1,5,5,1,4,1,3,0,0,0,0,0
-                         .byte 0,1,1,1,1,2,1,4,1,6,6,1,4,1,2,0,0,0,0,0
+                        ; .byte 0,1,1,1,1,2,1,4,1,6,6,1,4,1,2,0,0,0,0,0
+                         .byte  $4, $ff, $ff, $5, $ff, $ff, $ff, $ff
 
 gamebg_field_iball:  .byte 0,0,0, 0, 0,0,0,0,0,0,0,0,0,0,0, 0, 0,0,0,0
                      .byte 0,0,0,12,17,0,0,0,0,6,6,0,0,0,0,12,12,0,0,0
@@ -950,6 +1206,7 @@ gamebg_field_iball:  .byte 0,0,0, 0, 0,0,0,0,0,0,0,0,0,0,0, 0, 0,0,0,0
                      .byte 0,0,0,12,12,0,0,0,0,6,6,0,0,0,0,17,12,0,0,0
                      .byte 0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0, 0, 0,0,0,0
                      .byte 0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0, 0, 0,0,0,0
+                     .byte  $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 
 gamebg_field_iball_1:.byte 0,1,1,1, 1, 0,0,0,0,0,0,0,0,0,1,1,1,1,1,0
                      .byte 0,1,1,12,17,0,0,0,0,5,5,0,0,0,1,12,12,1,1,0
@@ -974,6 +1231,7 @@ gamebg_field_iball_1:.byte 0,1,1,1, 1, 0,0,0,0,0,0,0,0,0,1,1,1,1,1,0
                      .byte 0,1,1,12,12,0,0,0,0,5,5,0,0,0,1,17,12,1,1,0
                      .byte 0,1,1,1, 1, 0,0,0,0,0,0,0,0,0,1,1,1,1,1,0
                      .byte 0,1,1,1, 1, 0,0,0,0,0,0,0,0,0,1,1,1,1,1,0
+                     .byte  $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 
 gamebg_field_iball_2:.byte 0,1,1,0, 0, 0,0,0,0,0,0,0,0,0,0,1, 1, 1,1,0
                      .byte 0,1,12,17,1,4,4,4,4,4,4,4,4,4,4,1,12,12,1,0
@@ -998,5 +1256,6 @@ gamebg_field_iball_2:.byte 0,1,1,0, 0, 0,0,0,0,0,0,0,0,0,0,1, 1, 1,1,0
                      .byte 0,1,12,12,1,4,4,4,4,4,4,4,4,4,4,1,17,12,1,0
                      .byte 0,1,1,1, 1, 0,0,0,0,0,0,0,0,0,0,1, 1, 1,1,0
                      .byte 0,1,1,1, 1, 0,0,0,0,0,0,0,0,0,0,1, 1, 1,1,0
+                     .byte  $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 
 

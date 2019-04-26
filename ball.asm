@@ -574,16 +574,82 @@ ball_hit_char_adc:
     cmp #104                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
     cmp #$41
-    beq ball_hit_char_brick_1
+    beq ball_hit_char_brick_1_0
     cmp #$40
-    beq ball_hit_char_brick_1
+    beq ball_hit_char_brick_1_0
+
+    cmp #$C0
+    beq ball_hit_char_brick_1_1
+    cmp #$C1
+    beq ball_hit_char_brick_1_1
+    cmp #$C2
+    beq ball_hit_char_brick_1_2
+    cmp #$C3
+    beq ball_hit_char_brick_1_2
+    cmp #$C4
+    beq ball_hit_char_brick_1_3
+    cmp #$C5
+    beq ball_hit_char_brick_1_3
+    cmp #$C6
+    beq ball_hit_char_brick_1_4
+    cmp #$C7
+    beq ball_hit_char_brick_1_4
+
     cmp #$60
     bcc ball_hit_char_brick_2
     lda #0
     rts
-ball_hit_char_brick_1:
+
+ball_hit_char_brick_1_0:
+    lda gameBg_redPaintColors
+    beq ball_hit_char_brick_1_0_c
+    dec gameBg_redPaintColors
+ball_hit_char_brick_1_0_c:    
     jsr gameBg_hit_1
     jmp ball_hit_char_hit
+
+ball_hit_char_brick_1_1:
+    lda gameBg_redPaintColors+1
+    beq ball_hit_char_brick_1_1_c
+    dec gameBg_redPaintColors+1
+ball_hit_char_brick_1_1_c:    
+    jsr gameBg_hit_1
+    jmp ball_hit_char_hit
+
+ball_hit_char_brick_1_2:
+    lda gameBg_redPaintColors+2
+    beq ball_hit_char_brick_1_2_c
+    dec gameBg_redPaintColors+2
+ball_hit_char_brick_1_2_c:    
+    jsr gameBg_hit_1
+    jmp ball_hit_char_hit
+
+ball_hit_char_brick_1_3:
+    lda gameBg_redPaintColors+3
+    beq ball_hit_char_brick_1_3_c
+    dec gameBg_redPaintColors+3
+ball_hit_char_brick_1_3_c:    
+    jsr gameBg_hit_1
+    jmp ball_hit_char_hit
+
+ball_hit_char_brick_1_4:
+    lda gameBg_redPaintColors+4
+    beq ball_hit_char_brick_1_4_c
+    dec gameBg_redPaintColors+4
+ball_hit_char_brick_1_4_c:    
+    jsr gameBg_hit_1
+    jmp ball_hit_char_hit
+
+ball_hit_char_brick_1_5:
+    lda gameBg_redPaintColors+5
+    beq ball_hit_char_brick_1_5_c
+    dec gameBg_redPaintColors+5
+ball_hit_char_brick_1_5_c:    
+    jsr gameBg_hit_1
+    jmp ball_hit_char_hit
+
+
+
 ball_hit_bonus_1:
     jsr gameBg_hit_bonus_1
     jmp ball_hit_char_hit

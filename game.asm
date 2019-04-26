@@ -152,6 +152,7 @@ game_isr_game:
    jmp game_rest_every
    ;Update the rest-------
 game_rest:
+   jsr gameBg_checkRepaint
    jsr bullet_add_pl1
    jsr bullet_add_pl2
    jsr bullet_update_pl1
