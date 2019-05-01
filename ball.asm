@@ -61,6 +61,10 @@ ball_current .byte 0
 
 dir_0 = 4
 
+ball_bounce_bat   = #1
+ball_bounce_brick = #0
+ball_bounce        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ball_bounceToggle  .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 
 
@@ -207,28 +211,28 @@ ball_update:
     cmp LEFT_BAT_UP
     beq leftDownChangeRight
     jsr ball_dec_x
-    inc $d001,x
+    jsr ball_inc_y
     jmp ball_update_end
     
  leftDownChangeToUp
     lda LEFT_UP
     sta balls_state,x  
     jsr ball_dec_x
-    dec $d001,x
+    jsr ball_dec_y
     jmp ball_update_end
 
 leftDownChangeRight:
     lda RIGHT_DOWN      ;left hit -> rightDown
     sta balls_state,x  
     jsr ball_inc_x
-    inc $d001,x     
+    jsr ball_inc_y     
     jmp ball_update_end
 
 leftDownChangeToBack:
     lda RIGHT_UP
     sta balls_state,x  
     jsr ball_inc_x
-    dec $d001,x     
+    jsr ball_dec_y     
     jmp ball_update_end
 
 leftDownChangeToStraight:
@@ -253,14 +257,14 @@ ball_rightDown:
     beq rightDownChangeRight
 
     jsr ball_inc_x
-    inc $d001,x
+    jsr ball_inc_y
     jmp ball_update_end
 
 rightDownChangeToUp:
     lda RIGHT_UP
     sta balls_state,x       
     jsr ball_inc_x
-    dec $d001,x
+    jsr ball_dec_y
     jmp ball_update_end
 
 rightDownChangeToStraight:
@@ -273,14 +277,14 @@ rightDownChangeRight:
     lda LEFT_DOWN
     sta balls_state,x       
     jsr ball_dec_x
-    inc $d001,x          
+    jsr ball_inc_y          
     jmp ball_update_end
 
 rightDownChangeToBack:
     lda LEFT_UP
     sta balls_state,x       
     jsr ball_dec_x
-    dec $d001,x
+    jsr ball_dec_y
     jmp ball_update_end
 
 
@@ -299,14 +303,14 @@ ball_rightUp:
     cmp RIGHT_BAT_DOWN
     beq rightUpChangeToBack
     jsr ball_inc_x
-    dec $d001,x
+    jsr ball_dec_y
     jmp ball_update_end
 
 rightUpChangeToLeft:
     lda LEFT_UP
     sta balls_state,x 
     jsr ball_dec_x
-    dec $d001,x          
+    jsr ball_dec_y          
     jmp ball_update_end
 
 rightUpChangeToStraight:
@@ -319,14 +323,14 @@ rightUpChangeToDown:
     lda RIGHT_DOWN
     sta balls_state,x       
     jsr ball_inc_x
-    inc $d001,x
+    jsr ball_inc_y
     jmp ball_update_end
 
 rightUpChangeToBack:
     lda LEFT_DOWN
     sta balls_state,x       
     jsr ball_dec_x
-    inc $d001,x
+    jsr ball_inc_y
     jmp ball_update_end
 
 
@@ -344,14 +348,14 @@ ball_leftUp:
     cmp LEFT_BAT_UP
     beq ball_leftUpChangeRight
     jsr ball_dec_x
-    dec $d001,x       
+    jsr ball_dec_y       
     jmp ball_update_end
 
 ball_leftUpChangeDown:
     lda LEFT_DOWN
     sta balls_state,x       
     jsr ball_dec_x
-    inc $d001,x          
+    jsr ball_inc_y          
     jmp ball_update_end
 
 ball_leftUpChangeStraight:
@@ -364,14 +368,14 @@ ball_leftUpChangeRight:
     lda RIGHT_UP
     sta balls_state,x       
     jsr ball_inc_x
-    dec $d001,x          
+    jsr ball_dec_y          
     jmp ball_update_end
 
 ball_leftUpChangeBack:
     lda RIGHT_DOWN
     sta balls_state,x       
     jsr ball_inc_x
-    inc $d001,x          
+    jsr ball_inc_y          
     jmp ball_update_end
 
 ;------------------------------
@@ -470,13 +474,28 @@ ball_hit_none:
     ;lda NONE
     jsr ball_hit_bg
     cmp NONE
-    bne ball_hit_none_ret
+    bne ball_hit_none_brick
     jsr bat_hit_1
     cmp NONE
-    bne ball_hit_none_ret
+    bne ball_hit_none_bat
     jsr bat_hit_2
+    cmp NONE
+    bne ball_hit_none_bat
 ball_hit_none_ret:
     rts
+ball_hit_none_bat:
+    pha
+    lda ball_bounce_bat
+    sta ball_bounce,x
+    pla
+    rts
+ball_hit_none_brick:
+    pha
+    lda ball_bounce_brick
+    sta ball_bounce,x
+    pla
+    rts
+
 
 ball_hitLeft:
     ;lda LEFT
@@ -846,6 +865,58 @@ ball_hit_bg_none:
 ;Bitfield for easier masking of D010   ;TODO: probably we have duplicates..
 ball_bitfield .byte 1,2,4,8,16,32,64,128
 
+;-------------Alternate angle-----------------------
+;ball_bounce_bat   = 1
+;ball_bounce_brick = 0
+;ball_bounce        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+;ball_bounceToggle  .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+;if last bounce was from brick, when every second frame we should skip y
+; bat bounce 2*2,1*1,2*2,...   brick bounce 2*1,1*1,2*1,...
+ball_inc_y:
+    lda ball_bounce,x
+    bne ball_inc_y_bat
+    
+ball_inc_y_brick:
+   lda ball_bounceToggle,x
+   bne ball_inc_y_brick_skip
+
+   lda #1
+   sta ball_bounceToggle,x
+   inc $d001,x
+   rts
+
+ball_inc_y_brick_skip:
+    lda #0
+    sta ball_bounceToggle,x
+    rts
+        
+ball_inc_y_bat:
+    inc $d001,x
+    rts
+
+
+ball_dec_y:
+    lda ball_bounce,x
+    bne ball_dec_y_bat
+    
+ball_dec_y_brick:
+   lda ball_bounceToggle,x
+   bne ball_dec_y_brick_skip
+
+   lda #1
+   sta ball_bounceToggle,x
+   dec $d001,x
+   rts
+
+ball_dec_y_brick_skip:
+    lda #0
+    sta ball_bounceToggle,x
+    rts
+        
+ball_dec_y_bat:
+    dec $d001,x
+    rts
 
 ;-------------Increase the X-position of a sprite-------------
 ball_inc_x:
