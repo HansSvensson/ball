@@ -166,27 +166,10 @@ score_timeFCount      .byte 50
 score_time            .byte 48,48, 48
 
 score_timeSet:
-    bne score_timeSetLow
-    lda #49
-    sta score_time
-    lda #50
-    sta score_time+1
-    lda #48
-    sta score_time+2
     lda #0
     sta score_timeEndGame
-    rts
-score_timeSetLow:
-    clc
-    adc #48
-    sta score_time+1
-    lda #48
-    sta score_time
-    sta score_time+2
     lda #50
     sta score_timeFCount
-    lda #0
-    sta score_timeEndGame
     rts
 
 score_timeDec:

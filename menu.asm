@@ -18,10 +18,10 @@ menu:
     sta $d016
 
     jsr menu_move_color
-    jsr menu_mode
+    jsr menu_level
     lda #0
     sta menu_position
-    jsr menu_level
+    jsr menu_mode
     jsr menu_cleanChar
     rts
 
@@ -76,7 +76,65 @@ menu_item2_pos = $526+$50
 menu_item3_pos = $526+$78
 menu_item4_pos = $526+$a0
 
+menu_modeLong_titel .enc screen
+                .text "game#time"
+menu_modeLong_item1 .enc screen
+                .text "120#seconds"
+menu_modeLong_item2 .enc screen
+                .text "300#seconds"
+menu_modeLong_item3 .enc screen
+                .text "600#seconds"
+menu_modeLong_item4 .enc screen
+                .text "999#seconds"
+
+
+menu_modeLong:
+    lda #3
+    sta menu_nr_alt
+    ldx #0
+menu_modeLong_title:
+    lda menu_modeLong_titel,x
+    sta $4ff,x
+    inx
+    cpx #9
+    bne menu_modeLong_title   
+    ldx #0
+menu_modeLong_i1:
+    lda menu_modeLong_item1,x
+    sta menu_item1_pos,x
+    inx
+    cpx #11
+    bne menu_modeLong_i1   
+    ldx #0
+menu_modeLong_i2:
+    lda menu_modeLong_item2,x
+    sta menu_item2_pos,x
+    inx
+    cpx #11
+    bne menu_modeLong_i2   
+    ldx #0
+menu_modeLong_i3:
+    lda menu_modeLong_item3,x
+    sta menu_item3_pos,x
+    inx
+    cpx #11
+    bne menu_modeLong_i3   
+    ldx #0
+menu_modeLong_i4:
+    lda menu_modeLong_item4,x
+    sta menu_item4_pos,x
+    inx
+    cpx #11
+    bne menu_modeLong_i4
+    jmp menu_mode_loop 
+
+
 menu_mode:
+    lda gameBg_level
+    bne menu_modeShort
+    jmp menu_modeLong
+
+menu_modeShort:
     lda #3
     sta menu_nr_alt
     ldx #0
@@ -126,10 +184,79 @@ menu_mode_loop:
     jmp menu_mode_loop
 
 menu_mode_exit:
-    lda menu_time
+    lda gameBg_level
+    beq menu_mode_exit_setTimeLong
+    jsr menu_setTimeShort  
+    jsr score_timeSet
+    rts
+menu_mode_exit_setTimeLong:
+    jsr menu_setTimeLong  
     jsr score_timeSet
     rts
 
+;30 60 90 120 fill the stack with low mid high
+menu_setTimeShort:
+    lda #48               ;zero
+    sta score_time+2
+    sta score_time+1
+    lda menu_position
+    beq menu_setTimeShort0
+    cmp #1
+    beq menu_setTimeShort1
+    cmp #2
+    beq menu_setTimeShort2
+    cmp #3
+    beq menu_setTimeShort3
+    
+menu_setTimeShort0:
+    lda #51               ;three
+    sta score_time+1
+    rts
+menu_setTimeShort1:
+    lda #54               ;six
+    sta score_time+1
+    rts
+menu_setTimeShort2:
+    lda #57               ;nine
+    sta score_time+1
+    rts
+menu_setTimeShort3:
+    lda #50               ;two
+    sta score_time+1
+    lda #49               ;one
+    sta score_time
+    rts
+    
+menu_setTimeLong:  
+    lda #48               ;zero
+    sta score_time+2
+    sta score_time+1
+    lda menu_position
+    beq menu_setTimeLong0
+    cmp #1
+    beq menu_setTimeLong1
+    cmp #2
+    beq menu_setTimeLong2
+    cmp #3
+    beq menu_setTimeLong3
+menu_setTimeLong0:
+    lda #50               ;two
+    sta score_time+1
+    lda #49               ;one
+    sta score_time
+    rts
+menu_setTimeLong1:
+    lda #51               ;three
+    sta score_time
+    rts
+menu_setTimeLong2:
+    lda #54               ;six
+    sta score_time
+    rts
+menu_setTimeLong3:
+    lda #57               ;nine
+    sta score_time
+    rts
 
 ;------------------LEVEL SELECT--------------------- 
 menu_level_titel .enc screen
@@ -289,8 +416,6 @@ menu_move_color_i1_loop:
     inx
     cpx #40
     bne menu_move_color_i1_loop
-    lda #3
-    sta menu_time    
     rts    
 
 menu_move_color_i2:
@@ -300,8 +425,6 @@ menu_move_color_i2_loop:
     inx
     cpx #40
     bne menu_move_color_i2_loop
-    lda #6
-    sta menu_time    
     rts    
 
 menu_move_color_i3:
@@ -311,8 +434,6 @@ menu_move_color_i3_loop:
     inx
     cpx #40
     bne menu_move_color_i3_loop    
-    lda #9
-    sta menu_time    
     rts    
 
 menu_move_color_i4:
@@ -322,8 +443,6 @@ menu_move_color_i4_loop:
     inx
     cpx #40
     bne menu_move_color_i4_loop    
-    lda #0
-    sta menu_time    
     rts    
 
 menu_move_not:
