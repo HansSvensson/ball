@@ -26,6 +26,16 @@ game_init:
     lda #190
     sta game_init_state
 
+    lda gameBg_level
+    bne game_init_setShortTime
+    lda #120
+    sta game_levelChagne_lim
+    jmp game_init_cont
+game_init_setShortTime:
+    lda #30
+    sta game_levelChagne_lim
+
+game_init_cont:
     lda #50
     sta game_levelChange_frm
     lda game_levelChagne_lim
@@ -357,7 +367,7 @@ game_anim_ret:
 game_levelChange_sec .byte 0
 game_levelChange_frm .byte 0
 game_levelChange_cnt .byte 0
-game_levelChagne_lim = #30
+game_levelChagne_lim .byte 0
 
 game_levelChange:
     jsr score_lastTenSec
