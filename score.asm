@@ -217,8 +217,12 @@ score_timeEndGameSet:
 
 
 score_lastTenSec:
+    lda score_time
+    cmp #48
+    bne score_lastTenSec_end
     lda score_time+1
     cmp #48
+score_lastTenSec_end:    
     rts
 
 

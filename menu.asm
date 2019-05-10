@@ -81,11 +81,11 @@ menu_modeLong_titel .enc screen
 menu_modeLong_item1 .enc screen
                 .text "120#seconds"
 menu_modeLong_item2 .enc screen
-                .text "300#seconds"
+                .text "240#seconds"
 menu_modeLong_item3 .enc screen
-                .text "600#seconds"
+                .text "480#seconds"
 menu_modeLong_item4 .enc screen
-                .text "999#seconds"
+                .text "960#seconds"
 
 
 menu_modeLong:
@@ -245,15 +245,21 @@ menu_setTimeLong0:
     lda #49               ;one
     sta score_time
     rts
-menu_setTimeLong1:
-    lda #51               ;three
+menu_setTimeLong1:  ;240
+    lda #52               ;four
+    sta score_time+1
+    lda #50               ;two
     sta score_time
     rts
-menu_setTimeLong2:
+menu_setTimeLong2: ;480
+    lda #56               ;eight
+    sta score_time+1
+    lda #52               ;four
+    sta score_time
+    rts
+menu_setTimeLong3: ;960
     lda #54               ;six
-    sta score_time
-    rts
-menu_setTimeLong3:
+    sta score_time+1
     lda #57               ;nine
     sta score_time
     rts
