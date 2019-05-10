@@ -69,6 +69,10 @@ bonus_activate:
     beq bonus_op_ownAll
     cmp #$85
     beq bonus_op_ownAll
+    cmp #$86
+    beq bonus_bullet
+    cmp #$87
+    beq bonus_bullet
     rts
 
 bonus_op_smaller:
@@ -80,6 +84,11 @@ bonus_op_larger:
     lda #255
     sta bonus_timer,x
     jsr bat_bonus_larger
+    rts
+bonus_bullet:
+    lda #255
+    sta bonus_timer,x
+    jsr bullet_activate
     rts
 
 bonus_op_ownAll:
@@ -98,6 +107,10 @@ bonus_deactivate:
     beq bonus_larger_end
     cmp #$83
     beq bonus_larger_end
+    cmp #$86
+    beq bonus_bullet_end
+    cmp #$87
+    beq bonus_bullet_end
     rts
 
 bonus_smaller_end:
@@ -105,6 +118,9 @@ bonus_smaller_end:
     rts
 bonus_larger_end:
     jsr bat_bonus_larger_end    
+    rts
+bonus_bullet_end:
+    jsr bullet_deactivate
     rts
 ;--------------Draw timer text-----------------------
 bonus_print:

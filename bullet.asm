@@ -15,9 +15,22 @@ bullet_init:
     sta bullet_cnt+1
     rts
 
+bullet_bonusActive: .byte 0,0,0
+
+bullet_activate:
+    lda #1
+    sta bullet_bonusActive,x
+    rts
+
+bullet_deactivate:
+    lda #0
+    sta bullet_bonusActive,x
+    rts
 
 ;player must be in X-register
 bullet_add_pl1:
+    lda bullet_bonusActive+1
+    beq bullet_add_end
     lda $dc01
     and #4               ;left
     bne bullet_add_end
@@ -57,6 +70,8 @@ bullet_add_pl1:
     rts
 
 bullet_add_pl2:
+    lda bullet_bonusActive+2
+    beq bullet_add_end
     lda $dc00
     and #4               ;left
     bne bullet_add_end
