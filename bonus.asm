@@ -56,6 +56,10 @@ bonus_update_end:
 
 ;-----------------Activate Bonus--------------------
 bonus_activate:
+    pha
+    lda bonus_active,x
+    bne bonus_activate_end
+    pla    
     sta bonus_active,x
     cmp #$80
     beq bonus_op_smaller
@@ -73,6 +77,8 @@ bonus_activate:
     beq bonus_bullet
     cmp #$87
     beq bonus_bullet
+bonus_activate_end:
+    pla    
     rts
 
 bonus_op_smaller:
