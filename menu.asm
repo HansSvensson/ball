@@ -19,10 +19,10 @@ menu:
 
     jsr menu_move_color
     jsr menu_level
+    jsr menu_cleanChar
     lda #0
     sta menu_position
     jsr menu_mode
-    jsr menu_cleanChar
     rts
 
 
