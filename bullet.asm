@@ -32,7 +32,7 @@ bullet_add_pl1:
     lda bullet_bonusActive+1
     beq bullet_add_end
     lda $dc01
-    and #4               ;left
+    and #$10               ;left
     bne bullet_add_end
     lda bullet_active    ;Check if bullet already active
     bne bullet_add_end
@@ -73,7 +73,7 @@ bullet_add_pl2:
     lda bullet_bonusActive+2
     beq bullet_add_end
     lda $dc00
-    and #4               ;left
+    and #$10               ;left
     bne bullet_add_end
     lda bullet_active+1    ;Check if bullet already active
     bne bullet_add_end
