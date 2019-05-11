@@ -618,7 +618,13 @@ ball_hit_char_adc:
     cmp #$C7
     beq ball_hit_char_brick_1_4
 
-    cmp #$60
+    cmp #72
+    beq ball_hit_char_brick_hardbrick
+    cmp #73
+    beq ball_hit_char_brick_hardbrick
+
+
+    cmp #$60                      ;hit hard bricks
     bcc ball_hit_char_brick_2
     lda #0
     rts
@@ -671,6 +677,14 @@ ball_hit_char_brick_1_5_c:
     jsr gameBg_hit_1
     jmp ball_hit_char_hit
 
+
+ball_hit_char_brick_hardbrick:
+    jsr gameBg_hit_2
+    lda gameBg_redPaintColors+6
+    beq ball_hit_char_brick_hardbrick_c
+    dec gameBg_redPaintColors+6
+ball_hit_char_brick_hardbrick_c:    
+    jmp ball_hit_char_hit
 
 
 ball_hit_bonus_1:
