@@ -54,9 +54,11 @@ balls_state  .byte 1,0,1,0,1,0,4,0,4,0,4,1,0,1,0,1
 
 ball_player_1 = #1
 ball_player_2 = #2
-ball_owner  .byte 1,0,1,0,1,0,2,0,2,0,2,0,0,0,0,0
-ball_player_1_color = #15
-ball_player_2_color = #11
+ball_player_none = #3
+ball_owner  .byte 3,0,3,0,3,0,3,0,3,0,3,0,0,0,0,0
+ball_player_1_color    = #15
+ball_player_2_color    = #11
+ball_player_none_color = #0
 ball_current .byte 0
 
 dir_0 = 4
@@ -72,17 +74,17 @@ ball_init:
            lda #$3f
            sta $d015    ; Turn sprite 0 on
            sta $d027    ; Make it white
-           lda ball_player_1_color
+           lda ball_player_none_color
            sta $d027
-           lda ball_player_1_color
+           lda ball_player_none_color
            sta $d028
-           lda ball_player_1_color
+           lda ball_player_none_color
            sta $d029
-           lda ball_player_2_color
+           lda ball_player_none_color
            sta $d02a
-           lda ball_player_2_color
+           lda ball_player_none_color
            sta $d02b
-           lda ball_player_2_color
+           lda ball_player_none_color
            sta $d02c
 
            jsr ball_resetCord
@@ -99,12 +101,20 @@ ball_init:
            ora #$3f
            sta $d01c
            
-           lda ball_player_1
+           ;TODO REMOVE
+           ;lda ball_player_1
+           ;sta ball_owner
+           ;sta ball_owner+2
+           ;sta ball_owner+4
+           ;lda #1
+           ;lda ball_player_2
+           ;sta ball_owner+6
+           ;sta ball_owner+8
+           ;sta ball_owner+10
+           lda ball_player_none
            sta ball_owner
            sta ball_owner+2
            sta ball_owner+4
-           lda #1
-           lda ball_player_2
            sta ball_owner+6
            sta ball_owner+8
            sta ball_owner+10
@@ -132,11 +142,15 @@ ball_resetCord:
            sta balls_state+6
            sta balls_state+8
            sta balls_state+10
+
+           lda game_sixBalls
+           beq ball_resetCord_three 
+                    
            lda $d010
            and #$C0
            ora #$38
            sta $d010    ; Pl2 sprites starts at right part screen
-
+           
            lda #30
            sta $d000    ; set x coordinate to 40
            lda #$40
@@ -152,8 +166,6 @@ ball_resetCord:
            lda #$80
            sta $d005    ; set y coordinate to 40
            
-           lda game_sixBalls
-           beq ball_resetCord_end          
            lda #18
            sta $d006    ; set x coordinate to 40
            lda #$80
@@ -168,6 +180,29 @@ ball_resetCord:
            sta $d00a    ; set x coordinate to 40
            lda #$40
            sta $d00b    ; set y coordinate to 40
+           jmp ball_resetCord_end
+
+ball_resetCord_three:
+           lda $d010
+           and #$C0
+           ora #$2
+           sta $d010    ; Pl2 sprites starts at right part screen
+           
+           lda #71
+           sta $d000    ; set x coordinate to 40
+           lda #$80
+           sta $d001    ; set y coordinate to 40
+
+           lda #18
+           sta $d002    ; set x coordinate to 40
+           lda #$80
+           sta $d003    ; set y coordinate to 40
+ 
+           lda #174
+           sta $d004    ; set x coordinate to 40
+           lda #143
+           sta $d005    ; set y coordinate to 40
+           
 ball_resetCord_end:           
            rts
 
