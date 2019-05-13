@@ -152,7 +152,8 @@ ball_resetCord:
            lda #$80
            sta $d005    ; set y coordinate to 40
            
-           
+           lda game_sixBalls
+           beq ball_resetCord_end          
            lda #18
            sta $d006    ; set x coordinate to 40
            lda #$80
@@ -167,6 +168,7 @@ ball_resetCord:
            sta $d00a    ; set x coordinate to 40
            lda #$40
            sta $d00b    ; set y coordinate to 40
+ball_resetCord_end:           
            rts
 
 

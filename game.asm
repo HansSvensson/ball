@@ -3,6 +3,7 @@ game_mode        .byte 0
 game_running     .byte 0   ;0=keep running the game    1=quit game
 game_init_state: .byte 0
 game_speedCnt    .byte 0
+game_sixBalls    .byte 0
 
 game_init:
 
@@ -127,6 +128,9 @@ game_isr_game:
    jsr game_levelChange         ;check if bg should be updated, if jump over other updates
    bne game_isrAfterUpdate
    ;Round 1-----------------
+   lda $d01f
+   sta ball_temp_d01f   ;Every one has moved once, dont remember the old moves!
+   
    jsr bat_update
    ldx #2
    jsr ball_update
@@ -134,20 +138,23 @@ game_isr_game:
    jsr ball_update
    ldx #4
    jsr ball_update
+     
+   lda game_sixBalls            ;check if we are doing six balls
+   beq ball_update_round1_fin
    ldx #6
    jsr ball_update
    ldx #8
    jsr ball_update
    ldx #10
    jsr ball_update
-   lda $d01f
-   sta ball_temp_d01f   ;Every one has moved once, dont remember the old moves!
+
 
    ;Round 2---------------
    dec game_speedCnt
    bne game_rest
    lda #2
    sta game_speedCnt
+ball_update_round1_fin:   
    jsr bat_update
    ldx #2
    jsr ball_update
@@ -155,12 +162,16 @@ game_isr_game:
    jsr ball_update
    ldx #4
    jsr ball_update
+   
+   lda game_sixBalls            ;check if we are doing six balls
+   beq ball_update_round2_fin
    ldx #6
    jsr ball_update
    ldx #8
    jsr ball_update
    ldx #10
    jsr ball_update
+ball_update_round2_fin:   
    jmp game_rest_every
    ;Update the rest-------
 game_rest:
