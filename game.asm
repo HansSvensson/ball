@@ -188,6 +188,7 @@ game_rest_every:
    jsr score_timeDec
    jsr score_print    
    jsr game_anim
+   jsr bonus_insert
    ;Check if game ended---
 game_isrAfterUpdate:   
    jsr gameEnded

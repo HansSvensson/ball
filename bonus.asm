@@ -11,6 +11,9 @@ bonus_init:
     ldx #1
     sta bonus_timer,x
     sta bonus_active,x
+    lda #1
+    sta bonus_insert_frameCnt
+    sta bonus_insert_secCnt
     
     rts
 
@@ -52,7 +55,73 @@ bonus_update_end:
     rts
 
 
+;-----------------Insert bonuses each 30 sec-----------------
+bonus_insert_frameCnt: .byte 1
+bonus_insert_secCnt:   .byte 1
+bonus_insert_pos       .byte 0,0,0,0
+bonus_insertlist       .byte 16,17,18,19
+bonus_insertlist_len   = #4
+bonus_insertlist_cnt   .byte 0
+bonus_insert_current   .byte 0
+bonus_insert:
+    dec bonus_insert_frameCnt
+    bne bonus_insert_quit
+    lda #49
+    sta bonus_insert_frameCnt
+    dec bonus_insert_secCnt
+    bne bonus_insert_quit
+    lda #29
+    sta bonus_insert_secCnt
 
+    jsr bonus_insert_getBonus
+    lda bonus_insert_pos          ;Insret new bonus
+    sta 2
+    lda bonus_insert_pos+1
+    sta 3
+    lda bonus_insert_current
+    jsr gameBg_colorConvert
+    jsr gameBg_charConvert
+    lda gameBg_char
+    ldy #0
+    sta (2),y
+    lda bonus_insert_pos+1
+    clc
+    adc #$d4
+    sta 3
+    lda gameBg_color
+    sta (2),y
+
+    lda bonus_insert_pos+2          ;Insret new bonus
+    sta 2
+    lda bonus_insert_pos+3
+    sta 3
+    lda bonus_insert_current
+    jsr gameBg_colorConvert
+    jsr gameBg_charConvert
+    lda gameBg_char
+    sta (2),y
+    lda bonus_insert_pos+3
+    clc
+    adc #$d4
+    sta 3
+    lda gameBg_color
+    sta (2),y
+
+bonus_insert_quit:
+    rts    
+
+bonus_insert_getBonus:
+    lda bonus_insertlist_cnt
+    cmp bonus_insertlist_len
+    bne bonus_insert_getBonus_end
+    lda #0
+    sta bonus_insertlist_cnt
+bonus_insert_getBonus_end:
+    tay
+    inc bonus_insertlist_cnt
+    lda bonus_insertlist,y
+    sta bonus_insert_current
+    rts
 
 ;-----------------Activate Bonus--------------------
 bonus_activate:
