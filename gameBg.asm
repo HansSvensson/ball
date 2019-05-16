@@ -261,12 +261,13 @@ gameBg_setMulticolor:
 
 
 main_temp_pointer_2 = 8
-;-----------------------Check for hit between BG and sprite----------------
+;------------Check for hit between BG and sprite, returnes 0=no owner, 1=hit----------------
 gameBg_hit_1:
     ldx main_temp_x               ;If no player ownes the ball quit
     lda ball_owner,x
     cmp ball_player_none
     bne gameBg_hit_1_c
+    lda #0
     rts
 gameBg_hit_1_c:
     lda #32
@@ -291,12 +292,15 @@ gameBg_hit_1_score:
     beq gameBg_hit_1_player_1
     cmp ball_player_2
     beq gameBg_hit_1_player_2
+    lda #1
     rts
 gameBg_hit_1_player_1:
     jsr score_increase_player_1
+    lda #1
     rts
 gameBg_hit_1_player_2:
     jsr score_increase_player_2
+    lda #1
     rts
 
 
@@ -311,6 +315,7 @@ gameBg_hit_2:
     bne gameBg_hit_2_c
     pla
     pla
+    lda #0
     rts
 
 gameBg_hit_2_c:
@@ -328,6 +333,7 @@ gameBg_hit_2_do
     clc
     adc #$1                      ;We have the value for left but we want to store for right
     sta (main_temp_pointer),y
+    lda #1
     rts
 
 ;------------------------Hit with bonus blocks----------------------

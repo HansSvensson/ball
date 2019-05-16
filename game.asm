@@ -12,6 +12,7 @@ game_init:
     jsr bat_init
     jsr score_init
     jsr bullet_init
+    jsr bonus_init
     lda #24
     sta game_anim_delay
     jsr game_anim
@@ -171,8 +172,8 @@ ball_update_round1_fin:
    jsr ball_update
    ldx #10
    jsr ball_update
-ball_update_round2_fin:   
    jmp game_rest_every
+ball_update_round2_fin:   
    ;Update the rest-------
 game_rest:
    jsr gameBg_checkRepaint

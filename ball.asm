@@ -667,51 +667,57 @@ ball_hit_char_adc:
     rts
 
 ball_hit_char_brick_1_0:
+    jsr gameBg_hit_1
+    beq ball_hit_char_hit
     lda gameBg_redPaintColors
     beq ball_hit_char_brick_1_0_c
     dec gameBg_redPaintColors
 ball_hit_char_brick_1_0_c:    
-    jsr gameBg_hit_1
     jmp ball_hit_char_hit
 
 ball_hit_char_brick_1_1:
+    jsr gameBg_hit_1
+    beq ball_hit_char_hit
     lda gameBg_redPaintColors+1
     beq ball_hit_char_brick_1_1_c
     dec gameBg_redPaintColors+1
 ball_hit_char_brick_1_1_c:    
-    jsr gameBg_hit_1
     jmp ball_hit_char_hit
 
 ball_hit_char_brick_1_2:
+    jsr gameBg_hit_1
+    beq ball_hit_char_hit
     lda gameBg_redPaintColors+2
     beq ball_hit_char_brick_1_2_c
     dec gameBg_redPaintColors+2
 ball_hit_char_brick_1_2_c:    
-    jsr gameBg_hit_1
     jmp ball_hit_char_hit
 
 ball_hit_char_brick_1_3:
+    jsr gameBg_hit_1
+    beq ball_hit_char_hit
     lda gameBg_redPaintColors+3
     beq ball_hit_char_brick_1_3_c
     dec gameBg_redPaintColors+3
 ball_hit_char_brick_1_3_c:    
-    jsr gameBg_hit_1
     jmp ball_hit_char_hit
 
 ball_hit_char_brick_1_4:
+    jsr gameBg_hit_1
+    beq ball_hit_char_hit
     lda gameBg_redPaintColors+4
     beq ball_hit_char_brick_1_4_c
     dec gameBg_redPaintColors+4
 ball_hit_char_brick_1_4_c:    
-    jsr gameBg_hit_1
     jmp ball_hit_char_hit
 
 ball_hit_char_brick_1_5:
+    jsr gameBg_hit_1
+    beq ball_hit_char_hit
     lda gameBg_redPaintColors+5
     beq ball_hit_char_brick_1_5_c
     dec gameBg_redPaintColors+5
 ball_hit_char_brick_1_5_c:    
-    jsr gameBg_hit_1
     jmp ball_hit_char_hit
 
 
