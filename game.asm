@@ -3,10 +3,13 @@ game_mode        .byte 0
 game_running     .byte 0   ;0=keep running the game    1=quit game
 game_init_state: .byte 0
 game_speedCnt    .byte 0
-game_sixBalls    .byte 0
+game_sixBalls    .byte 0   ;0=3 balls  0 != 6 balls
 
 game_init:
 
+    lda gameBg_level
+    sta game_sixBalls
+    
     jsr gameBg_init
     jsr ball_init
     jsr bat_init
@@ -58,7 +61,7 @@ game_setIsr:
     sta $fffe
     lda #>game_isr
     sta $ffff
-    lda #180     ;this is how to tell the VICII to generate a raster interrupt
+    lda #220     ;this is how to tell the VICII to generate a raster interrupt
     sta $d012
     rts
 
@@ -71,7 +74,8 @@ game_deinit:
 
 
 game_isr:
-   ;inc $d020
+   ;lda #2
+   ;sta $d020
    jsr game_isr_prepare
    bne game_isr_ret
    jmp game_isr_game
@@ -197,7 +201,8 @@ game_isrAfterUpdate:
    jsr game_deinit
     
 gameContiniue:
-   ;dec $d020
+   ;lda #0
+   ;sta $d020
    jsr sound_setIsr
    asl $d019
    rti

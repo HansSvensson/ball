@@ -22,11 +22,12 @@ sound_init_menu:
     rts
 
 sound_setIsr:
+    lda #$
     lda #<sound_isr   ;Set raster interrupt position
     sta $fffe
     lda #>sound_isr
     sta $ffff
-    lda #80     ;this is how to tell the VICII to generate a raster interrupt
+    lda #160     ;this is how to tell the VICII to generate a raster interrupt
     sta $d012
     rts
 
@@ -38,12 +39,13 @@ sound_isr:
     tya
     pha
     php
+    ;lda #4
+    ;sta $d020
     lda sound_delay_cnt
     cmp sound_delay_lim
     beq sound_isr_cont
     inc sound_delay_cnt
 sound_isr_cont:    
-    ;inc $d020
     jsr $5012
     jsr game_setIsr
     asl $d019
@@ -54,6 +56,8 @@ sound_isr_cont:
     pla
     tax
     pla
+    ;lda #0
+    ;sta $d020
     rti
     
 sound_isr_only:
@@ -71,7 +75,8 @@ sound_isr_only_cont:
     ;inc $d020
     jsr $5012
     asl $d019
-    ;dec $d020
+    ;lda #0
+    ;sta $d020
     plp
     pla
     tay
