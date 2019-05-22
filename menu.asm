@@ -130,6 +130,7 @@ menu_modeLong_i4:
 
 
 menu_mode:
+    jsr menu_move_color
     lda gameBg_level
     bne menu_modeShort
     jmp menu_modeLong
@@ -282,6 +283,7 @@ menu_level:
     lda #2
     sta menu_nr_alt
     jsr menu_cleanChar
+    jsr menu_move_color
     ldx #0
 menu_level_title:
     lda menu_level_titel,x
