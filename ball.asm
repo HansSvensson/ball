@@ -183,6 +183,9 @@ ball_resetCord:
            jmp ball_resetCord_end
 
 ball_resetCord_three:
+           lda #$07
+           sta $d015    ; Turn sprite 0 on
+
            lda $d010
            and #$C0
            ora #$2
