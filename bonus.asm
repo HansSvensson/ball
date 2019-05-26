@@ -130,22 +130,27 @@ bonus_activate:
     bne bonus_activate_end
     pla    
     sta bonus_active,x
-    cmp #$80
+    cmp #$80                  ;Make smaller
     beq bonus_op_smaller
     cmp #$81
     beq bonus_op_smaller
-    cmp #$82
+    cmp #$82                  ;Make larger
     beq bonus_op_larger
     cmp #$83
     beq bonus_op_larger
-    cmp #$84
+    cmp #$84                  ;Own all
     beq bonus_op_ownAll
     cmp #$85
     beq bonus_op_ownAll
-    cmp #$86
+    cmp #$86                  ;Send bullets
     beq bonus_bullet
     cmp #$87
     beq bonus_bullet
+    cmp #$88                  ;Unstopable
+    beq bonus_unStopable
+    cmp #$89
+    beq bonus_unStopable
+
 bonus_activate_end:
     pla    
     rts
@@ -165,6 +170,11 @@ bonus_bullet:
     sta bonus_timer,x
     jsr bullet_activate
     rts
+bonus_unStopable:
+    lda #255
+    sta bonus_timer,x
+    jsr ball_unStopableActivate
+    rts
 
 bonus_op_ownAll:
     jsr ball_changeOwnerAll
@@ -174,18 +184,22 @@ bonus_op_ownAll:
 ;-----------------DeActivate Bonus--------------------
 bonus_deactivate:
     lda bonus_active,x
-    cmp #$80
+    cmp #$80                   ;Make smaller
     beq bonus_smaller_end
     cmp #$81
     beq bonus_smaller_end
-    cmp #$82
+    cmp #$82                   ;Make Larger
     beq bonus_larger_end
     cmp #$83
     beq bonus_larger_end
-    cmp #$86
+    cmp #$86                   ;Send Bullets
     beq bonus_bullet_end
     cmp #$87
     beq bonus_bullet_end
+    cmp #$88                   ;Unstopable
+    beq bonus_unStopable_end
+    cmp #$89
+    beq bonus_unStopable_end
     rts
 
 bonus_smaller_end:
@@ -197,6 +211,10 @@ bonus_larger_end:
 bonus_bullet_end:
     jsr bullet_deactivate
     rts
+bonus_unStopable_end:
+    jsr ball_unStopableDeactivate
+    rts
+
 ;--------------Draw timer text-----------------------
 bonus_print:
     ldx ball_player_1

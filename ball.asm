@@ -68,6 +68,7 @@ ball_bounce_brick = #0
 ball_bounce        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ball_bounceToggle  .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
+ball_bonusUnStopable .byte 0,0,0
 
 
 ball_init:
@@ -119,6 +120,11 @@ ball_init:
            sta ball_owner+8
            sta ball_owner+10
            
+           lda #0
+           sta ball_bonusUnStopable
+           sta ball_bonusUnStopable+1
+           sta ball_bonusUnStopable+2
+
             ldx #0
 fill:
             lda sprite_1,x
@@ -575,6 +581,27 @@ ball_hit_char:
     lda (main_temp_pointer),y     ;Use the pointer we just created.
     ldy main_temp_y_l2
 ball_hit_char_adc:    
+    cmp #$40
+    beq ball_hit_char_brick_1_0
+    cmp #$41
+    beq ball_hit_char_brick_1_0
+    cmp #$C0
+    beq ball_hit_char_brick_1_1
+    cmp #$C1
+    beq ball_hit_char_brick_1_1
+    cmp #$C2
+    beq ball_hit_char_brick_1_2
+    cmp #$C3
+    beq ball_hit_char_brick_1_2
+    cmp #$C4
+    beq ball_hit_char_brick_1_3
+    cmp #$C5
+    beq ball_hit_char_brick_1_3
+    cmp #$C6
+    beq ball_hit_char_brick_1_4
+    cmp #$C7
+    beq ball_hit_char_brick_1_4
+
     cmp #128
     beq ball_hit_bonus_1
     cmp #129
@@ -590,6 +617,8 @@ ball_hit_char_adc:
     cmp #134
     beq ball_hit_bonus_1
     cmp #135
+    beq ball_hit_bonus_1
+    cmp #136
     beq ball_hit_bonus_1
 
 
@@ -636,27 +665,6 @@ ball_hit_char_adc:
     beq ball_hit_char_hit
     cmp #104                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
-    cmp #$41
-    beq ball_hit_char_brick_1_0
-    cmp #$40
-    beq ball_hit_char_brick_1_0
-
-    cmp #$C0
-    beq ball_hit_char_brick_1_1
-    cmp #$C1
-    beq ball_hit_char_brick_1_1
-    cmp #$C2
-    beq ball_hit_char_brick_1_2
-    cmp #$C3
-    beq ball_hit_char_brick_1_2
-    cmp #$C4
-    beq ball_hit_char_brick_1_3
-    cmp #$C5
-    beq ball_hit_char_brick_1_3
-    cmp #$C6
-    beq ball_hit_char_brick_1_4
-    cmp #$C7
-    beq ball_hit_char_brick_1_4
 
     cmp #72
     beq ball_hit_char_brick_hardbrick
@@ -676,7 +684,7 @@ ball_hit_char_brick_1_0:
     beq ball_hit_char_brick_1_0_c
     dec gameBg_redPaintColors
 ball_hit_char_brick_1_0_c:    
-    jmp ball_hit_char_hit
+    jmp ball_hit_char_hit_brick
 
 ball_hit_char_brick_1_1:
     jsr gameBg_hit_1
@@ -685,7 +693,7 @@ ball_hit_char_brick_1_1:
     beq ball_hit_char_brick_1_1_c
     dec gameBg_redPaintColors+1
 ball_hit_char_brick_1_1_c:    
-    jmp ball_hit_char_hit
+    jmp ball_hit_char_hit_brick
 
 ball_hit_char_brick_1_2:
     jsr gameBg_hit_1
@@ -694,7 +702,7 @@ ball_hit_char_brick_1_2:
     beq ball_hit_char_brick_1_2_c
     dec gameBg_redPaintColors+2
 ball_hit_char_brick_1_2_c:    
-    jmp ball_hit_char_hit
+    jmp ball_hit_char_hit_brick
 
 ball_hit_char_brick_1_3:
     jsr gameBg_hit_1
@@ -703,7 +711,7 @@ ball_hit_char_brick_1_3:
     beq ball_hit_char_brick_1_3_c
     dec gameBg_redPaintColors+3
 ball_hit_char_brick_1_3_c:    
-    jmp ball_hit_char_hit
+    jmp ball_hit_char_hit_brick
 
 ball_hit_char_brick_1_4:
     jsr gameBg_hit_1
@@ -712,7 +720,7 @@ ball_hit_char_brick_1_4:
     beq ball_hit_char_brick_1_4_c
     dec gameBg_redPaintColors+4
 ball_hit_char_brick_1_4_c:    
-    jmp ball_hit_char_hit
+    jmp ball_hit_char_hit_brick
 
 ball_hit_char_brick_1_5:
     jsr gameBg_hit_1
@@ -721,7 +729,7 @@ ball_hit_char_brick_1_5:
     beq ball_hit_char_brick_1_5_c
     dec gameBg_redPaintColors+5
 ball_hit_char_brick_1_5_c:    
-    jmp ball_hit_char_hit
+    jmp ball_hit_char_hit_brick
 
 
 ball_hit_char_brick_hardbrick:
@@ -748,6 +756,21 @@ ball_hit_char_brick_2_do
 ball_hit_char_hit:
     lda #1    
     rts
+
+ball_hit_char_hit_brick:
+    ldx main_temp_x
+    lda ball_owner,x
+    tax
+    lda ball_bonusUnStopable,x
+    bne ball_hit_char_hit_brick_unstopable
+    lda #1    
+    ldx main_temp_x
+    rts
+ball_hit_char_hit_brick_unstopable:
+    lda #0
+    ldx main_temp_x
+    rts    
+    
 ;---------------------
 
 
@@ -1143,5 +1166,16 @@ ball_changeOwnerAll_end:
     tay
     pla
     tax
+    rts
+
+
+ball_unStopableActivate:
+    lda #1
+    sta ball_bonusUnStopable,x
+    rts
+
+ball_unStopableDeactivate:
+    lda #0
+    sta ball_bonusUnStopable,x
     rts
 
