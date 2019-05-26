@@ -1,7 +1,7 @@
 gameOverText .enc screen
              .text "player#x#won!"
 gameOverTextEqual .enc screen
-             .text "Equal,#no#winner!"
+             .text "equal,#no#winner!"
 
 gameOver:
     jsr sound_init_menu
@@ -37,16 +37,20 @@ gameOver_cleanColorLoop:
     jsr score_lead
     tay
     jsr score_print
+    tya
     bne gameOverWinner
 
     ldx #0
 gameOverEqual:
     lda gameOverTextEqual,x
-    sta $5c6,x                   ;11rader = 440byte + 14byte = 454 = 256 + 128 + 64 + 4 + 2 = 0x1d6 => 0x5d1
+    sta $5c3,x                   ;11rader = 440byte + 14byte = 454 = 256 + 128 + 64 + 4 + 2 = 0x1d6 => 0x5d1
     inx
-    cpx #12
+    cpx #17
     bne gameOverEqual
-
+    lda #0
+    sta $d015                    ;turn off all sprites
+    jmp gameOverWaitJoy
+    
 gameOverWinner:
     ldx #0
 gameOverWinnerLoop:

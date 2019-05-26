@@ -194,6 +194,7 @@ game_rest_every:
    jsr score_print    
    jsr game_anim
    jsr bonus_insert
+   jsr wall_update
    ;Check if game ended---
 game_isrAfterUpdate:   
    jsr gameEnded
