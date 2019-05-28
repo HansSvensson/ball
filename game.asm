@@ -8,8 +8,15 @@ game_sixBalls    .byte 0   ;0=3 balls  0 != 6 balls
 game_init:
 
     lda gameBg_level
+    cmp #2
+    beq game_init_eightBalls
+    lda #0
+    jmp game_init_start
+game_init_eightBalls:    
+    lda #1
+
+game_init_start:    
     sta game_sixBalls
-    
     jsr gameBg_init
     jsr ball_init
     jsr bat_init
@@ -32,7 +39,8 @@ game_init:
     sta game_init_state
 
     lda gameBg_level
-    bne game_init_setShortTime
+    cmp #2
+    beq game_init_setShortTime
     lda #1
     sta game_levelChagne_disable
     jmp game_init_cont

@@ -197,14 +197,14 @@ ball_resetCord_three:
            ora #$2
            sta $d010    ; Pl2 sprites starts at right part screen
            
-           lda #71
+           lda #30
            sta $d000    ; set x coordinate to 40
-           lda #$80
+           lda #80
            sta $d001    ; set y coordinate to 40
 
-           lda #18
+           lda #58
            sta $d002    ; set x coordinate to 40
-           lda #$80
+           lda #80
            sta $d003    ; set y coordinate to 40
  
            lda #174

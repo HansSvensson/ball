@@ -132,7 +132,8 @@ menu_modeLong_i4:
 menu_mode:
     jsr menu_move_color
     lda gameBg_level
-    bne menu_modeShort
+    cmp #2
+    beq menu_modeShort
     jmp menu_modeLong
 
 menu_modeShort:
@@ -186,7 +187,8 @@ menu_mode_loop:
 
 menu_mode_exit:
     lda gameBg_level
-    beq menu_mode_exit_setTimeLong
+    cmp #2
+    bne menu_mode_exit_setTimeLong
     jsr menu_setTimeShort  
     jsr score_timeSet
     rts
@@ -269,11 +271,11 @@ menu_setTimeLong3: ;960
 menu_level_titel .enc screen
                 .text "select#level"
 menu_level_item1 .enc screen
-                .text "bashball"
+                .text "original"
 menu_level_item2 .enc screen
-                .text "iball"
+                .text "alternative"
 menu_level_item3 .enc screen
-                .text "technical"
+                .text "six#balls"
 ;540 start char
 menu_level_item1_pos = $54e
 menu_level_item2_pos = $54e+$28
@@ -303,7 +305,7 @@ menu_level_i2:
     lda menu_level_item2,x
     sta menu_level_item2_pos,x
     inx
-    cpx #5
+    cpx #11
     bne menu_level_i2   
     ldx #0
 menu_level_i3:
