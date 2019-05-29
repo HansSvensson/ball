@@ -463,8 +463,8 @@ gamebg_field_char:  .byte  $20, $20, $40, $C0, $C2, $C4, $C6, $42, $42, $42, $42
 ;2 = röd                  80 = bonus smaller
 ;3 = ljus blå             82 = bonus bigger
 ;4 = rosa                 84 = own all
-;5 = grön
-;6 = bakgrunds blå
+;5 = grön                 86 = bullets
+;6 = bakgrunds blå        88 = unstoppable
 ;7 = gul
 
 

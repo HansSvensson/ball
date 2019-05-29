@@ -4,7 +4,7 @@
 score_player: .byte 48,48,48,48,48,48
 score_wins_player: .byte 48,48,48,48
 score_x_temp: .byte 0
-
+score_rePrintScore: .byte 0
 
 
 ;---------------------Increase score-------------------
@@ -81,10 +81,13 @@ score_reset_loop:
     inx
     cpx #6
     bne score_reset_loop
+
     lda #50
     sta score_timeFCount
     lda #0
     sta score_timeEndGame
+    sta score_rePrintScore
+
     rts
 
 
@@ -127,8 +130,20 @@ score_lead_equal:
     lda #0
     rts
 
-
 score_print:
+    lda bonus_active+1
+    bne score_print_bonus
+    lda bonus_active+2
+    bne score_print_bonus
+    lda score_rePrintScore
+    beq score_print_scores           ;if 0 print only the scores
+    lda #0
+    sta score_rePrintScore
+score_print_score_all:    
+    jsr score_print_clean
+    jsr gameBg_printScore
+
+score_print_scores:
     lda score_player+2
     sta $406
     lda score_player+1
@@ -160,6 +175,156 @@ score_print:
     lda score_time+2
     sta $417
     rts
+
+
+;----------------PRINT BONUS TITLE ROW FOR BOTH PLAYERS
+score_print_bonus_color  = #7
+score_print_bonus_smaller .enc screen
+                          .text "smaller#bat"
+score_print_bonus_larger  .enc screen
+                          .text "larger#bat"
+score_print_bonus_bullets .enc screen
+                          .text "bullets"
+score_print_bonus_unstop  .enc screen
+                          .text "unstoppable#ball"
+
+score_print_bonus:
+    txa
+    pha
+    lda #1
+    sta score_rePrintScore
+    jsr score_print_clean
+
+    ldx #0            ;Just reset for looping!
+
+    lda bonus_active+1
+    cmp #$80
+    beq score_print_pl1_smaller    
+    cmp #$82
+    beq score_print_pl1_larger
+    cmp #$86
+    beq score_print_pl1_bullets
+    cmp #$88
+    beq score_print_pl1_unstop
+
+score_print_bonus_pl2:
+    
+    ldx #0            ;Just reset for looping!
+
+    lda bonus_active+2
+    cmp #$80
+    beq score_print_pl2_smaller    
+    cmp #$82
+    beq score_print_pl2_larger
+    cmp #$86
+    beq score_print_pl2_bullets
+    cmp #$88
+    beq score_print_pl2_unstop
+    
+score_print_bonus_end:    
+    pla
+    tax
+    jsr bonus_print
+    rts
+       
+score_print_pl1_smaller:
+    lda score_print_bonus_smaller,x
+    sta $400,x
+    lda score_print_bonus_color
+    sta $d800,x
+    inx
+    cpx #11
+    bne score_print_pl1_smaller
+    jmp score_print_bonus_pl2
+
+score_print_pl1_larger:
+    lda score_print_bonus_larger,x
+    sta $400,x
+    lda score_print_bonus_color
+    sta $d800,x
+    inx
+    cpx #10
+    bne score_print_pl1_larger
+    jmp score_print_bonus_pl2
+
+score_print_pl1_bullets:
+    lda score_print_bonus_bullets,x
+    sta $400,x
+    lda score_print_bonus_color
+    sta $d800,x
+    inx
+    cpx #7
+    bne score_print_pl1_bullets
+    jmp score_print_bonus_pl2
+
+score_print_pl1_unstop:
+    lda score_print_bonus_unstop,x
+    sta $400,x
+    lda score_print_bonus_color
+    sta $d800,x
+    inx
+    cpx #16
+    bne score_print_pl1_unstop
+    jmp score_print_bonus_pl2
+
+
+
+score_print_pl2_smaller:
+    lda score_print_bonus_smaller,x
+    sta $416,x
+    lda score_print_bonus_color
+    sta $d816,x
+    inx
+    cpx #11
+    bne score_print_pl2_smaller
+    jmp score_print_bonus_end   
+
+score_print_pl2_larger:
+    lda score_print_bonus_larger,x
+    sta $416,x
+    lda score_print_bonus_color
+    sta $d816,x
+    inx
+    cpx #10
+    bne score_print_pl2_larger
+    jmp score_print_bonus_end   
+
+score_print_pl2_bullets:
+    lda score_print_bonus_bullets,x
+    sta $416,x
+    lda score_print_bonus_color
+    sta $d816,x
+    inx
+    cpx #7
+    bne score_print_pl2_bullets
+    jmp score_print_bonus_end   
+
+score_print_pl2_unstop:
+    lda score_print_bonus_unstop,x
+    sta $416,x
+    lda score_print_bonus_color
+    sta $d816,x
+    inx
+    cpx #16
+    bne score_print_pl2_unstop
+    jmp score_print_bonus_end   
+
+;--------------------------------------------------------------
+
+
+score_print_clean:
+    txa
+    pha
+    lda #34
+    ldx #$28
+score_print_clean_loop:
+    dex    
+    sta $400,x
+    bne score_print_clean_loop
+    pla
+    tax
+    rts
+
 
 score_timeEndGame     .byte 0        ; 0 = time has ended    1 = time is set
 score_timeFCount      .byte 50

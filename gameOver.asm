@@ -36,7 +36,7 @@ gameOver_cleanColorLoop:
     
     jsr score_lead
     tay
-    jsr score_print
+    jsr score_print_score_all
     tya
     bne gameOverWinner
 

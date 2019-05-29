@@ -23,7 +23,6 @@ bonus_update:
     lda bonus_time_doubler          ;Make the counter last for 10s by only exec every 2:nd frame
     beq bonus_update_end
     dec bonus_time_doubler
-    jsr bonus_print
     ldx ball_player_1
     lda bonus_timer,x
     beq bonus_update_p2
@@ -59,8 +58,8 @@ bonus_update_end:
 bonus_insert_frameCnt: .byte 1
 bonus_insert_secCnt:   .byte 1
 bonus_insert_pos       .byte 0,0,0,0
-bonus_insertlist       .byte 16,17,18,19
-bonus_insertlist_len   = #4
+bonus_insertlist       .byte 16,17,18,19,20
+bonus_insertlist_len   = #5
 bonus_insertlist_cnt   .byte 0
 bonus_insert_current   .byte 0
 bonus_insert:
@@ -177,6 +176,8 @@ bonus_unStopable:
     rts
 
 bonus_op_ownAll:
+    lda #0
+    sta bonus_active,x
     jsr ball_changeOwnerAll
     rts
 
@@ -219,10 +220,13 @@ bonus_unStopable_end:
 bonus_print:
     ldx ball_player_1
     jsr bonus_print_eval
-    sta $40f
+    sta $411
     ldx ball_player_2
     jsr bonus_print_eval
-    sta $418
+    sta $427
+    lda #2
+    sta $d811
+    sta $d827
     rts
 
 bonus_print_eval:
