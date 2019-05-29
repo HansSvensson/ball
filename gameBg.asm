@@ -259,12 +259,22 @@ gameBg_setMulticolor:
     sta $d023
     rts
 
+;----------------
+gameBg_getOwner:
+    lda bullet_owner
+    cmp ball_player_none
+    bne gameBg_getOwner_end
+    ldx main_temp_x
+    lda ball_owner,x    
+gameBg_getOwner_end:    
+    rts
+;----------------
 
 main_temp_pointer_2 = 8
 ;------------Check for hit between BG and sprite, returnes 0=no owner, 1=hit----------------
 gameBg_hit_1:
-    ldx main_temp_x               ;If no player ownes the ball quit
-    lda ball_owner,x
+    bne gameBg_hit_1_c
+    jsr gameBg_getOwner
     cmp ball_player_none
     bne gameBg_hit_1_c
     lda #0
@@ -286,8 +296,7 @@ gameBg_hit_1_c:
 gameBg_hit_1_score:
     jsr gameBg_bricksLeft
     jsr gameBg_bricksLeft
-    ldx main_temp_x               ;Give score!
-    lda ball_owner,x
+    jsr gameBg_getOwner
     cmp ball_player_1
     beq gameBg_hit_1_player_1
     cmp ball_player_2
@@ -339,14 +348,19 @@ gameBg_hit_2_do
 ;------------------------Hit with bonus blocks----------------------
 gameBg_hit_bonus_1:
     pha                  ;Acc has the bricknumber x has the player
-    ldx ball_current
-    lda ball_owner,x
+    ;ldx ball_current
+    ;lda ball_owner,x
+    jsr gameBg_getOwner
+    cmp ball_player_none
+    beq gameBg_hit_bonus_1_end
     tax
     pla
     jsr bonus_activate
- 
     jmp gameBg_hit_1
-
+ gameBg_hit_bonus_1_end:
+    pla
+    tax
+    rts
 ;------------------------Electric animation-------------------------
 gameBgEl:
     lda gameElframeCount

@@ -2,6 +2,7 @@ bullet_active:  .byte 0,0
 bullet_pos_hi:  .byte 0,0
 bullet_pos_lo:  .byte 0,0
 bullet_cnt      .byte 0,0
+bullet_owner    .byte 0
  
 bullet_init:
     lda #0
@@ -13,6 +14,8 @@ bullet_init:
     sta bullet_pos_lo+1
     sta bullet_cnt
     sta bullet_cnt+1
+    lda ball_player_none
+    sta bullet_owner
     rts
 
 bullet_bonusActive: .byte 0,0,0
@@ -149,8 +152,14 @@ bullet_update_pl1_print:
     sta 3
     lda bullet_pos_lo
     sta 2    
+    lda ball_player_1
+    sta bullet_owner
     lda (2),y                ;check if next character is a brick
     jsr ball_hit_char_adc
+    pha
+    lda ball_player_none
+    sta bullet_owner
+    pla
     bne bullet_update_pl1_end
 
     lda #70                 ;no hit move the bullet
@@ -212,8 +221,14 @@ bullet_update_pl2_print:
     sta 3
     lda bullet_pos_lo+1
     sta 2    
+    lda ball_player_2
+    sta bullet_owner
     lda (2),y                ;check if next character is a brick
     jsr ball_hit_char_adc
+    pha
+    lda ball_player_none
+    sta bullet_owner
+    pla
     bne bullet_update_pl2_end
 
     lda #71                 ;no hit move the bullet

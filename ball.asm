@@ -758,8 +758,7 @@ ball_hit_char_hit:
     rts
 
 ball_hit_char_hit_brick:
-    ldx main_temp_x
-    lda ball_owner,x
+    jsr gameBg_getOwner
     tax
     lda ball_bonusUnStopable,x
     bne ball_hit_char_hit_brick_unstopable
