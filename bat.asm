@@ -58,12 +58,12 @@ bat_init:
 
            lda #$18
            sta bat_1_cordX    ; set x coordinate to 40
-           lda #100
+           lda #140
            sta bat_1_cordY    ; set y coordinate to 40
 
            lda #$40
            sta bat_2_cordX    ; set x coordinate to 40
-           lda #100
+           lda #140
            sta bat_2_cordY    ; set y coordinate to 40
 
            lda #$81
