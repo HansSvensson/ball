@@ -1,6 +1,7 @@
 bonus_timer:  .byte 0,0,0
 bonus_active: .byte 0,0,0
 bonus_time_doubler .byte 0
+bonus_flash_cnt    .byte 0
 
 bonus_init:
     lda #0
@@ -8,6 +9,7 @@ bonus_init:
     sta bonus_timer,x
     sta bonus_active,x
     sta bonus_time_doubler
+    sta bonus_flash_cnt
     ldx #1
     sta bonus_timer,x
     sta bonus_active,x
@@ -20,6 +22,7 @@ bonus_init:
 
 ;-------------------Timeout a Bonus--------------------
 bonus_update:
+    jsr bonus_flash_update
     lda bonus_time_doubler          ;Make the counter last for 10s by only exec every 2:nd frame
     beq bonus_update_end
     dec bonus_time_doubler
@@ -179,6 +182,8 @@ bonus_op_ownAll:
     lda #0
     sta bonus_active,x
     jsr ball_changeOwnerAll
+    lda #5
+    sta bonus_flash_cnt
     rts
 
 
@@ -260,5 +265,23 @@ bonus_print_1:
     lda #49
     rts
 
+;----------A little flash effect-------------
+bonus_flash_update:
+    lda bonus_flash_cnt
+    beq bonus_flash_update_end
+    cmp #1
+    beq bonus_flash_update_off
 
+    lda #1
+    jmp bonus_flash_update_c
+
+bonus_flash_update_off:
+    lda #0
+
+bonus_flash_update_c:        
+    dec bonus_flash_cnt
+    sta $d020
+    sta $d021
+bonus_flash_update_end:
+    rts    
 
