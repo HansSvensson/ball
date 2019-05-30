@@ -122,7 +122,7 @@ bonus_insert_getBonus_end:
     sta bonus_insert_current
     rts
 
-;-----------------Activate Bonus--------------------
+;-----------------Activate Bonus, x-hold owner--------------------
 bonus_activate:
     pha
     lda bonus_active,x

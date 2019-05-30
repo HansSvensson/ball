@@ -1127,8 +1127,8 @@ ball_changeOwnerAll:
     tya
     pha
 
-    lda ball_owner,x
-    cmp #2
+    txa
+    cmp ball_player_1
     beq ball_changeOwnerAll_2
 
     ldx #0

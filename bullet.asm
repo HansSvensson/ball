@@ -212,6 +212,7 @@ bullet_update_do_pl2:
     beq bullet_update_pl2_end    ;if counter is zero we don't print more bullet on screen
 
     dec bullet_pos_lo+1           ;if over 255 we should update hi 
+    lda bullet_pos_lo+1           ;if over 255 we should update hi 
     cmp #$ff
     bne bullet_update_pl2_print
     dec bullet_pos_hi+1
