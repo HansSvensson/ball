@@ -154,24 +154,24 @@ gameBg_printScore:
     ;---------score------------
     lda #$13
     sta $400
-    sta $41F
+    sta $41e
     lda #$03
     sta $401
-    sta $420
+    sta $41f
     lda #$0F
     sta $402
-    sta $421
+    sta $420
     lda #$12
     sta $403
-    sta $422
+    sta $421
     lda #$05
     sta $404
-    sta $423
+    sta $422
     lda #$3A
     sta $405
-    sta $424
-    sta $40b
-    sta $41b
+    sta $423
+    sta $40c
+    sta $41a
     lda #35
     sta $406
     sta $407
@@ -180,8 +180,8 @@ gameBg_printScore:
     sta $426
     sta $427
     lda #23
-    sta $40a
-    sta $41a
+    sta $40b
+    sta $419
     ;---------TIME-------------
     lda #$14
     sta $410
@@ -207,22 +207,21 @@ gameBg_printScoreColor:
     sta $d806
     sta $d807
     sta $d808
+    sta $d809
+    sta $d824
     sta $d825
     sta $d826
     sta $d827
+    sta $d814
     sta $d815
     sta $d816
     sta $d817
 
     lda #3
-    sta $d80c
     sta $d80d
+    sta $d80e
+    sta $d81b
     sta $d81c
-    sta $d81d
-
-    lda #2
-    sta $d80f
-    sta $d818
     rts
 
 
@@ -1022,7 +1021,3 @@ gamebg_change:
     jsr gameBg_print
     rts
  
- * = $3000
- .binary "resources/charsetBg.bin"
-
-

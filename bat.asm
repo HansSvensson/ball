@@ -1,33 +1,3 @@
-bat_1:
-.byte $00,$fc,$00,$03,$ab,$00,$03,$ab
-.byte $00,$03,$ff,$00,$03,$ab,$00,$03
-.byte $ab,$00,$03,$ab,$00,$03,$ab,$00
-.byte $03,$ab,$00,$03,$ab,$00,$03,$ab
-.byte $00,$03,$ab,$00,$03,$ab,$00,$03
-.byte $ab,$00,$03,$ab,$00,$03,$ab,$00
-.byte $03,$ab,$00,$03,$ff,$00,$03,$ab
-.byte $00,$03,$ab,$00,$00,$fc,$00,$8f
-;.byte $00,$5c,$00,$00,$5c,$00,$02,$ba
-;.byte $00,$02,$ba,$00,$02,$ba,$00,$00
-;.byte $00,$00,$01,$d5,$00,$01,$d5,$00
-;.byte $01,$d5,$00,$01,$d5,$00,$01,$d5
-;.byte $00,$01,$d5,$00,$01,$d5,$00,$01
-;.byte $d5,$00,$01,$d5,$00,$00,$00,$00
-;.byte $02,$ba,$00,$02,$ba,$00,$02,$ba
-;.byte $00,$00,$5c,$00,$00,$5c,$00,$82
-
-
-
-bat_small:
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$5c,$00,$00,$5c,$00
-.byte $02,$ba,$00,$02,$ba,$00,$00,$00
-.byte $00,$02,$ba,$00,$02,$ba,$00,$00
-.byte $5c,$00,$00,$5c,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$82
-
 
 bat_1_cordX = $d00c
 bat_1_cordY = $d00d
@@ -66,7 +36,7 @@ bat_init:
            lda #140
            sta bat_2_cordY    ; set y coordinate to 40
 
-           lda #$81
+           lda #$e1
            sta $07fe    ; set pointer: sprite data at $2040
            sta $07ff    ; set pointer: sprite data at $2040
            
@@ -90,20 +60,6 @@ bat_init:
            inx
            inx
            sta bat_bash_state,x
-           ldx #0          
-bat_fill:
-            lda bat_1,x
-            sta $2040,x
-            inx
-            cpx #64
-            bne bat_fill
-            ldx #0
-bat_small_fill:
-            lda bat_small,x
-            sta $2080,x
-            inx
-            cpx #64
-            bne bat_small_fill
 
             rts
 
@@ -287,11 +243,11 @@ bat_bonus_smaller:
     beq bat_bonus_smaller_pl2
     rts
 bat_bonus_smaller_pl1:
-    lda #$82
+    lda #$e2
     sta $07ff
     rts
 bat_bonus_smaller_pl2:
-    lda #$82
+    lda #$e2
     sta $07fe
     rts
 
@@ -302,11 +258,11 @@ bat_bonus_smaller_end:
     beq bat_bonus_smaller_end_pl2
     rts
 bat_bonus_smaller_end_pl1:
-    lda #$81
+    lda #$e1
     sta $07ff
     rts
 bat_bonus_smaller_end_pl2:
-    lda #$81
+    lda #$e1
     sta $07fe
     rts
 

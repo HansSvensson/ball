@@ -85,9 +85,3 @@ sound_isr_only_cont:
     pla
     rti
    
-
-
-*=$5000
-.binary "resources/music.sid",$7e
-
-

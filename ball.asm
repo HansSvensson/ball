@@ -31,25 +31,6 @@ main_temp_y_l2    = 6
 ball_temp_d01f    .byte 0
 ball_temp_d01e    .byte 0
 ball_temp         .byte 0
-;sprite_1:
-;.byte $00,$00,$00,$00,$00,$00,$00,$00
-;.byte $00,$00,$00,$00,$00,$00,$00,$00
-;.byte $00,$00,$00,$3c,$00,$00,$eb,$00
-;.byte $00,$eb,$00,$00,$eb,$00,$00,$eb
-;.byte $00,$00,$eb,$00,$00,$eb,$00,$00
-;.byte $eb,$00,$00,$3c,$00,$00,$00,$00
-;.byte $00,$00,$00,$00,$00,$00,$00,$00
-;.byte $00,$00,$00,$00,$00,$00,$00,$85
-sprite_1:
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $14,$00,$00,$55,$00,$00,$69,$00
-.byte $01,$69,$40,$01,$aa,$40,$01,$aa
-.byte $40,$01,$aa,$40,$01,$69,$40,$00
-.byte $69,$00,$00,$55,$00,$00,$14,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$8f
-
 balls_state  .byte 1,0,1,0,1,0,4,0,4,0,4,1,0,1,0,1
 
 ball_player_1 = #1
@@ -90,7 +71,7 @@ ball_init:
 
            jsr ball_resetCord
 
-           lda #$80
+           lda #$e0
            sta $07f8    ; set pointer: sprite data at $2000
            sta $07f9    ; set pointer: sprite data at $2000
            sta $07fa    ; set pointer: sprite data at $2000
@@ -124,14 +105,6 @@ ball_init:
            sta ball_bonusUnStopable
            sta ball_bonusUnStopable+1
            sta ball_bonusUnStopable+2
-
-            ldx #0
-fill:
-            lda sprite_1,x
-            sta $2000,x
-            inx
-            cpx #63
-            bne fill
 
             lda #0
             sta dir_0

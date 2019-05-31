@@ -1,7 +1,7 @@
 
 ;we use straight screen codes so it is easy to print 0=48 9=57
-;player 1 = index 0,1,2    player 2 = index 3,4,5
-score_player: .byte 48,48,48,48,48,48
+;player 1 = index 0,1,2,3    player 2 = index 4,5,6,7
+score_player: .byte 48,48,48,48,48,48,48,48
 score_wins_player: .byte 48,48,48,48
 score_x_temp: .byte 0
 score_rePrintScore: .byte 0
@@ -16,7 +16,7 @@ score_increase_player_1:
     rts
 score_increase_player_2:
     stx score_x_temp
-    ldx #3
+    ldx #4
     jsr score_increase
     ldx score_x_temp
     rts
@@ -38,7 +38,16 @@ score_increase_ten:
 score_increase_hundred:
     lda #48
     sta score_player+1,x
+    lda score_player+2,x
+    cmp #57
+    beq score_increase_thousand
     inc score_player+2,x
+    jmp score_increase_end
+score_increase_thousand:
+    lda #48
+    sta score_player+2,x
+    inc score_player+3,x
+
 
 score_increase_end:
     rts
@@ -79,7 +88,7 @@ score_init:
 score_reset_loop:
     sta score_player,x
     inx
-    cpx #6
+    cpx #8
     bne score_reset_loop
 
     lda #50
@@ -101,20 +110,26 @@ score_reset_loop:
 
 
 score_lead:
+    lda score_player+3
+    cmp score_player+7
+    bcc score_lead_p2Won  ; p1 < p2
+    beq score_lead_100    ; p2 == p1
+    jmp score_lead_p1Won  ; p1 >  p2
+score_lead_100:
     lda score_player+2
-    cmp score_player+5
+    cmp score_player+6
     bcc score_lead_p2Won  ; p1 < p2
     beq score_lead_10     ; p2 == p1
     jmp score_lead_p1Won  ; p1 >  p2
 score_lead_10:
     lda score_player+1
-    cmp score_player+4
+    cmp score_player+5
     bcc score_lead_p2Won  ; p1 < p2
     beq score_lead_1      ; p2 == p1
     jmp score_lead_p1Won  ; p1 >  p2
 score_lead_1:
     lda score_player
-    cmp score_player+3
+    cmp score_player+4
     bcc score_lead_p2Won  ; p1 < p2
     beq score_lead_equal  ; p2 == p1
     jmp score_lead_p1Won  ; p1 >  p2
@@ -144,28 +159,32 @@ score_print_score_all:
     jsr gameBg_printScore
 
 score_print_scores:
-    lda score_player+2
+    lda score_player+3
     sta $406
-    lda score_player+1
+    lda score_player+2
     sta $407
-    lda score_player
+    lda score_player+1
     sta $408
+    lda score_player
+    sta $409
     
     lda score_wins_player+1
-    sta $40c
-    lda score_wins_player
     sta $40d
+    lda score_wins_player
+    sta $40e
 
     lda score_wins_player+3
-    sta $41c
+    sta $41b
     lda score_wins_player+2
-    sta $41d
+    sta $41c
 
-    lda score_player+5
+    lda score_player+7
+    sta $424
+    lda score_player+6
     sta $425
-    lda score_player+4
+    lda score_player+5
     sta $426
-    lda score_player+3
+    lda score_player+4
     sta $427
    
     lda score_time
