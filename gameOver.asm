@@ -3,7 +3,7 @@ gameOverText .enc screen
 gameOverTextEqual .enc screen
              .text "equal,#no#winner!"
 gameOverTextF1 .enc screen
-             .text "press#f1#to#continiue"
+             .text "press#f1#to#continue"
 gameOver:
     jsr sound_init_menu
     ;lda $d018          ;set location of charset
