@@ -38,11 +38,11 @@ gameOver_cleanColorLoop:
     ldx #0
 gameOver_f1Loop:    
     lda gameOverTextF1,x
-    sta $610,x
+    sta $611,x
     lda #5
-    sta $da10,x
+    sta $da11,x
     inx
-    cpx #21
+    cpx #20
     bne gameOver_f1Loop
             
     jsr score_lead
