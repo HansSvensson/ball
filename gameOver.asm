@@ -2,7 +2,8 @@ gameOverText .enc screen
              .text "player#x#won!"
 gameOverTextEqual .enc screen
              .text "equal,#no#winner!"
-
+gameOverTextF1 .enc screen
+             .text "press#f1#to#continiue"
 gameOver:
     jsr sound_init_menu
     ;lda $d018          ;set location of charset
@@ -34,6 +35,16 @@ gameOver_cleanColorLoop:
     inx
     bne gameOver_cleanColorLoop
     
+    ldx #0
+gameOver_f1Loop:    
+    lda gameOverTextF1,x
+    sta $610,x
+    lda #5
+    sta $da10,x
+    inx
+    cpx #21
+    bne gameOver_f1Loop
+            
     jsr score_lead
     tay
     jsr score_print_score_all
@@ -49,7 +60,7 @@ gameOverEqual:
     bne gameOverEqual
     lda #0
     sta $d015                    ;turn off all sprites
-    jmp gameOverWaitJoy
+    jmp gameOverWaitF1
     
 gameOverWinner:
     ldx #0
@@ -63,16 +74,8 @@ gameOverWinnerLoop:
 
     lda #0
     sta $d015                    ;turn off all sprites
-gameOverWaitJoy:    
-    lda $DC00
-    and $DC01
-    and #%00010000               ;Zero flag=0 if joystick pressed
-    bne gameOverWaitJoy
-gameOverWaitJoyUp:    
-    lda $DC00
-    and $DC01
-    and #%00010000               ;Zero flag=0 if joystick pressed
-    beq gameOverWaitJoyUp
+gameOverWaitF1:
+    jsr gameOver_checkF1
    
     lda #32
     ldx #0
@@ -84,3 +87,35 @@ gameOverEndClean:
 
 
     rts
+
+
+gameOver_checkF1:
+    lda $dc00
+    pha
+    lda $dc02
+    pha
+    lda $dc03
+    pha
+
+    lda #$ff       ;we want to select row 
+    sta $dc02      ;1:s equal Output mode
+    lda #$fe
+    sta $dc00
+
+    lda #$0        ;we want to read the result from the keyboard matrix
+    sta $dc03      ;0:s equal Input mode
+
+gameOver_checkF1_loop:
+    lda $dc01
+    and #$10 
+    bne gameOver_checkF1_loop
+
+    pla
+    sta $dc03
+    pla
+    sta $dc02
+    pla
+    sta $dc00
+    rts
+
+     
