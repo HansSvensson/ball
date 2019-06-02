@@ -748,53 +748,56 @@ ball_hit_char_hit_brick_unstopable:
 
 ;------------Check if ball collides with a CHAR-----------------
 ball_hit_bg:
-    stx main_temp_x          ;Pusha X till stacken!!!  
-    txa                      ;DO HW check if ball collides with ANY char                     
+    stx main_temp_x          ;Store X in temp variable!!!  
+
+    ;Input X-vilken boll det handlar om.
+
+    ;--Handle X-coordinate
+    txa                                          
     lsr a
-    tay  
-    lda $d01f
-    ora ball_temp_d01f
-    sta ball_temp_d01f      
-    lda ball_bitfield,y
-    and ball_temp_d01f
-  ;  beq ball_hit_bg_none
-    
+    tay      
     lda $d010                ;If sprite is on the right part of the screen above pixel 255
     and ball_bitfield,y
-    beq ball_hit_bg_less_FF
-    ldy #$20                 ;256 equals 32 chars
-    sty ball_temp
-    jmp ball_hit_bg_calc_xy
-ball_hit_bg_less_FF:
-    ldy #0    
-    sty ball_temp
+    beq ball_hit_bg_x_less_FF
 
-ball_hit_bg_calc_xy    
+ball_hit_bg_x_over_FF    ;ruta 30 börjar på pixel 252 ->  d000,x pixel 0-3 = 0, 4-b = 1, osv
+    lda $d000,x          ;256 equals column 30 and 4 pixels chars  (240 + 4 + c)    
+    clc
+    adc #4
+    lsr a
+    lsr a
+    lsr a
+    clc
+    adc #$1e
+    pha
+    
+    jmp ball_hit_bg_y
+    
+ball_hit_bg_x_less_FF:
+    lda $d000,x              ;Also add sprite X value converted to Char cord (40*25) in Reg X
+    clc
+    adc #$F4                 ;Screen start at 24, sprite center 12 pixel => 0xF4
+    bcc ball_hit_bg_none
+    clc
+    lsr a
+    lsr a
+    lsr a
+    pha
+
+ball_hit_bg_y:
     lda $d001,x              ;We Want sprites Y value converted to Char cord (40*25) in REG Y
     clc
-    adc #$D8                 ;Screen start at 50, sprite center 11 pixel => 0xD9
+    adc #$D8                 ;Screen start at 50, sprite center 12 pixel => 0xD8
     lsr a
     lsr a
     lsr a
     tay
-    
-   
-    lda $d000,x              ;Also add sprite X value converted to Char cord (40*25) in Reg X
-    clc
-    adc #$F4                 ;Screen start at 24, sprite center 12 pixel => 0xF4
-    bcs ball_hit_bg_calc_xy_div
-    lda #$0                 ;TODO: WHY do I subtract??? :)
-    jmp ball_hit_bg_calc_xy_add
-ball_hit_bg_calc_xy_div:    
-    lsr a
-    lsr a
-    lsr a
-ball_hit_bg_calc_xy_add:    
-    adc ball_temp 
-    cmp #0                  ; we are outside of field!
-    beq ball_hit_bg_none
-    pha                      ;push the calulated x to the stack
-    
+
+
+
+;output -> A = X position    Y = Y postion    
+
+
 
   ;------------------
 
