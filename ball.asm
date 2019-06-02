@@ -782,6 +782,8 @@ ball_hit_bg_x_less_FF:
     lsr a
     lsr a
     lsr a
+    cmp #0
+    beq ball_hit_bg_none
     pha
 
 ball_hit_bg_y:
@@ -1016,6 +1018,8 @@ ball_inc_x_bounds:
     sta $d010
     lda #12
     sta $d000,x
+    lda #140                      ;TODO: QUICK FIX, see rball_dex_x also
+    sta $d001,x                   ;      Avoid wired reflections.
     ;lda ball_player_1            ;Change balls owner since it changed side
     ;sta ball_owner,x
     ;txa
@@ -1028,50 +1032,49 @@ ball_inc_x_bounds_quit:
 ;---------------------
 
 
+
+
 ;-------------Decrease the X-position of a sprite-------------
 ball_dec_x:
-    lda $d000,x         
-    cmp #0
-    beq ball_dec_x_over
-    dec $d000,x         
-    rts
-
-ball_dec_x_over:
     txa
     lsr a  
     tay
-    jsr ball_dec_x_bounds          ;Check is out of bounds at left side
-    beq ball_dec_x_over_quit
+    lda ball_bitfield,y
+    and $d010
+    beq ball_dec_x_leftside   
+
+ball_dec_x_rightside:
+    lda $d000,x
+    beq ball_dec_x_rightside_go_leftside
+    dec $d000,x                   ;normal ball still on right side
+    rts
+
+ball_dec_x_rightside_go_leftside:
     lda ball_bitfield,y
     eor $d010
     sta $d010
-    dec $d000,x
-ball_dec_x_over_quit:
+    lda #$ff
+    sta $d000,x
     rts
 
+ball_dec_x_leftside:    
+    lda $d000,x
+    cmp #4
+    bcc ball_dec_x_leftside_out
+    dec $d000,x                   ;normal ball still on field
+    rts
 
-
-;-------------If sprite gets outside field at left set it to right side-------------
- ball_dec_x_bounds:
-    lda ball_bitfield,y
-    and $d010
-    bne ball_dec_x_bounds_quit   ;Take jump if d010 set -> zero bit not set 
+ball_dec_x_leftside_out:          ;Move ball to other side. Set D011
     lda ball_bitfield,y
     ora $d010
     sta $d010
     lda #80
     sta $d000,x
-    ;lda ball_player_2            ;Change balls owner since it changed side
-    ;sta ball_owner,x
-    ;txa
-    ;lsr a
-    ;tay
-    ;lda ball_player_2_color
-    ;sta $d027,y
-    
-    lda #0                       ;set the zero bit
-ball_dec_x_bounds_quit:
+    lda #140                      ;Set Y to middle, othwise it might get wired reflections
+    sta $d001,x                   ;TODO: QUICK FIX!!
     rts
+;-------------------------------------------------
+
 
 
 ball_changeOwner_1_to_2:
