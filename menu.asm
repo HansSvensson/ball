@@ -132,8 +132,8 @@ menu_modeLong_i4:
 menu_mode:
     jsr menu_move_color
     lda gameBg_level
-    cmp #2
-    beq menu_modeShort
+;    cmp #2
+;    beq menu_modeShort
     jmp menu_modeLong
 
 menu_modeShort:
@@ -186,13 +186,13 @@ menu_mode_loop:
     jmp menu_mode_loop
 
 menu_mode_exit:
-    lda gameBg_level
-    cmp #2
-    bne menu_mode_exit_setTimeLong
-    jsr menu_setTimeShort  
-    jsr score_timeSet
-    rts
-menu_mode_exit_setTimeLong:
+;    lda gameBg_level
+;    cmp #2
+;    bne menu_mode_exit_setTimeLong
+;    jsr menu_setTimeShort  
+;    jsr score_timeSet
+;    rts
+;menu_mode_exit_setTimeLong:
     jsr menu_setTimeLong  
     jsr score_timeSet
     rts

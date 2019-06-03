@@ -39,8 +39,8 @@ game_init_start:
     sta game_init_state
 
     lda gameBg_level
-    cmp #2
-    beq game_init_setShortTime
+;    cmp #2
+;    beq game_init_setShortTime
     lda #1
     sta game_levelChagne_disable
     jmp game_init_cont

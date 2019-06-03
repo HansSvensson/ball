@@ -545,12 +545,12 @@ gameBq_print_bashball_1:
     jmp gameBg_print_start
 
 gameBq_print_tech:
-    lda gameBg_levelSub
-    beq gameBq_print_tech_0
-    cmp #1
-    beq gameBq_print_tech_1
-    cmp #2
-    beq gameBq_print_tech_2
+;    lda gameBg_levelSub
+;    beq gameBq_print_tech_0
+;    cmp #1
+;    beq gameBq_print_tech_1
+;    cmp #2
+;    beq gameBq_print_tech_2
 gameBq_print_tech_0:
     lda #<gamebg_field_tech0
     sta 2
@@ -565,43 +565,43 @@ gameBq_print_tech_0:
     lda gamebg_field_tech0_bonus+3
     sta bonus_insert_pos+3
     jmp gameBg_print_start
-gameBq_print_tech_1:
-    lda #<gamebg_field_tech1
-    sta 2
-    lda #>gamebg_field_tech1
-    sta 3
-    lda gamebg_field_tech1_bonus
-    sta bonus_insert_pos
-    lda gamebg_field_tech1_bonus+1
-    sta bonus_insert_pos+1
-    lda gamebg_field_tech1_bonus+2
-    sta bonus_insert_pos+2
-    lda gamebg_field_tech1_bonus+3
-    sta bonus_insert_pos+3
-    jmp gameBg_print_start
-gameBq_print_tech_2:
-    lda #<gamebg_field_tech2
-    sta 2
-    lda #>gamebg_field_tech2
-    sta 3
-    lda gamebg_field_tech2_bonus
-    sta bonus_insert_pos
-    lda gamebg_field_tech2_bonus+1
-    sta bonus_insert_pos+1
-    lda gamebg_field_tech2_bonus+2
-    sta bonus_insert_pos+2
-    lda gamebg_field_tech2_bonus+3
-    sta bonus_insert_pos+3
-    jmp gameBg_print_start
+;gameBq_print_tech_1:
+;    lda #<gamebg_field_tech1
+;    sta 2
+;    lda #>gamebg_field_tech1
+;    sta 3
+;    lda gamebg_field_tech1_bonus
+;    sta bonus_insert_pos
+;    lda gamebg_field_tech1_bonus+1
+;    sta bonus_insert_pos+1
+;    lda gamebg_field_tech1_bonus+2
+;    sta bonus_insert_pos+2
+;    lda gamebg_field_tech1_bonus+3
+;    sta bonus_insert_pos+3
+;    jmp gameBg_print_start
+;gameBq_print_tech_2:
+;    lda #<gamebg_field_tech2
+;    sta 2
+;    lda #>gamebg_field_tech2
+;    sta 3
+;    lda gamebg_field_tech2_bonus
+;    sta bonus_insert_pos
+;    lda gamebg_field_tech2_bonus+1
+;    sta bonus_insert_pos+1
+;    lda gamebg_field_tech2_bonus+2
+;    sta bonus_insert_pos+2
+;    lda gamebg_field_tech2_bonus+3
+;    sta bonus_insert_pos+3
+;    jmp gameBg_print_start
 
 
 gameBq_print_iball: 
-    lda gameBg_levelSub
-    beq gameBq_print_iball_0
-    cmp #1
-    beq gameBq_print_iball_1
-    cmp #2
-    beq gameBq_print_iball_2
+;    lda gameBg_levelSub
+;    beq gameBq_print_iball_0
+;    cmp #1
+;    beq gameBq_print_iball_1
+;    cmp #2
+;    beq gameBq_print_iball_2
 gameBq_print_iball_0:       
     lda #<gamebg_field_iball
     sta 2
@@ -616,34 +616,34 @@ gameBq_print_iball_0:
     lda gamebg_field_iball_bonus+3
     sta bonus_insert_pos+3
     jmp gameBg_print_start
-gameBq_print_iball_1:       
-    lda #<gamebg_field_iball_1
-    sta 2
-    lda #>gamebg_field_iball_1
-    sta 3
-    lda gamebg_field_iball_1_bonus
-    sta bonus_insert_pos
-    lda gamebg_field_iball_1_bonus+1
-    sta bonus_insert_pos+1
-    lda gamebg_field_iball_1_bonus+2
-    sta bonus_insert_pos+2
-    lda gamebg_field_iball_1_bonus+3
-    sta bonus_insert_pos+3
-    jmp gameBg_print_start
-gameBq_print_iball_2:       
-    lda #<gamebg_field_iball_2
-    sta 2
-    lda #>gamebg_field_iball_2
-    sta 3
-    lda gamebg_field_iball_2_bonus
-    sta bonus_insert_pos
-    lda gamebg_field_iball_2_bonus+1
-    sta bonus_insert_pos+1
-    lda gamebg_field_iball_2_bonus+2
-    sta bonus_insert_pos+2
-    lda gamebg_field_iball_2_bonus+3
-    sta bonus_insert_pos+3
-    jmp gameBg_print_start
+;gameBq_print_iball_1:       
+;    lda #<gamebg_field_iball_1
+;    sta 2
+;    lda #>gamebg_field_iball_1
+;    sta 3
+;    lda gamebg_field_iball_1_bonus
+;    sta bonus_insert_pos
+;    lda gamebg_field_iball_1_bonus+1
+;    sta bonus_insert_pos+1
+;    lda gamebg_field_iball_1_bonus+2
+;    sta bonus_insert_pos+2
+;    lda gamebg_field_iball_1_bonus+3
+;    sta bonus_insert_pos+3
+;    jmp gameBg_print_start
+;gameBq_print_iball_2:       
+;    lda #<gamebg_field_iball_2
+;    sta 2
+;    lda #>gamebg_field_iball_2
+;    sta 3
+;    lda gamebg_field_iball_2_bonus
+;    sta bonus_insert_pos
+;    lda gamebg_field_iball_2_bonus+1
+;    sta bonus_insert_pos+1
+;    lda gamebg_field_iball_2_bonus+2
+;    sta bonus_insert_pos+2
+;    lda gamebg_field_iball_2_bonus+3
+;    sta bonus_insert_pos+3
+;    jmp gameBg_print_start
 
 
 gameBg_print_start:
