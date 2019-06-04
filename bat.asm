@@ -177,6 +177,8 @@ ball_hit_mask .byte $01,$00, $02,$00, $04,$00, $08,$00, $10,$00, $20,$00, $40,$0
 bat_hit_d01e .byte 0
 
 bat_hit_1:
+           jsr bat_hit_1_range
+           beq ball_hit_quit
            lda bat_bash_state
            cmp #3
            bcc bat_hit_1_left
@@ -199,6 +201,8 @@ bat_hit1_exit:
            jmp bat_hit
 
 bat_hit_2:
+           jsr bat_hit_2_range
+           beq ball_hit_quit
            lda bat_bash_state+2
            cmp #3
            bcc bat_hit_2_right
@@ -220,7 +224,7 @@ bat_hit2_exit:
            lda #%10000000
            jmp bat_hit
 
-bat_hit:
+bat_hit:                          ;check if bat colides with sprite, and if ball does it.
             and ball_temp_d01e
             beq ball_hit_quit
             lda ball_temp_d01e
@@ -235,6 +239,62 @@ ball_hit_quit:
             lda NONE
             rts    
             
+
+;----------Range ball so that we minimize risk of changing balls direkcion---------------
+bat_hit_1_range:
+            tya                      ;first must check if d010 is set or not
+            pha
+            txa
+            lsr a
+            tay
+            lda ball_bitfield,y
+            and $d010
+            bne bat_hit_1_range_no   ;om satt
+
+            lda $d000,x
+            cmp #42                  ;rangecheck limit remember $c then balls middle at the boarder of screen 8+8+8+12+6
+            bcc bat_hit_1_range_yes                        
+             
+bat_hit_1_range_no:
+            pla
+            tay
+            lda #0
+            rts
+               
+bat_hit_1_range_yes:
+            pla
+            tay
+            lda #1
+            rts                     
+
+bat_hit_2_range:
+            tya                      ;first must check if d010 is set or not
+            pha
+            txa
+            lsr a
+            tay
+            lda ball_bitfield,y
+            and $d010
+            beq bat_hit_2_range_no
+
+            lda $d000,x
+            cmp #48                  ;rangecheck limit remember $c then balls middle at the boarder of screen 320-256+12-8-8-8=56 
+            bcs bat_hit_2_range_yes                        
+             
+bat_hit_2_range_no:
+            pla
+            tay
+            lda #0
+            rts
+               
+bat_hit_2_range_yes:
+            pla
+            tay
+            lda #1
+            rts                     
+ 
+ ;-----------------------------------------------------           
+                        
 ;---------------Code for bonus logic--------------
 bat_bonus_smaller:
     cpx ball_player_1
