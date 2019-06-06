@@ -85,6 +85,20 @@ gameBg_fillBottom:
     cpx #39
     bne gameBg_fillBottom
 
+    ;---------Add Wall---------
+    lda #105
+    sta $7d2
+    lda #106
+    sta $7d3
+    lda #107
+    sta $7d4
+    lda #108
+    sta $7d5
+    lda #1
+    sta $dbd2
+    sta $dbd3
+    sta $dbd4
+    sta $dbd5
     ;---------fill left--------
     lda #102    
     sta $450

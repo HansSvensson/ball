@@ -23,6 +23,7 @@ game_init_start:
     jsr score_init
     jsr bullet_init
     jsr bonus_init
+    jsr wall_init
     lda #24
     sta game_anim_delay
     jsr game_anim

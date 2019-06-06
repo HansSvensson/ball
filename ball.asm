@@ -594,6 +594,14 @@ ball_hit_char_adc:
     cmp #136
     beq ball_hit_bonus_1
 
+    cmp #105
+    beq wall_hit
+    cmp #106
+    beq wall_hit
+    cmp #107
+    beq wall_hit
+    cmp #108
+    beq wall_hit
 
     cmp #$a0                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
