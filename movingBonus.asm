@@ -30,10 +30,14 @@ movingBonus_init:
     sta $D02b 
 
     lda #0
-    sta movingBonus_mode
     sta movingBonus_move_x_index
     sta movingBonus_move_y_mode
     sta movingBonus_move_x_split
+    sta movingBonus_mode
+    lda #50
+    sta movingBonus_update_insert_frame
+    lda movingBonus_update_insert_lim
+    sta movingBonus_update_insert_cnt
     
 movingBonus_init_end:
     rts
@@ -41,22 +45,56 @@ movingBonus_init_end:
 
 
 ;---Update function------------
+movingBonus_update_insert_lim    = #60
+movingBonus_update_insert_frame: .byte 0
+movingBonus_update_insert_cnt:   .byte 0
+
 movingBonus_update:
-    lda movingBonus_mode
-    beq movingBonus_update_end
-    dec movingBonus_mode
+    lda movingBonus_mode              ; 0=Visible, 1=not visible, wait to insert,  3> Chaos mode active
+    beq movingBonus_update_visible
+    cmp #1
+    beq movingBonus_update_insert
+    cmp #2
     beq movingBonus_update_chaos_set_end
+
+    dec movingBonus_mode                    ; movingBonus_mode > 2 => Active chaos
     jsr movingBonus_update_chaos    
     rts
 
 movingBonus_update_chaos_set_end:
+    dec movingBonus_mode                    ; make it 1, so that we can reinsert again.
     jsr movingBonus_reset
     rts
 
-movingBonus_update_end:
+movingBonus_update_visible:
     jsr movingBonus_move
     jsr movingBonus_hitDetect
     rts
+
+
+
+
+movingBonus_update_insert:
+    dec movingBonus_update_insert_frame
+    bne movingBonus_update_insert_end
+    lda #50
+    sta movingBonus_update_insert_frame
+    dec movingBonus_update_insert_cnt
+    bne movingBonus_update_insert_end
+    lda movingBonus_update_insert_lim
+    sta movingBonus_update_insert_cnt
+
+    lda $d015    ; we set sprite close sprite
+    ora #$10
+    sta $d015
+    lda #0
+    sta movingBonus_mode
+    sta movingBonus_move_x_index
+    sta movingBonus_move_y_mode
+    sta movingBonus_move_x_split
+
+movingBonus_update_insert_end:    
+    rts       
 ;-------------------------------
 
 movingBonus_reset:
