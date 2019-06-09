@@ -68,4 +68,5 @@ loopGameRunning:
 .include "howto.asm"
 .include "wall.asm"
 .include "gameBgLevels.asm"
+.include "movingBonus.asm"
 .include "loadData.asm"

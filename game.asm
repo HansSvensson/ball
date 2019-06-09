@@ -24,6 +24,7 @@ game_init_start:
     jsr bullet_init
     jsr bonus_init
     jsr wall_init
+    jsr movingBonus_init
     lda #24
     sta game_anim_delay
     jsr game_anim
@@ -204,6 +205,7 @@ game_rest_every:
    jsr game_anim
    jsr bonus_insert
    jsr wall_update
+   jsr movingBonus_update
    ;Check if game ended---
 game_isrAfterUpdate:   
    jsr gameEnded

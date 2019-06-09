@@ -14,6 +14,7 @@ gameOver:
     ;and #%11101111
     ;sta $d016
 
+    jsr movingBonus_reset
 
     ldx #0
     lda #35
