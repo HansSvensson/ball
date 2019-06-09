@@ -143,6 +143,7 @@ movingBonus_hitDetect_ball3:
 
 
 movingBonus_hitDetect_hit:
+    jsr movingBonus_incScore
     lda $d015    ; we set sprite close sprite
     and #$EF
     sta $d015
@@ -154,6 +155,31 @@ movingBonus_hitDetect_end:
     rts    
 
 
+movingBonus_incScore:
+    cmp ball_player_1
+    beq movingBonus_incScore_pl1
+    ldx #4
+    jmp movingBonus_incScore_do
+
+movingBonus_incScore_pl1:
+    ldx #0
+movingBonus_incScore_do:
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    jsr score_increase
+    rts
 
 movingBonus_screen_dirX: .byte 0
 movingBonus_screen_dirY: .byte 0
