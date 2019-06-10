@@ -120,6 +120,7 @@ movingBonus_hitDetect_ball1:
     lda ball_temp_d01e
     and #1
     beq movingBonus_hitDetect_ball2
+    ldx #0
     lda ball_owner
     cmp ball_player_none
     beq movingBonus_hitDetect_ball2
@@ -128,6 +129,7 @@ movingBonus_hitDetect_ball2:
     lda ball_temp_d01e
     and #2
     beq movingBonus_hitDetect_ball3
+    ldx #2
     lda ball_owner+2
     cmp ball_player_none
     beq movingBonus_hitDetect_ball3
@@ -136,6 +138,7 @@ movingBonus_hitDetect_ball3:
     lda ball_temp_d01e
     and #4
     beq movingBonus_hitDetect_end
+    ldx #4
     lda ball_owner+4
     cmp ball_player_none
     beq movingBonus_hitDetect_end
@@ -143,6 +146,8 @@ movingBonus_hitDetect_ball3:
 
 
 movingBonus_hitDetect_hit:
+    jsr movingBonus_hitbox
+    beq movingBonus_hitDetect_end
     jsr movingBonus_incScore
     lda $d015    ; we set sprite close sprite
     and #$EF
@@ -153,6 +158,38 @@ movingBonus_hitDetect_end:
     pla
     tax
     rts    
+
+movingBonus_hitbox:
+    lda $d000,x
+    cmp movingBonus_move_x_min
+    bcs movingBonus_hitbox_x_max
+    jmp movingBonus_hitbox_end
+movingBonus_hitbox_x_max:    
+    cmp movingBonus_move_x_max
+    bcc movingBonus_hitbox_y
+    jmp movingBonus_hitbox_end
+movingBonus_hitbox_y:
+    lda $d009
+    clc
+    adc #$dc
+    cmp $d001,x
+    bcc movingBonus_hitbox_y_max
+    jmp movingBonus_hitbox_end
+movingBonus_hitbox_y_max:
+    lda $d009
+    clc
+    adc #24
+    cmp $d001,x
+    bcs movingBonus_hitbox_fin
+
+movingBonus_hitbox_end:
+    lda #0
+    rts
+
+movingBonus_hitbox_fin:
+    lda #1
+    rts
+
 
 
 movingBonus_incScore:
@@ -197,7 +234,7 @@ movingBonus_update_chaos_end:
 
 
 movingBonus_bg:
-    lda $d41B
+    lda sound_random_value
     sta $3100
     sta $3101
     sta $3102
@@ -254,7 +291,8 @@ movingBonus_move_y_mode .byte 0
 movingBonus_move_x_split .byte 0
 movingBonus_move_y_up_lim   = #101
 movingBonus_move_y_down_lim = #190
-
+movingBonus_move_x_min = #125    ; 149 - 24 because of sprite left down corner
+movingBonus_move_x_max = #220    ; 196 + 24 becase of sprite width
 
 movingBonus_move_x_sin:  .byte 173,176,179,182,185,188,190,192,194,195,196,196,196,196,195
                          .byte 193,191,189,187,184,181,177,174,171,168,164,161,158,156,154

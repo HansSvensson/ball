@@ -1,6 +1,7 @@
 
 sound_delay_cnt: .byte 0
 sound_delay_lim = #15
+sound_random_value .byte 0
 
 sound_init_game:
     lda #0
@@ -50,6 +51,13 @@ sound_isr_cont:
     jsr game_setIsr
     asl $d019
     ;dec $d020
+
+    ;----make some random number
+    lda $d012 
+    eor $dc04 
+    sbc $dc05 
+    sta sound_random_value
+
     plp
     pla
     tay
