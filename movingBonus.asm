@@ -104,6 +104,9 @@ movingBonus_reset:
     lda #0
     sta $d020
     sta $d021
+    lda $d015    ; we set sprite close sprite
+    and #$EF
+    sta $d015
     rts
 
 movingBonus_hitDetect:
@@ -149,9 +152,6 @@ movingBonus_hitDetect_hit:
     jsr movingBonus_hitbox
     beq movingBonus_hitDetect_end
     jsr movingBonus_incScore
-    lda $d015    ; we set sprite close sprite
-    and #$EF
-    sta $d015
     lda #200
     sta movingBonus_mode
 movingBonus_hitDetect_end:
@@ -228,6 +228,7 @@ movingBonus_update_chaos:
     jsr moveingBonus_screenMove_X
     jsr moveingBonus_colors
     jsr movingBonus_bg
+    jsr movingBonus_sprite
 
 movingBonus_update_chaos_end:
     rts
@@ -251,7 +252,15 @@ moveingBonus_colors:
     inc $d021
     rts
 
+movingBonus_random_old: .byte 0
 
+movingBonus_sprite:
+    lda movingBonus_random_old
+    sta $d009
+    lda sound_random_value
+    sta $d008
+    sta movingBonus_random_old
+    rts
 
 moveingBonus_screenMove_X:
 

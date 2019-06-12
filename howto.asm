@@ -4,8 +4,6 @@ howto_joy_up     .enc screen
                  .text "joystick up     ########move#bat#up"
 howto_joy_down   .enc screen
                  .text "joystick#down     ######move#bat#down"
-howto_joy_left   .enc screen
-                 .text "joystick#left     ######activate wall"
 howto_joy_button .enc screen
                  .text "joystick#button     ####bash and shoot"
 
@@ -16,11 +14,13 @@ howto_rules_bash .enc screen
 howto_rules_pnt  .enc screen
                  .text "* one point for bricks and bonuses"
 howto_rules_bonus .enc screen
-                 .text "* annoy oponent with a wall"
+                 .text "* hit wall to annoy the oponent"
 howto_rules_time .enc screen
                  .text "* control balls y direction by moving"
 howto_rules_shoot .enc screen
                  .text "  bat against or with the balls dir."
+howto_rules_ht   .enc screen
+                 .text "* hit the ht logo to get 15 points."
 howto_quit       .enc screen
                  .text "press fire"
 howto_bonuses_cap .enc screen
@@ -40,7 +40,7 @@ howto_bonuses_unstop .enc screen
 row1start = $410
 row2start = row1start + $19 + $28
 row3start = row2start + $28 
-row4start = row3start + $28
+row4start = row3start ;Todo not used
 row5start = row4start + $28
 row6start = row5start + $28 + $28 + 16
 row7start = row6start + $18 + $28
@@ -48,8 +48,9 @@ row8start = row7start + $28
 row9start = row8start + $28
 row10start = row9start + $28
 row11start = row10start + $28
+row115start = row11start + $28
 
-row12start = row11start + $28 + $28 + 11
+row12start = row115start + $28 + $28 + 11
 
 row13start = row12start + $28 + $28 -5
 row14start = row13start + $28 +3
@@ -110,15 +111,6 @@ howto_down:
     cpy #37
     bne howto_down
     
-    ldy #0
-
-howto_left:
-    lda howto_joy_left,y
-    sta row4start,y
-    iny
-    cpy #37
-    bne howto_left
-
     ldy #0
 
 howto_button:
@@ -186,6 +178,15 @@ howto_shoot:
 
     ldy #0
 
+howto_ht:
+    lda howto_rules_ht,y
+    sta row115start,y
+    iny
+    cpy #34
+    bne howto_ht
+
+    ldy #0
+
 howto_bonuses:
     lda howto_bonuses_cap,y
     sta row12start,y
@@ -233,7 +234,7 @@ howto_all:
 howto_bullet:
     lda howto_bonuses_bullet,y
     sta row16start,y
-    lda #4
+    lda #3
     sta row16start+$d400,y
     iny
     cpy #21
@@ -244,7 +245,7 @@ howto_bullet:
 howto_unstop:
     lda howto_bonuses_unstop,y
     sta row17start,y
-    lda #3
+    lda #4
     sta row17start+$d400,y
     iny
     cpy #37
