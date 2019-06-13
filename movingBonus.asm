@@ -20,7 +20,7 @@ movingBonus_init:
     sta $07fc    ; set pointer: sprite data at $2040
     
     lda $d01c
-    ora #$10
+    and #$ef
     sta $d01c
     
     ;lda #12     ;sprite multicolor 1
@@ -50,6 +50,9 @@ movingBonus_update_insert_frame: .byte 0
 movingBonus_update_insert_cnt:   .byte 0
 
 movingBonus_update:
+    lda game_sixBalls
+    bne movingBonus_update_end
+   
     lda movingBonus_mode              ; 0=Visible, 1=not visible, wait to insert,  3> Chaos mode active
     beq movingBonus_update_visible
     cmp #1
@@ -71,7 +74,8 @@ movingBonus_update_visible:
     jsr movingBonus_hitDetect
     rts
 
-
+movingBonus_update_end:
+    rts
 
 
 movingBonus_update_insert:

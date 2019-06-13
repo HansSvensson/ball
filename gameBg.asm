@@ -566,17 +566,17 @@ gameBq_print_tech:
 ;    cmp #2
 ;    beq gameBq_print_tech_2
 gameBq_print_tech_0:
-    lda #<gamebg_field_tech0
+    lda #<gamebg_field_bashball_1
     sta 2
-    lda #>gamebg_field_tech0
+    lda #>gamebg_field_bashball_1
     sta 3
-    lda gamebg_field_tech0_bonus
+    lda gamebg_field_bashball_1_bonus
     sta bonus_insert_pos
-    lda gamebg_field_tech0_bonus+1
+    lda gamebg_field_bashball_1_bonus+1
     sta bonus_insert_pos+1
-    lda gamebg_field_tech0_bonus+2
+    lda gamebg_field_bashball_1_bonus+2
     sta bonus_insert_pos+2
-    lda gamebg_field_tech0_bonus+3
+    lda gamebg_field_bashball_1_bonus+3
     sta bonus_insert_pos+3
     jmp gameBg_print_start
 ;gameBq_print_tech_1:
