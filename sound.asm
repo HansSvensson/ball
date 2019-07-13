@@ -4,13 +4,13 @@ sound_delay_lim = #15
 sound_random_value .byte 0
 
 sound_init_game:
-    lda #0
-    jsr $5f80
+    lda #2
+    jsr $1000
     rts
 
 sound_init_menu:
-    lda #1
-    jsr $5f80
+    lda #0
+    jsr $1000
     lda #<sound_isr_only   ;Set raster interrupt position
     sta $fffe
     lda #>sound_isr_only
@@ -47,7 +47,7 @@ sound_isr:
     beq sound_isr_cont
     inc sound_delay_cnt
 sound_isr_cont:    
-    jsr $5012
+    jsr $1003
     jsr game_setIsr
     asl $d019
     ;dec $d020
@@ -81,7 +81,7 @@ sound_isr_only:
     inc sound_delay_cnt
 sound_isr_only_cont:    
     ;inc $d020
-    jsr $5012
+    jsr $1003
     asl $d019
     ;lda #0
     ;sta $d020

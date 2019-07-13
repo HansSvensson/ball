@@ -53,8 +53,8 @@ htSprite:
 .byte $00,$01,$c0,$00,$01,$c0,$00,$01
 .byte $c0,$00,$00,$00,$00,$00,$00,$0b
 
-*=$5000
-.binary "resources/music.sid",$7e
+*=$1000
+.binary "resources/music.sid",2
 
 
 

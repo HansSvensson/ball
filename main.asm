@@ -54,7 +54,7 @@ loopGameRunning:
            jsr gameOver
            jmp loop
 
-
+*=$4000
 .include "game.asm"
 .include "bat.asm"
 .include "ball.asm"
