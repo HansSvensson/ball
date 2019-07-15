@@ -1,66 +1,61 @@
-howto_joy_ctrl   .enc screen
-                 .text "controls"
-howto_joy_up     .enc screen
-                 .text "joystick up     ########move#bat#up"
-howto_joy_down   .enc screen
-                 .text "joystick#down     ######move#bat#down"
-howto_joy_button .enc screen
-                 .text "joystick#button     ####bash and shoot"
+howto_row1       .enc screen
+                 .text "////////////////////////////////////////"
+howto_row2       .enc screen
+                 .text "/////////  welcome to the game  ////////"
+howto_row3       .enc screen
+                 .text "////////////////////////////////////////"
 
-howto_rules_cap  .enc screen
-                 .text "hints"
-howto_rules_bash .enc screen
-                 .text "* claim oponents balls by bashing them"
-howto_rules_pnt  .enc screen
-                 .text "* one point for bricks and bonuses"
-howto_rules_bonus .enc screen
-                 .text "* hit wall to annoy the oponent"
-howto_rules_time .enc screen
-                 .text "* control balls y direction by moving"
-howto_rules_shoot .enc screen
-                 .text "  bat against or with the balls dir."
-howto_rules_ht   .enc screen
-                 .text "* hit the ht logo to get 15 points."
+howto_row4       .enc screen
+                 .text "1. use two certified joysticks          "
+howto_row5       .enc screen
+                 .text "2. claim balls, hit bricks, get points  "
+howto_row6       .enc screen
+                 .text "3. get bonuses for mega powers          "
+
+howto_row7       .enc screen
+                 .text "when you hit the ball:                  "
+howto_row8       .enc screen
+                 .text " * claim it with fire button (bash)     "
+howto_row9       .enc screen
+                 .text " * change its course by moving the bat  "
+
+howto_row10       .enc screen
+                 .text "bonuses:                                "
+howto_row11       .enc screen
+                 .text " * green: your bat is so big            "
+howto_row12       .enc screen
+                 .text " * red: opponent's bat is so small      "
+howto_row13       .enc screen
+                 .text " * yellow: claim all the balls          "
+howto_row14       .enc screen
+                 .text " * cyan: shotgun (use with fire)        "
+howto_row15       .enc screen
+                 .text " * purpel: bazooka balls                "
+howto_row16       .enc screen
+                 .text " * ht: 15 points & eternal glory        "
+howto_row17       .enc screen
+                 .text "dont stare at the screen for too long ! "
 howto_quit       .enc screen
-                 .text "press fire"
-howto_bonuses_cap .enc screen
-                  .text "bonuses by color"
-howto_bonuses_small .enc screen
-                    .text "oponent gets a smaller bat"
-howto_bonuses_large .enc screen
-                    .text "you get a larger bat"
-howto_bonuses_all   .enc screen
-                    .text "you own all balls"
-howto_bonuses_bullet .enc screen
-                     .text "you can shoot bullets"
-howto_bonuses_unstop .enc screen
-                     .text "your balls can go through many bricks"
+                 .text "             press fire                 "
 
-
-row1start = $410
-row2start = row1start + $19 + $28
-row3start = row2start + $28 
-row4start = row3start ;Todo not used
-row5start = row4start + $28
-row6start = row5start + $28 + $28 + 16
-row7start = row6start + $18 + $28
-row8start = row7start + $28
-row9start = row8start + $28
-row10start = row9start + $28
-row11start = row10start + $28
-row115start = row11start + $28
-
-row12start = row115start + $28 + $28 + 11
-
-row13start = row12start + $28 + $28 -5
-row14start = row13start + $28 +3
-row15start = row14start + $28 +1
-row16start = row15start + $28 -2
-row17start = row16start + $28 -8
-
-row18start = row17start + $28 + $28 + $28 + 14
-
-
+row1 = $400
+row2 = row1 + 40
+row3 = row2 + 40
+row4 = row3 + 40 + 40 + 40
+row5 = row4 + 40
+row6 = row5 + 40
+row7 = row6 + 40 + 40
+row8 = row7 + 40
+row9 = row8 + 40
+row10 = row9 + 40 + 40
+row11 = row10 + 40
+row12 = row11 + 40
+row13 = row12 + 40
+row14 = row13 + 40
+row15 = row14 + 40
+row16 = row15 + 40
+row17 = row16 + 40 + 40 +40
+row18 = row17 + 40 + 40 
 
 howto_init:
     
@@ -81,178 +76,177 @@ howto_fillGrey:
     iny
     bne howto_fillGrey
 
-    ldy #0
-    
-howto_ctrl:
-    lda howto_joy_ctrl,y
-    sta row1start,y
+
+    ldy #0    
+howto_row1_loop:
+    lda howto_row1,y
+    sta row1,y
     lda #1
-    sta row1start+$d400,y
+    sta row1+$d400,y
     iny
-    cpy #8
-    bne howto_ctrl
-
+    cpy #40
+    bne howto_row1_loop
 
     ldy #0
-
-howto_up:
-    lda howto_joy_up,y
-    sta row2start,y
-    iny
-    cpy #35
-    bne howto_up
-    
-    ldy #0
-    
-howto_down:
-    lda howto_joy_down,y
-    sta row3start,y
-    iny
-    cpy #37
-    bne howto_down
-    
-    ldy #0
-
-howto_button:
-    lda howto_joy_button,y
-    sta row5start,y
-    iny
-    cpy #38
-    bne howto_button
-    
-    ldy #0
-
-howto_rules:
-    lda howto_rules_cap,y
-    sta row6start,y
+howto_row2_loop:
+    lda howto_row2,y
+    sta row2,y
     lda #1
-    sta row6start+$d400,y
+    sta row2+$d400,y
     iny
-    cpy #5
-    bne howto_rules
+    cpy #40
+    bne howto_row2_loop
 
-    ldy #0
-
-howto_bash:
-    lda howto_rules_bash,y
-    sta row7start,y
-    iny
-    cpy #38
-    bne howto_bash
-
-    ldy #0
-
-howto_pnt:
-    lda howto_rules_pnt,y
-    sta row8start,y
-    iny
-    cpy #34
-    bne howto_pnt
-
-    ldy #0
-
-howto_bonus:
-    lda howto_rules_bonus,y
-    sta row9start,y
-    iny
-    cpy #27
-    bne howto_bonus
-    
-    ldy #0
-
-howto_time:
-    lda howto_rules_time,y
-    sta row10start,y
-    iny
-    cpy #37
-    bne howto_time
-
-    ldy #0
-
-howto_shoot:
-    lda howto_rules_shoot,y
-    sta row11start,y
-    iny
-    cpy #36
-    bne howto_shoot
-
-    ldy #0
-
-howto_ht:
-    lda howto_rules_ht,y
-    sta row115start,y
-    iny
-    cpy #34
-    bne howto_ht
-
-    ldy #0
-
-howto_bonuses:
-    lda howto_bonuses_cap,y
-    sta row12start,y
+    ldy #0   
+howto_row3_loop:
+    lda howto_row3,y
+    sta row3,y
     lda #1
-    sta row12start+$d400,y
+    sta row3+$d400,y
     iny
-    cpy #16
-    bne howto_bonuses
+    cpy #40
+    bne howto_row3_loop
+
+    ldy #0    
+howto_row4_loop:
+    lda howto_row4,y
+    sta row4,y
+    iny
+    cpy #40
+    bne howto_row4_loop
 
     ldy #0
 
-howto_small:
-    lda howto_bonuses_small,y
-    sta row13start,y
-    lda #2
-    sta row13start+$d400,y
+howto_row5_loop:
+    lda howto_row5,y
+    sta row5,y
     iny
-    cpy #26
-    bne howto_small
+    cpy #40
+    bne howto_row5_loop
 
     ldy #0
+howto_row6_loop:
+    lda howto_row6,y
+    sta row6,y
+    iny
+    cpy #40
+    bne howto_row6_loop
 
-howto_large:
-    lda howto_bonuses_large,y
-    sta row14start,y
+    ldy #0
+howto_row7_loop:
+    lda howto_row7,y
+    sta row7,y
+    lda #1
+    sta row7+$d400,y
+    iny
+    cpy #40
+    bne howto_row7_loop
+
+    ldy #0
+howto_row8_loop:
+    lda howto_row8,y
+    sta row8,y
+    iny
+    cpy #40
+    bne howto_row8_loop
+
+    ldy #0
+howto_row9_loop:
+    lda howto_row9,y
+    sta row9,y
+    iny
+    cpy #40
+    bne howto_row9_loop
+
+
+   ldy #0    
+howto_row10_loop:
+    lda howto_row10,y
+    sta row10,y
+    lda #1
+    sta row10+$d400,y
+    iny
+    cpy #40
+    bne howto_row10_loop
+
+   ldy #0    
+howto_row11_loop:
+    lda howto_row11,y
+    sta row11,y
     lda #5
-    sta row14start+$d400,y
+    sta row11+$d400,y
     iny
-    cpy #20
-    bne howto_large
+    cpy #40
+    bne howto_row11_loop
 
-    ldy #0
+   ldy #0    
+howto_row12_loop:
+    lda howto_row12,y
+    sta row12,y
+    lda #2
+    sta row12+$d400,y
+    iny
+    cpy #40
+    bne howto_row12_loop
 
-howto_all:
-    lda howto_bonuses_all,y
-    sta row15start,y
+   ldy #0    
+howto_row13_loop:
+    lda howto_row13,y
+    sta row13,y
     lda #7
-    sta row15start+$d400,y
+    sta row13+$d400,y
     iny
-    cpy #17
-    bne howto_all
+    cpy #40
+    bne howto_row13_loop
 
-    ldy #0
 
-howto_bullet:
-    lda howto_bonuses_bullet,y
-    sta row16start,y
+   ldy #0    
+howto_row14_loop:
+    lda howto_row14,y
+    sta row14,y
     lda #3
-    sta row16start+$d400,y
+    sta row14+$d400,y
     iny
-    cpy #21
-    bne howto_bullet
+    cpy #40
+    bne howto_row14_loop
 
-    ldy #0
-
-howto_unstop:
-    lda howto_bonuses_unstop,y
-    sta row17start,y
+   ldy #0    
+howto_row15_loop:
+    lda howto_row15,y
+    sta row15,y
     lda #4
-    sta row17start+$d400,y
+    sta row15+$d400,y
     iny
-    cpy #37
-    bne howto_unstop
+    cpy #40
+    bne howto_row15_loop
+
+   ldy #0    
+howto_row16_loop:
+    lda howto_row16,y
+    sta row16,y
+    lda #6
+    sta row16+$d400,y
+    iny
+    cpy #40
+    bne howto_row16_loop
+
+   ldy #0    
+howto_row17_loop:
+    lda howto_row17,y
+    sta row17,y
+    iny
+    cpy #40
+    bne howto_row17_loop
+
+    
+
+
 
     ldy #0
-    ;jsr gameOverWaitJoy
+ 
+
+
+
 
 howto_WaitJoy: 
     jsr howto_quit_print  
@@ -296,10 +290,10 @@ howto_quit_print_do:
     ldy #0
 howto_quit_print_doLoop:
     lda howto_quit,y
-    sta row18start,y
+    sta row18,y
     lda howto_quitColor
-    sta $d400+row18start,y
+    sta $d400+row18,y
     iny
-    cpy #10
+    cpy #40
     bne howto_quit_print_doLoop
     rts

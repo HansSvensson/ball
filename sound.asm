@@ -4,7 +4,7 @@ sound_delay_lim = #15
 sound_random_value .byte 0
 
 sound_init_game:
-    lda #2
+    lda #1
     jsr $1000
     rts
 
