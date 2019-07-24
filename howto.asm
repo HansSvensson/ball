@@ -20,19 +20,19 @@ howto_row9       .enc screen
                  .text " * change its course by moving the bat  "
 
 howto_row10       .enc screen
-                 .text "bonuses:                                "
+                 .text "bonuses                                 "
 howto_row11       .enc screen
-                 .text " * green: your bat is so big            "
+                 .text " * green   your bat is so big            "
 howto_row12       .enc screen
-                 .text " * red: opponent's bat is so small      "
+                 .text " * red     opponent's bat is so small      "
 howto_row13       .enc screen
-                 .text " * yellow: claim all the balls          "
+                 .text " * yellow  claim all the balls          "
 howto_row14       .enc screen
-                 .text " * cyan: shotgun (use with fire)        "
+                 .text " * cyan    shotgun (use with fire)        "
 howto_row15       .enc screen
-                 .text " * purpel: bazooka balls                "
+                 .text " * purpel  bazooka balls                "
 howto_row16       .enc screen
-                 .text " * ht: 15 points & eternal glory        "
+                 .text " * ht      15 points & eternal glory        "
 howto_row17       .enc screen
                  .text "dont stare at the screen for too long ! "
 howto_quit       .enc screen
