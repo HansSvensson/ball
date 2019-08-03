@@ -206,6 +206,7 @@ game_rest_every:
    jsr bonus_insert
    jsr wall_update
    jsr movingBonus_update
+   jsr sound_playHt
    ;Check if game ended---
 game_isrAfterUpdate:   
    jsr gameEnded

@@ -5,6 +5,8 @@ gameOverTextEqual .enc screen
 gameOverTextF1 .enc screen
              .text "press#f1#to#continue"
 gameOver:
+    lda #3
+    sta sound_songToPlay
     jsr sound_init_menu
     ;lda $d018          ;set location of charset
     ;and #$f1

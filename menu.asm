@@ -1,6 +1,9 @@
 ;-------------------Does init and function blocking---------------------
 menu:
     ;Clean up
+    lda #0
+    sta sound_songToPlay
+    jsr sound_init_menu
     jsr menu_cleanChar
     lda #0
     sta menu_position

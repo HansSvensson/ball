@@ -111,6 +111,7 @@ movingBonus_reset:
     lda $d015    ; we set sprite close sprite
     and #$EF
     sta $d015
+    jsr sound_playHtStop
     rts
 
 movingBonus_hitDetect:
@@ -233,6 +234,7 @@ movingBonus_update_chaos:
     jsr moveingBonus_colors
     jsr movingBonus_bg
     jsr movingBonus_sprite
+    jsr sound_playHtStart
 
 movingBonus_update_chaos_end:
     rts

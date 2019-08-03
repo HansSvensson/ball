@@ -35,13 +35,15 @@ howto_row16       .enc screen
                  .text " * ht      15 points & eternal glory        "
 howto_row17       .enc screen
                  .text "dont stare at the screen for too long ! "
+howto_row18       .enc screen
+                 .text "aro(code,gfx)  goto80(sfx)  vinzi(font) "
 howto_quit       .enc screen
                  .text "             press fire                 "
 
 row1 = $400
 row2 = row1 + 40
 row3 = row2 + 40
-row4 = row3 + 40 + 40 + 40
+row4 = row3 + 40 + 40
 row5 = row4 + 40
 row6 = row5 + 40
 row7 = row6 + 40 + 40
@@ -54,8 +56,9 @@ row13 = row12 + 40
 row14 = row13 + 40
 row15 = row14 + 40
 row16 = row15 + 40
-row17 = row16 + 40 + 40 +40
-row18 = row17 + 40 + 40 
+row17 = row16 + 40 + 40
+row18 = row17 + 40 + 40
+row19 = row18 + 40 + 40 
 
 howto_init:
     
@@ -233,10 +236,18 @@ howto_row16_loop:
    ldy #0    
 howto_row17_loop:
     lda howto_row17,y
-    sta row17,y
+    sta row18,y
     iny
     cpy #40
     bne howto_row17_loop
+   
+   ldy #0    
+howto_row18_loop:
+    lda howto_row18,y
+    sta row17,y
+    iny
+    cpy #40
+    bne howto_row18_loop
 
     
 
@@ -290,9 +301,9 @@ howto_quit_print_do:
     ldy #0
 howto_quit_print_doLoop:
     lda howto_quit,y
-    sta row18,y
+    sta row19,y
     lda howto_quitColor
-    sta $d400+row18,y
+    sta $d400+row19,y
     iny
     cpy #40
     bne howto_quit_print_doLoop

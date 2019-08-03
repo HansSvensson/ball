@@ -307,6 +307,7 @@ gameBg_hit_1_c:
     sta (main_temp_pointer_2),y
 
 gameBg_hit_1_score:
+    jsr sound_playBrick
     jsr gameBg_bricksLeft
     jsr gameBg_bricksLeft
     jsr gameBg_getOwner
@@ -854,6 +855,7 @@ gameBg_colorRePaint: .byte 0
 
 gameBg_drawSingleColor:
 
+    jsr sound_playBricksReappear
     ;----test-----
 
     lda gameBg_activeBg

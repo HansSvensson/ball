@@ -1,15 +1,23 @@
 
+; #0  -  intro tune
+; #6  -  game tune
+; #3  -  tune song end
+;
+;
+
+
 sound_delay_cnt: .byte 0
 sound_delay_lim = #15
 sound_random_value .byte 0
+sound_songToPlay .byte 0
 
 sound_init_game:
-    lda #1
+    lda #6
     jsr $1000
     rts
 
 sound_init_menu:
-    lda #0
+    lda sound_songToPlay
     jsr $1000
     lda #<sound_isr_only   ;Set raster interrupt position
     sta $fffe
@@ -93,3 +101,103 @@ sound_isr_only_cont:
     pla
     rti
    
+
+sound_playBrick:
+    lda #$39
+    sta $12ef
+    lda #0
+    sta $12e0
+    rts
+sound_playPlayer1Claim:
+    lda #$66
+    sta $12ef
+    lda #0
+    sta $12e0
+    rts    
+sound_playPlayer2Claim:
+    lda #$6d
+    sta $12ef
+    lda #0
+    sta $12e0
+    rts    
+sound_playBricksReappear:
+    lda #$47
+    sta $12ef
+    lda #0
+    sta $12e0
+    rts
+sound_playBonusLarge:
+    lda #$4c
+    sta $12ef
+    lda #0
+    sta $12e0
+    rts
+sound_playBonusSmall:
+    lda #$51
+    sta $12ef
+    lda #0
+    sta $12e0
+    rts
+sound_playBonusUnStopable:
+    lda #$75
+    sta $12ef
+    lda #0
+    sta $12e0
+    rts
+sound_playBonusBullet:
+    lda #$56
+    sta $12ef
+    lda #0
+    sta $12e0
+    rts
+sound_playBonusBulletShoot:
+    lda #$5d
+    sta $12ef
+    lda #0
+    sta $12e0
+    rts
+sound_playBonusOwnAll:
+    lda #$7b
+    sta $12ef
+    lda #0
+    sta $12e0
+    rts
+
+
+
+
+
+;--------HT SOUND EFFECT-------------
+sound_playHtActive .byte 0    
+sound_playHtCounter .byte 0   
+
+sound_playHtStart:
+    lda #1
+    sta sound_playHtActive
+    rts
+sound_playHtStop:
+    lda #0
+    sta sound_playHtActive
+    rts
+
+
+
+sound_playHt:
+    lda sound_playHtActive
+    beq sound_playHtEnd
+    lda sound_playHtCounter
+    cmp #10
+    bne sound_playHtNoTrigg
+    lda #$3d
+    sta $12ef
+    lda #0
+    sta $12e0
+    sta sound_playHtCounter
+sound_playHtNoTrigg:
+    inc sound_playHtCounter
+    rts
+sound_playHtEnd:
+    sta sound_playHtCounter    
+    rts
+
+

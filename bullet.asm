@@ -41,6 +41,8 @@ bullet_add_pl1:
     bne bullet_add_end
     inc bullet_active
 
+    jsr sound_playBonusBulletShoot
+
     tya
     pha            ;store x on stack
     txa
@@ -81,6 +83,8 @@ bullet_add_pl2:
     lda bullet_active+1    ;Check if bullet already active
     bne bullet_add_end
     inc bullet_active+1
+
+    jsr sound_playBonusBulletShoot
 
     tya
     pha            ;store x on stack

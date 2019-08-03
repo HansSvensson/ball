@@ -257,6 +257,7 @@ leftDownChangeToBack:
 leftDownChangeToStraight:
     lda RIGHT_STRAIGHT
     sta balls_state,x   
+    jsr sound_playPlayer1Claim
     jsr ball_changeOwner_2_to_1 
 
     jmp ball_update_end
@@ -289,6 +290,7 @@ rightDownChangeToUp:
 rightDownChangeToStraight:
     lda LEFT_STRAIGHT
     sta balls_state,x
+    jsr sound_playPlayer2Claim
     jsr ball_changeOwner_1_to_2 
     jmp ball_update_end
     
@@ -335,6 +337,7 @@ rightUpChangeToLeft:
 rightUpChangeToStraight:
     lda LEFT_STRAIGHT
     sta balls_state,x
+    jsr sound_playPlayer2Claim
     jsr ball_changeOwner_1_to_2 
     jmp ball_update_end
 
@@ -380,6 +383,7 @@ ball_leftUpChangeDown:
 ball_leftUpChangeStraight:
     lda RIGHT_STRAIGHT
     sta balls_state,x 
+    jsr sound_playPlayer1Claim
     jsr ball_changeOwner_2_to_1      
     jmp ball_update_end
 
@@ -415,6 +419,7 @@ ball_leftStraightChangeRight:
 ball_leftStraightChangeStraight:
     lda RIGHT_STRAIGHT
     sta balls_state,x  
+    jsr sound_playPlayer1Claim
     jsr ball_changeOwner_2_to_1 
          
     jmp ball_update_end
@@ -437,6 +442,7 @@ rightStraightChangeToLeft:
 rightStraightChangeToStraight:
     lda LEFT_STRAIGHT
     sta balls_state,x
+    jsr sound_playPlayer2Claim
     jsr ball_changeOwner_1_to_2 
     jmp ball_update_end
 

@@ -161,21 +161,25 @@ bonus_op_smaller:
     lda #255
     sta bonus_timer,x
     jsr bat_bonus_smaller
+    jsr sound_playBonusSmall
     rts
 bonus_op_larger:
     lda #255
     sta bonus_timer,x
     jsr bat_bonus_larger
+    jsr sound_playBonusLarge
     rts
 bonus_bullet:
     lda #255
     sta bonus_timer,x
     jsr bullet_activate
+    jsr sound_playBonusBullet
     rts
 bonus_unStopable:
     lda #255
     sta bonus_timer,x
     jsr ball_unStopableActivate
+    jsr sound_playBonusUnStopable
     rts
 
 bonus_op_ownAll:
@@ -184,6 +188,7 @@ bonus_op_ownAll:
     jsr ball_changeOwnerAll
     lda #5
     sta bonus_flash_cnt
+    jsr sound_playBonusOwnAll
     rts
 
 

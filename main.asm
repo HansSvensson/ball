@@ -42,8 +42,8 @@ clearing:
 
            ;cli
  
-           jsr howto_init
            jsr sound_init_menu
+           jsr howto_init
 loop:
            jsr menu
            jsr game_init
