@@ -5,14 +5,16 @@
 ;
 ;
 
-
-sound_delay_cnt: .byte 0
+sound_effec_delay_value = 4
+sound_delay_cnt: .byte 0         ;Counter to make the menus a move at a good speed
 sound_delay_lim = #15
 sound_random_value .byte 0
 sound_songToPlay .byte 0
+sound_effect_delay .byte 0
 
 sound_init_game:
-    lda #6
+    lda #1 ;TODO change back 
+    ;lda #6
     jsr $1000
     rts
 
@@ -60,7 +62,13 @@ sound_isr_cont:
     asl $d019
     ;dec $d020
 
+    ;----Dec sound effect counter
+    lda sound_effect_delay
+    beq sound_isr_rand
+    dec sound_effect_delay
+
     ;----make some random number
+sound_isr_rand:    
     lda $d012 
     eor $dc04 
     sbc $dc05 
@@ -103,67 +111,110 @@ sound_isr_only_cont:
    
 
 sound_playBrick:
-    lda #$39
+    lda sound_effect_delay
+    bne sound_playReturn 
+    lda sound_effec_delay_value
+    sta sound_effect_delay
+    lda #$3b
     sta $12ef
     lda #0
     sta $12e0
+    inc $d020
+sound_playBrick_end:    
     rts
 sound_playPlayer1Claim:
+    lda sound_effect_delay
+    bne sound_playReturn 
+    lda sound_effec_delay_value
+    sta sound_effect_delay
     lda #$66
     sta $12ef
     lda #0
     sta $12e0
     rts    
 sound_playPlayer2Claim:
-    lda #$6d
+    lda sound_effect_delay
+    bne sound_playReturn 
+    lda sound_effec_delay_value
+    sta sound_effect_delay
+    lda #$6e
     sta $12ef
     lda #0
     sta $12e0
     rts    
 sound_playBricksReappear:
-    lda #$47
+    lda sound_effect_delay
+    bne sound_playReturn 
+    lda sound_effec_delay_value
+    sta sound_effect_delay
+    lda #$48
     sta $12ef
     lda #0
     sta $12e0
     rts
 sound_playBonusLarge:
-    lda #$4c
+    lda sound_effect_delay
+    bne sound_playReturn 
+    lda sound_effec_delay_value
+    sta sound_effect_delay
+    lda #$4e
     sta $12ef
     lda #0
     sta $12e0
     rts
 sound_playBonusSmall:
-    lda #$51
+    lda sound_effect_delay
+    bne sound_playReturn 
+    lda sound_effec_delay_value
+    sta sound_effect_delay
+    lda #$52
     sta $12ef
     lda #0
     sta $12e0
     rts
 sound_playBonusUnStopable:
-    lda #$75
+    lda sound_effect_delay
+    bne sound_playReturn 
+    lda sound_effec_delay_value
+    sta sound_effect_delay
+    lda #$76
     sta $12ef
     lda #0
     sta $12e0
     rts
 sound_playBonusBullet:
-    lda #$56
+    lda sound_effect_delay
+    bne sound_playReturn 
+    lda sound_effec_delay_value
+    sta sound_effect_delay
+    lda #$57
     sta $12ef
     lda #0
     sta $12e0
     rts
 sound_playBonusBulletShoot:
-    lda #$5d
+    lda sound_effect_delay
+    bne sound_playReturn 
+    lda sound_effec_delay_value
+    sta sound_effect_delay
+    lda #$5f
     sta $12ef
     lda #0
     sta $12e0
     rts
 sound_playBonusOwnAll:
-    lda #$7b
+    lda sound_effect_delay
+    bne sound_playReturn 
+    lda sound_effec_delay_value
+    sta sound_effect_delay
+    lda #$7d
     sta $12ef
     lda #0
     sta $12e0
     rts
 
-
+sound_playReturn
+    rts
 
 
 
@@ -188,7 +239,7 @@ sound_playHt:
     lda sound_playHtCounter
     cmp #10
     bne sound_playHtNoTrigg
-    lda #$3d
+    lda #$3e
     sta $12ef
     lda #0
     sta $12e0

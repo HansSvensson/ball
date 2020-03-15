@@ -348,13 +348,13 @@ gameBg_hit_2_c:
     ldy #0    
     clc
     adc #$fe
-    cmp #$48
+    cmp #$4a                     ;How hard a brick should be
     bcs gameBg_hit_2_do          ;if A is equal or larger then  cmp
     jmp gameBg_hit_1
     
 gameBg_hit_2_do
-    clc
-    adc #$1                      ;We have the value for left but we want to store for right
+ ;   clc
+ ;   adc #$1                      ;We have the value for left but we want to store for right
     sta (main_temp_pointer),y
     lda #1
     rts
@@ -481,8 +481,8 @@ gameBg_empty_not:
 ;                          ++++++++  ------------------------------------------------- **** ############## ================ 
                         ;    0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F   10   11   12     13    14
 gamebg_dubble_brick:.byte    0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   2,   0,   0,   0,     0,    0  
-gamebg_field_color: .byte    0,   6,   1,   3,   4,   5,   7,   1,   3,   4,   5,   7,   2,  15,  15,  15,   2,   5,   7,     4,    3
-gamebg_field_char:  .byte  $20, $20, $40, $C0, $C2, $C4, $C6, $42, $42, $42, $42, $42, $4e, $a0, $a6, $af, $80, $82, $84,   $88,  $86
+gamebg_field_color: .byte    0,   6,   1,   3,   4,   5,   7,   1,   3,   4,   2,   7,   2,  15,  15,  15,   2,   5,   7,     4,    3
+gamebg_field_char:  .byte  $20, $20, $40, $C0, $C2, $C4, $C6, $C1, $C3, $C5, $4f, $42, $4e, $a0, $a6, $af, $80, $82, $84,   $88,  $86
 
 ;C64 färger:              CHARS
 ;-----------              -----
@@ -504,6 +504,10 @@ gamebg_field_char:  .byte  $20, $20, $40, $C0, $C2, $C4, $C6, $42, $42, $42, $42
 ;4  -> rosa
 ;5  -> grön
 ;6  -> gul
+; NEW COLORS!!!
+;7 -> vit 2
+;8 -> ljus blå 2
+;9 -> rosa
 
 ;Hårda Brickor nr in table
 ;-------------------------
@@ -515,8 +519,18 @@ gamebg_field_char:  .byte  $20, $20, $40, $C0, $C2, $C4, $C6, $42, $42, $42, $42
 ;17 -> own bigger
 ;15 -> get all balls
 
-
-gameBg_redPaintColors .byte 0,0,0,0,0,0,0,0
+gameBg_redPaintColors_2  = 0
+gameBg_redPaintColors_3  = 1
+gameBg_redPaintColors_4  = 2
+gameBg_redPaintColors_5  = 3
+gameBg_redPaintColors_6  = 4
+gameBg_redPaintColors_7  = 5
+gameBg_redPaintColors_12 = 6
+gameBg_redPaintColors_8  = 7
+gameBg_redPaintColors_9  = 8
+gameBg_redPaintColors_10 = 9
+                           ;2 3 4 5 6 7 12  8 9 10
+gameBg_redPaintColors .byte 0,0,0,0,0,0, 0, 0,0, 0
 
 gameBg_color:  .byte 0
 gameBg_color_2:.byte 0
@@ -769,7 +783,7 @@ gameBg_print_copyCounter:
     sta gameBg_redPaintColors,x
     inx
     iny
-    cpx #8
+    cpx #10
     bne gameBg_print_copyCounter
     rts
 
@@ -996,10 +1010,32 @@ gameBg_checkRepaint_5:
 
 gameBg_checkRepaint_6:
     lda gameBg_redPaintColors+6
-    bne gameBg_checkRepaint_end
+    bne gameBg_checkRepaint_7
     lda #12
     sta gameBg_colorRePaint
     jsr gameBg_drawSingleColor
+
+gameBg_checkRepaint_7:
+    lda gameBg_redPaintColors+7
+    bne gameBg_checkRepaint_8
+    lda #8
+    sta gameBg_colorRePaint
+    jsr gameBg_drawSingleColor
+
+gameBg_checkRepaint_8:
+    lda gameBg_redPaintColors+8
+    bne gameBg_checkRepaint_9
+    lda #9
+    sta gameBg_colorRePaint
+    jsr gameBg_drawSingleColor
+
+gameBg_checkRepaint_9:
+    lda gameBg_redPaintColors+9
+    bne gameBg_checkRepaint_end
+    lda #10
+    sta gameBg_colorRePaint
+    jsr gameBg_drawSingleColor
+
 
 gameBg_checkRepaint_end:
     jsr gameBg_refillColorCounter
@@ -1022,7 +1058,7 @@ gameBg_refillColorCounterLoop:
     sta gameBg_redPaintColors,y
 gameBg_refillColorCounterInc    
     iny
-    cpy #8
+    cpy #10
     bne gameBg_refillColorCounterLoop
     pla
     tay

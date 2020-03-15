@@ -167,7 +167,7 @@ game_isr_game:
    ;Round 2---------------
    dec game_speedCnt
    bne game_rest
-   lda #2
+   lda #1
    sta game_speedCnt
 ball_update_round1_fin:   
    jsr bat_update

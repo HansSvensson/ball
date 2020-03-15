@@ -567,11 +567,11 @@ ball_hit_char_adc:
     cmp #$C0
     beq ball_hit_char_brick_1_1
     cmp #$C1
-    beq ball_hit_char_brick_1_1
+    beq ball_hit_char_brick_1_7    
     cmp #$C2
     beq ball_hit_char_brick_1_2
     cmp #$C3
-    beq ball_hit_char_brick_1_2
+    beq ball_hit_char_brick_1_8
     cmp #$C4
     beq ball_hit_char_brick_1_3
     cmp #$C5
@@ -653,10 +653,10 @@ ball_hit_char_adc:
     cmp #104                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
 
-    cmp #72
+    cmp #$4A
     beq ball_hit_char_brick_hardbrick
-    cmp #73
-    beq ball_hit_char_brick_hardbrick
+    cmp #$4B
+    beq ball_hit_char_brick_hardbrick_2
 
 
     cmp #$60                      ;hit hard bricks
@@ -709,23 +709,50 @@ ball_hit_char_brick_1_4:
 ball_hit_char_brick_1_4_c:    
     jmp ball_hit_char_hit_brick
 
-ball_hit_char_brick_1_5:
+ball_hit_char_brick_1_7:
     jsr gameBg_hit_1
     beq ball_hit_char_hit
-    lda gameBg_redPaintColors+5
-    beq ball_hit_char_brick_1_5_c
-    dec gameBg_redPaintColors+5
-ball_hit_char_brick_1_5_c:    
+    lda gameBg_redPaintColors + gameBg_redPaintColors_7
+    beq ball_hit_char_brick_1_7_c
+    dec gameBg_redPaintColors + gameBg_redPaintColors_7
+ball_hit_char_brick_1_7_c:    
+    jmp ball_hit_char_hit_brick
+
+ball_hit_char_brick_1_8:
+    jsr gameBg_hit_1
+    beq ball_hit_char_hit
+    lda gameBg_redPaintColors+gameBg_redPaintColors_8
+    beq ball_hit_char_brick_1_8_c
+    dec gameBg_redPaintColors+gameBg_redPaintColors_8
+ball_hit_char_brick_1_8_c:    
+    jmp ball_hit_char_hit_brick
+
+ball_hit_char_brick_1_9:
+    jsr gameBg_hit_1
+    beq ball_hit_char_hit
+    lda gameBg_redPaintColors+gameBg_redPaintColors_9
+    beq ball_hit_char_brick_1_9_c
+    dec gameBg_redPaintColors+gameBg_redPaintColors_9
+ball_hit_char_brick_1_9_c:    
     jmp ball_hit_char_hit_brick
 
 
 ball_hit_char_brick_hardbrick:
     jsr gameBg_hit_2
-    lda gameBg_redPaintColors+6
+    lda gameBg_redPaintColors+gameBg_redPaintColors_12
     beq ball_hit_char_brick_hardbrick_c
-    dec gameBg_redPaintColors+6
+    dec gameBg_redPaintColors+gameBg_redPaintColors_12
 ball_hit_char_brick_hardbrick_c:    
     jmp ball_hit_char_hit
+
+ball_hit_char_brick_hardbrick_2:
+    jsr gameBg_hit_2
+    lda gameBg_redPaintColors+gameBg_redPaintColors_10
+    beq ball_hit_char_brick_hardbrick_2_c
+    dec gameBg_redPaintColors+gameBg_redPaintColors_10
+ball_hit_char_brick_hardbrick_2_c:    
+    jmp ball_hit_char_hit
+
 
 
 ball_hit_bonus_1:

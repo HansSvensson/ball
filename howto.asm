@@ -30,7 +30,7 @@ howto_row13       .enc screen
 howto_row14       .enc screen
                  .text " * cyan    shotgun (use with fire)        "
 howto_row15       .enc screen
-                 .text " * purpel  bazooka balls                "
+                 .text " * purple  bazooka balls                "
 howto_row16       .enc screen
                  .text " * ht      15 points & eternal glory        "
 howto_row17       .enc screen
