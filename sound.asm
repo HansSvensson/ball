@@ -7,7 +7,7 @@
 
 sound_effec_delay_value = 4
 sound_delay_cnt: .byte 0         ;Counter to make the menus a move at a good speed
-sound_delay_lim = #15
+sound_delay_lim = #5
 sound_random_value .byte 0
 sound_songToPlay .byte 0
 sound_effect_delay .byte 0
