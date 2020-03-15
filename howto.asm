@@ -13,7 +13,7 @@ howto_row6       .enc screen
                  .text "3. get bonuses for mega powers          "
 
 howto_row7       .enc screen
-                 .text "when you hit the ball:                  "
+                 .text "when you hit the ball                   "
 howto_row8       .enc screen
                  .text " * claim it with fire button (bash)     "
 howto_row9       .enc screen
@@ -39,6 +39,8 @@ howto_row18       .enc screen
                  .text "aro(code,gfx)  goto80(sfx)  vinzi(font) "
 howto_quit       .enc screen
                  .text "             press fire                 "
+howto_version    .enc screen
+                 .text "            version##001                "
 
 row1 = $400
 row2 = row1 + 40
@@ -280,7 +282,7 @@ howto_WaitJoyUp:
 
 howto_quitCnt:   .byte 0
 howto_quitColor: .byte 0
-
+howto_quit_firstime .byte 0
 howto_quit_print:
     lda $d012
     bne howto_quit_print
@@ -300,11 +302,21 @@ howto_quitColor_green:
 howto_quit_print_do:
     ldy #0
 howto_quit_print_doLoop:
+    ;Print version number first time
+    lda howto_quit_firstime   
+    bne howto_quit_print_doLoop_press
+    lda howto_version,y
+    jmp howto_quit_print_doLoop_cont
+howto_quit_print_doLoop_press:
     lda howto_quit,y
+
+howto_quit_print_doLoop_cont:
     sta row19,y
     lda howto_quitColor
     sta $d400+row19,y
     iny
     cpy #40
     bne howto_quit_print_doLoop
+    lda #1
+    sta howto_quit_firstime
     rts

@@ -279,13 +279,17 @@ menu_level_item2 .enc screen
                 .text "alternative"
 menu_level_item3 .enc screen
                 .text "six#balls"
+menu_level_item4 .enc screen
+                .text "do#you#feel#lucky"
+
 ;540 start char
 menu_level_item1_pos = $54e
 menu_level_item2_pos = $54e+$28
 menu_level_item3_pos = $54e+$50
+menu_level_item4_pos = $54e+$78
 
 menu_level:
-    lda #2
+    lda #3
     sta menu_nr_alt
     jsr menu_cleanChar
     jsr menu_move_color
@@ -318,6 +322,14 @@ menu_level_i3:
     cpx #9
     bne menu_level_i3   
     ldx #0
+menu_level_i4:
+    lda menu_level_item4,x
+    sta menu_level_item4_pos,x
+    inx
+    cpx #17
+    bne menu_level_i4   
+    ldx #0
+
     ldx menu_position
     jsr menu_move_color
 
