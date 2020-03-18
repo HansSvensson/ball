@@ -21,6 +21,10 @@ menu:
     sta $d016
 
     jsr menu_move_color
+    jsr menu_balls
+    jsr menu_cleanChar
+    lda #0
+    sta menu_position
     jsr menu_level
     jsr menu_cleanChar
     lda #0
@@ -274,19 +278,19 @@ menu_setTimeLong3: ;960
 menu_level_titel .enc screen
                 .text "select#level"
 menu_level_item1 .enc screen
-                .text "original"
+                .text "five#lanes"
 menu_level_item2 .enc screen
-                .text "alternative"
+                .text "seven#lanes"
 menu_level_item3 .enc screen
-                .text "six#balls"
+                .text "ballevel2"
 menu_level_item4 .enc screen
-                .text "do#you#feel#lucky"
+                .text "ballevel6"
 
 ;540 start char
-menu_level_item1_pos = $54e
-menu_level_item2_pos = $54e+$28
-menu_level_item3_pos = $54e+$50
-menu_level_item4_pos = $54e+$78
+menu_level_item1_pos = $54f
+menu_level_item2_pos = $54f+$28
+menu_level_item3_pos = $54f+$50
+menu_level_item4_pos = $54f+$78
 
 menu_level:
     lda #3
@@ -305,14 +309,14 @@ menu_level_i1:
     lda menu_level_item1,x
     sta menu_level_item1_pos,x
     inx
-    cpx #8
+    cpx #9
     bne menu_level_i1   
     ldx #0
 menu_level_i2:
     lda menu_level_item2,x
     sta menu_level_item2_pos,x
     inx
-    cpx #11
+    cpx #9
     bne menu_level_i2   
     ldx #0
 menu_level_i3:
@@ -326,7 +330,7 @@ menu_level_i4:
     lda menu_level_item4,x
     sta menu_level_item4_pos,x
     inx
-    cpx #17
+    cpx #9
     bne menu_level_i4   
     ldx #0
 
@@ -347,7 +351,62 @@ menu_level_exit:
     rts
 
 
+;------------------BALLS SELECT--------------------- 
+menu_balls_titel .enc screen
+                .text "select#number#of#balls"
+menu_balls_item1 .enc screen
+                .text "3#balls"
+menu_balls_item2 .enc screen
+                .text "6#balls"
 
+;540 start char
+menu_balls_item1_pos = $54f
+menu_balls_item2_pos = $54f+$28
+
+menu_balls:
+    lda #1
+    sta menu_nr_alt
+    jsr menu_cleanChar
+    jsr menu_move_color
+    ldx #0
+menu_balls_title:
+    lda menu_balls_titel,x
+    sta $4f8,x                ;4f0 0 baseline
+    inx
+    cpx #22
+    bne menu_balls_title   
+    ldx #0
+menu_balls_i1:
+    lda menu_balls_item1,x
+    sta menu_balls_item1_pos,x
+    inx
+    cpx #7
+    bne menu_balls_i1   
+    ldx #0
+menu_balls_i2:
+    lda menu_balls_item2,x
+    sta menu_balls_item2_pos,x
+    inx
+    cpx #7
+    bne menu_balls_i2   
+    ldx #0
+
+    ldx menu_position
+    jsr menu_move_color
+
+menu_balls_loop:
+    jsr menu_delay
+    jsr menu_input
+    cmp #1
+    beq menu_balls_exit
+    jsr menu_move
+    lda menu_position
+    sta game_sixBalls
+    jmp menu_balls_loop
+
+menu_balls_exit:
+    rts
+;----------------------------
 
 
 

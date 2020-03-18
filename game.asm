@@ -6,17 +6,6 @@ game_speedCnt    .byte 0
 game_sixBalls    .byte 0   ;0=3 balls  0 != 6 balls
 
 game_init:
-
-    lda gameBg_level
-    cmp #2
-    beq game_init_eightBalls
-    lda #0
-    jmp game_init_start
-game_init_eightBalls:    
-    lda #1
-
-game_init_start:    
-    sta game_sixBalls
     jsr gameBg_init
     jsr ball_init
     jsr bat_init
