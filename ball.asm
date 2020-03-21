@@ -79,9 +79,9 @@ ball_init:
            sta $07fc    ; set pointer: sprite data at $2000
            sta $07fd    ; set pointer: sprite data at $2000
     
-           lda $d01c    ; enable multicolor sprites
-           ora #$3f
-           sta $d01c
+           ;lda $d01c    ; enable multicolor sprites
+           ;ora #$3f
+           ;sta $d01c
            
            ;TODO REMOVE
            ;lda ball_player_1
@@ -130,34 +130,34 @@ ball_resetCord:
            ora #$38
            sta $d010    ; Pl2 sprites starts at right part screen
            
-           lda #30
+           lda #34
            sta $d000    ; set x coordinate to 40
-           lda #$40
+           lda #$7c
            sta $d001    ; set y coordinate to 40
 
-           lda #50
+           lda #38
            sta $d002    ; set x coordinate to 40
-           lda #$60
+           lda #$8c
            sta $d003    ; set y coordinate to 40
 
-           lda #70
+           lda #42
            sta $d004    ; set x coordinate to 40
-           lda #$80
+           lda #$9c
            sta $d005    ; set y coordinate to 40
            
-           lda #18
+           lda #42
            sta $d006    ; set x coordinate to 40
-           lda #$80
+           lda #$9c
            sta $d007    ; set y coordinate to 40
            
-           lda #38
+           lda #46
            sta $d008    ; set x coordinate to 40
-           lda #$60
+           lda #$8c
            sta $d009    ; set y coordinate to 40
 
-           lda #58      ; left is 27in -> right 316 = 255 + 61 -> -24 sprite width => 37
+           lda #50      ; left is 27in -> right 316 = 255 + 61 -> -24 sprite width => 37
            sta $d00a    ; set x coordinate to 40
-           lda #$40
+           lda #$7c
            sta $d00b    ; set y coordinate to 40
            jmp ball_resetCord_end
 
@@ -170,14 +170,14 @@ ball_resetCord_three:
            ora #$2
            sta $d010    ; Pl2 sprites starts at right part screen
            
-           lda #30
+           lda #34
            sta $d000    ; set x coordinate to 40
-           lda #80
+           lda #$7c
            sta $d001    ; set y coordinate to 40
 
-           lda #58
+           lda #50
            sta $d002    ; set x coordinate to 40
-           lda #80
+           lda #$7c
            sta $d003    ; set y coordinate to 40
  
            lda #174

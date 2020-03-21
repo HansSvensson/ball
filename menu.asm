@@ -24,10 +24,17 @@ menu:
     jsr menu_balls
     jsr menu_cleanChar
     lda #0
+
+    jsr menu_move_color
+    jsr menu_speed
+    jsr menu_cleanChar
+    lda #0
+
     sta menu_position
     jsr menu_level
     jsr menu_cleanChar
     lda #0
+
     sta menu_position
     jsr menu_mode
     rts
@@ -405,6 +412,99 @@ menu_balls_loop:
     jmp menu_balls_loop
 
 menu_balls_exit:
+    rts
+;----------------------------
+
+
+
+;------------------BALLS SPEED--------------------- 
+menu_speed_titel .enc screen
+                .text "select#speed"
+menu_speed_item1 .enc screen
+                .text "cool"
+menu_speed_item2 .enc screen
+                .text "sporty"
+menu_speed_item3 .enc screen
+                .text "turbo"
+
+;540 start char
+menu_speed_item1_pos = $54f
+menu_speed_item2_pos = $54f+$28
+menu_speed_item3_pos = $54f+$50
+
+menu_speed:
+    lda #2
+    sta menu_nr_alt
+    jsr menu_cleanChar
+    jsr menu_move_color
+    ldx #0
+menu_speed_title:
+    lda menu_speed_titel,x
+    sta $4fc,x                ;4f0 0 baseline
+    inx
+    cpx #12
+    bne menu_speed_title   
+    ldx #0
+menu_speed_i1:
+    lda menu_speed_item1,x
+    sta menu_speed_item1_pos,x
+    inx
+    cpx #4
+    bne menu_speed_i1   
+    ldx #0
+menu_speed_i2:
+    lda menu_speed_item2,x
+    sta menu_speed_item2_pos,x
+    inx
+    cpx #6
+    bne menu_speed_i2   
+    ldx #0
+menu_speed_i3:
+    lda menu_speed_item3,x
+    sta menu_speed_item3_pos,x
+    inx
+    cpx #5
+    bne menu_speed_i3   
+    ldx #0
+
+    ldx menu_position
+    jsr menu_move_color
+
+menu_speed_loop:
+    jsr menu_delay
+    jsr menu_input
+    cmp #1
+    beq menu_speed_exit
+    jsr menu_move
+    lda menu_position
+    
+menu_speed_loop_cool:
+    cmp #0
+    bne menu_speed_loop_sporty
+    lda #2
+    sta game_BallSpeedRound1
+    lda #0
+    sta game_BallSpeedRound2
+    jmp menu_speed_loop
+menu_speed_loop_sporty:
+    cmp #1
+    bne menu_speed_loop_turbo
+    lda #1
+    sta game_BallSpeedRound1
+    lda #0
+    sta game_BallSpeedRound2
+    jmp menu_speed_loop
+menu_speed_loop_turbo:
+    cmp #2
+    bne menu_speed_loop
+    lda #1
+    sta game_BallSpeedRound1
+    lda #1
+    sta game_BallSpeedRound2
+
+    jmp menu_speed_loop
+
+menu_speed_exit:
     rts
 ;----------------------------
 

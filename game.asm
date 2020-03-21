@@ -2,8 +2,10 @@
 game_mode        .byte 0
 game_running     .byte 0   ;0=keep running the game    1=quit game
 game_init_state: .byte 0
-game_speedCnt    .byte 0
-game_sixBalls    .byte 0   ;0=3 balls  0 != 6 balls
+game_speedRound1Cnt    .byte 0
+game_sixBalls          .byte 0   ;0=3 balls  0 != 6 balls
+game_BallSpeedRound1   .byte 0 ; 1 = every frame, 2 = every second frame
+game_BallSpeedRound2   .byte 0 ; 0 = off          1 = on
 
 game_init:
     jsr gameBg_init
@@ -23,8 +25,8 @@ game_init:
     sta game_running
     jsr game_setIsr
    
-    lda #2
-    sta game_speedCnt
+    lda #1
+    sta game_speedRound1Cnt
     
     lda #190
     sta game_init_state
@@ -73,8 +75,6 @@ game_deinit:
 
 
 game_isr:
-   ;lda #2
-   ;sta $d020
    jsr game_isr_prepare
    bne game_isr_ret
    jmp game_isr_game
@@ -122,8 +122,12 @@ game_isr_prepare_cont:
    rts    
 
 
-
+; SLOW = once every second frame
+; MID  = once every frame
+; FAST = twice a frame
 game_isr_game:
+   lda #2
+   sta $d020
    lda $d01f
    sta ball_temp_d01f
    lda $d01e
@@ -135,6 +139,11 @@ game_isr_game:
    lda $d01f
    sta ball_temp_d01f   ;Every one has moved once, dont remember the old moves!
    
+   dec game_speedRound1Cnt
+   bne game_rest
+   lda game_BallSpeedRound1
+   sta game_speedRound1Cnt
+
    jsr bat_update
    ldx #2
    jsr ball_update
@@ -154,11 +163,9 @@ game_isr_game:
 
 
    ;Round 2---------------
-   dec game_speedCnt
-   bne game_rest
-   lda #1
-   sta game_speedCnt
 ball_update_round1_fin:   
+   lda game_BallSpeedRound2
+   beq game_rest
    jsr bat_update
    ldx #2
    jsr ball_update
@@ -203,8 +210,8 @@ game_isrAfterUpdate:
    jsr game_deinit
     
 gameContiniue:
-   ;lda #0
-   ;sta $d020
+   lda #0
+   sta $d020
    jsr sound_setIsr
    asl $d019
    rti

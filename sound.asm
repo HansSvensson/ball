@@ -50,8 +50,8 @@ sound_isr:
     tya
     pha
     php
-    ;lda #4
-    ;sta $d020
+    lda #4
+    sta $d020
     lda sound_delay_cnt
     cmp sound_delay_lim
     beq sound_isr_cont
@@ -80,8 +80,8 @@ sound_isr_rand:
     pla
     tax
     pla
-    ;lda #0
-    ;sta $d020
+    lda #0
+    sta $d020
     rti
     
 sound_isr_only:
@@ -115,7 +115,7 @@ sound_playBrick:
     bne sound_playReturn 
     lda sound_effec_delay_value
     sta sound_effect_delay
-    lda #$3b
+    lda #4
     sta $12ef
     lda #0
     sta $12e0
@@ -127,7 +127,7 @@ sound_playPlayer1Claim:
     bne sound_playReturn 
     lda sound_effec_delay_value
     sta sound_effect_delay
-    lda #$66
+    lda #$2e
     sta $12ef
     lda #0
     sta $12e0
@@ -137,7 +137,7 @@ sound_playPlayer2Claim:
     bne sound_playReturn 
     lda sound_effec_delay_value
     sta sound_effect_delay
-    lda #$6e
+    lda #$32
     sta $12ef
     lda #0
     sta $12e0
@@ -147,7 +147,7 @@ sound_playBricksReappear:
     bne sound_playReturn 
     lda sound_effec_delay_value
     sta sound_effect_delay
-    lda #$48
+    lda #$15
     sta $12ef
     lda #0
     sta $12e0
@@ -157,7 +157,7 @@ sound_playBonusLarge:
     bne sound_playReturn 
     lda sound_effec_delay_value
     sta sound_effect_delay
-    lda #$4e
+    lda #$b
     sta $12ef
     lda #0
     sta $12e0
@@ -167,7 +167,7 @@ sound_playBonusSmall:
     bne sound_playReturn 
     lda sound_effec_delay_value
     sta sound_effect_delay
-    lda #$52
+    lda #$10
     sta $12ef
     lda #0
     sta $12e0
@@ -177,7 +177,7 @@ sound_playBonusUnStopable:
     bne sound_playReturn 
     lda sound_effec_delay_value
     sta sound_effect_delay
-    lda #$76
+    lda #$1c
     sta $12ef
     lda #0
     sta $12e0
@@ -187,7 +187,7 @@ sound_playBonusBullet:
     bne sound_playReturn 
     lda sound_effec_delay_value
     sta sound_effect_delay
-    lda #$57
+    lda #$1c
     sta $12ef
     lda #0
     sta $12e0
@@ -197,7 +197,7 @@ sound_playBonusBulletShoot:
     bne sound_playReturn 
     lda sound_effec_delay_value
     sta sound_effect_delay
-    lda #$5f
+    lda #$5
     sta $12ef
     lda #0
     sta $12e0
@@ -207,7 +207,7 @@ sound_playBonusOwnAll:
     bne sound_playReturn 
     lda sound_effec_delay_value
     sta sound_effect_delay
-    lda #$7d
+    lda #$5
     sta $12ef
     lda #0
     sta $12e0
@@ -239,7 +239,7 @@ sound_playHt:
     lda sound_playHtCounter
     cmp #10
     bne sound_playHtNoTrigg
-    lda #$3e
+    lda #$25
     sta $12ef
     lda #0
     sta $12e0
