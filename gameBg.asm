@@ -9,7 +9,7 @@ gameBg_init:
     jsr gameBg_init_bg
 
     ;----------fill fg color-------
-    lda #10     ;FOREGROUND COLOR
+    lda #11     ;FOREGROUND COLOR
     ldx #0
 gameBg_fill_foreground:
     sta $d800,x
@@ -19,7 +19,7 @@ gameBg_fill_foreground:
     inx
     bne gameBg_fill_foreground
 
-    lda #6     ;FOREGROUND COLOR
+    lda #6    ;FOREGROUND COLOR
     ldx #1
 gameBg_fill_foreground_2:
     sta $d850,x
@@ -55,9 +55,9 @@ gameBg_fill_foreground_2:
 gameBg_fillTop:
     lda #102
     sta $428,x
-    lda #103
+    ;lda #103
     sta $429,x
-    lda #104
+    ;lda #104
     sta $42A,x
     inx
     inx
@@ -67,6 +67,10 @@ gameBg_fillTop:
     lda #102
     sta $44f
 
+    lda #103
+    sta $428
+    lda #104
+    sta $44f
 
     ;---------fill bottom-------
     ldx #0
@@ -75,9 +79,9 @@ gameBg_fillTop:
 gameBg_fillBottom:
     lda #102
     sta $7C0,x
-    lda #103
+    ;lda #103
     sta $7C1,x
-    lda #104
+    ;lda #104
     sta $7C2,x
     inx
     inx
@@ -94,7 +98,7 @@ gameBg_fillBottom:
     sta $7d4
     lda #108
     sta $7d5
-    lda #1
+    lda #9
     sta $dbd2
     sta $dbd3
     sta $dbd4
@@ -131,8 +135,13 @@ gameBg_fillBottom:
     sta $76F
     sta $797
     sta $7BF
+    
+    lda #100
+    sta $7c0
+    lda #101
+    sta $7e7
 
-    jsr gameBg_setMulticolor
+    ;jsr gameBg_setMulticolor
     
     ;-----------set el color and chars------------
     lda #11
@@ -477,12 +486,18 @@ gameBg_empty_not:
 ;gamebg_dubble_brick:.byte    0,   0,   0,   0,   1,   0,   0,   0,   0,   0,   0,   0,   1,   1,   1,   0,   2,   2,   2
 ;gamebg_field_color: .byte    0,  $2,   3,   5,   6,   7,   9,   8,   9,  $9,  15,  15,  15,  15,  15,  15,  15,  15,  15
 ;gamebg_field_char:  .byte  $20, $4e, $40, $40, $20, $40, $84, $40, $80, $82, $a0, $a2, $a4, $a6, $a8, $aa, $ad, $af, $b1
-;                                    RIGHT                    LEFT                               LFT  RGT
-;                          ++++++++  ------------------------------------------------- **** ############## ================ 
-                        ;    0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F   10   11   12     13    14
-gamebg_dubble_brick:.byte    0,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1,   2,   0,   0,   0,     0,    0  
-gamebg_field_color: .byte    0,   6,   1,   3,   4,   5,   7,   1,   3,   4,   2,   7,   2,  15,  15,  15,   2,   5,   7,     4,    3
-gamebg_field_char:  .byte  $20, $20, $40, $C0, $C2, $C4, $C6, $C1, $C3, $C5, $4f, $42, $4e, $a0, $a6, $af, $80, $82, $84,   $88,  $86
+
+
+
+;first set 0x02 - 0x11
+;second    0x12 - 0x21
+; third    0x12 - 0x31
+;                                        NORMAL BRICKS SET 1                                                                NORMAL BRICKS SET 2                                                                NORMAL BRICKS SET 3                                                           
+;                          ++++++++      -------------------------------------------------------------------------------    ------------------------------------------------------------------------------     -------------------------------------------------------------------------------
+                        ;    0    1        2    3   4    5    6    7    8    9    A    B    C    D    E    F   10   11       12   13   14   15   16   17   18   19   1a   1b   1c   1d   1e   1f   20   21       22   23   24   25   26   27   28   29   2a   2b   2c   2d   2e   2f   30   31                         
+gamebg_dubble_brick:.byte    0,   1,       0,   0,  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,       0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,       0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0      
+gamebg_field_color: .byte    0,   6,       0,   1,  2,   3,   4,   5,   6,   7,   8,   9,  $a,  $b,  $c,  $d,  $e,  $f,       0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  $a,  $b,  $c,  $d,  $e,  $f,       0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  $a,  $b,  $c,  $d,  $e,  $f      
+gamebg_field_char:  .byte  $20, $20,     $C0, $C1,$C2, $C3, $C4, $C5, $C6, $C7, $C8, $C9, $Ca, $Cb, $Cc, $Cd, $Ce, $Cf,     $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da, $db, $dc, $dd, $de, $df,     $e0, $e1, $e2, $e3, $e4, $e5, $e6, $e7, $e8, $e9, $ea, $eb, $ec, $ed, $ee, $ef      
 
 ;C64 färger:              CHARS
 ;-----------              -----
@@ -530,7 +545,7 @@ gameBg_redPaintColors_8  = 7
 gameBg_redPaintColors_9  = 8
 gameBg_redPaintColors_10 = 9
                            ;2 3 4 5 6 7 12  8 9 10
-gameBg_redPaintColors .byte 0,0,0,0,0,0, 0, 0,0, 0
+gameBg_redPaintColors .byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
 
 gameBg_color:  .byte 0
 gameBg_color_2:.byte 0
@@ -780,7 +795,7 @@ gameBg_print_copyCounter:
     sta gameBg_redPaintColors,x
     inx
     iny
-    cpx #10
+    cpx #48
     bne gameBg_print_copyCounter
     rts
 

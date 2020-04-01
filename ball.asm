@@ -49,7 +49,7 @@ ball_bounce_brick = #0
 ball_bounce        .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ball_bounceToggle  .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
-ball_bonusUnStopable .byte 0,0,0
+ball_bonusUnStopable .byte 0,0,0,0
 
 
 ball_init:
@@ -560,27 +560,33 @@ ball_hit_char:
     lda (main_temp_pointer),y     ;Use the pointer we just created.
     ldy main_temp_y_l2
 ball_hit_char_adc:    
-    cmp #$40
-    beq ball_hit_char_brick_1_0
-    cmp #$41
-    beq ball_hit_char_brick_1_0
+    
     cmp #$C0
-    beq ball_hit_char_brick_1_1
-    cmp #$C1
-    beq ball_hit_char_brick_1_7    
-    cmp #$C2
-    beq ball_hit_char_brick_1_2
-    cmp #$C3
-    beq ball_hit_char_brick_1_8
-    cmp #$C4
-    beq ball_hit_char_brick_1_3
-    cmp #$C5
-    beq ball_hit_char_brick_1_3
-    cmp #$C6
-    beq ball_hit_char_brick_1_4
-    cmp #$C7
-    beq ball_hit_char_brick_1_4
+    bcc ball_hit_char_others
+    cmp #$F0
+    bcs ball_hit_char_others
 
+apa:
+    ;NORMAL BRICKS
+    clc
+    adc #$42            ;$C0 -> 02
+    pha
+    lda #0
+    jsr gameBg_hit_1
+    beq ball_hit_char_hit_tmp
+    pla
+    tax
+    lda gameBg_redPaintColors,x
+    beq ball_hit_char_brick_1_0_c
+    dec gameBg_redPaintColors,x
+ball_hit_char_brick_1_0_c:    
+    jmp ball_hit_char_hit_brick
+
+ball_hit_char_hit_tmp:
+    pla
+    jmp ball_hit_char_hit
+
+ball_hit_char_others:
     cmp #128
     beq ball_hit_bonus_1
     cmp #129
@@ -653,107 +659,17 @@ ball_hit_char_adc:
     cmp #104                      ;TODO: this must support more kinds of 
     beq ball_hit_char_hit
 
-    cmp #$4A
-    beq ball_hit_char_brick_hardbrick
-    cmp #$4B
-    beq ball_hit_char_brick_hardbrick_2
+  ; TODO
+  ;  cmp #$4A
+  ;  beq ball_hit_char_brick_hardbrick
+  ;  cmp #$4B
+  ;  beq ball_hit_char_brick_hardbrick_2
 
 
     cmp #$60                      ;hit hard bricks
     bcc ball_hit_char_brick_2
     lda #0
     rts
-
-ball_hit_char_brick_1_0:
-    jsr gameBg_hit_1
-    beq ball_hit_char_hit
-    lda gameBg_redPaintColors
-    beq ball_hit_char_brick_1_0_c
-    dec gameBg_redPaintColors
-ball_hit_char_brick_1_0_c:    
-    jmp ball_hit_char_hit_brick
-
-ball_hit_char_brick_1_1:
-    jsr gameBg_hit_1
-    beq ball_hit_char_hit
-    lda gameBg_redPaintColors+1
-    beq ball_hit_char_brick_1_1_c
-    dec gameBg_redPaintColors+1
-ball_hit_char_brick_1_1_c:    
-    jmp ball_hit_char_hit_brick
-
-ball_hit_char_brick_1_2:
-    jsr gameBg_hit_1
-    beq ball_hit_char_hit
-    lda gameBg_redPaintColors+2
-    beq ball_hit_char_brick_1_2_c
-    dec gameBg_redPaintColors+2
-ball_hit_char_brick_1_2_c:    
-    jmp ball_hit_char_hit_brick
-
-ball_hit_char_brick_1_3:
-    jsr gameBg_hit_1
-    beq ball_hit_char_hit
-    lda gameBg_redPaintColors+3
-    beq ball_hit_char_brick_1_3_c
-    dec gameBg_redPaintColors+3
-ball_hit_char_brick_1_3_c:    
-    jmp ball_hit_char_hit_brick
-
-ball_hit_char_brick_1_4:
-    jsr gameBg_hit_1
-    beq ball_hit_char_hit
-    lda gameBg_redPaintColors+4
-    beq ball_hit_char_brick_1_4_c
-    dec gameBg_redPaintColors+4
-ball_hit_char_brick_1_4_c:    
-    jmp ball_hit_char_hit_brick
-
-ball_hit_char_brick_1_7:
-    jsr gameBg_hit_1
-    beq ball_hit_char_hit
-    lda gameBg_redPaintColors + gameBg_redPaintColors_7
-    beq ball_hit_char_brick_1_7_c
-    dec gameBg_redPaintColors + gameBg_redPaintColors_7
-ball_hit_char_brick_1_7_c:    
-    jmp ball_hit_char_hit_brick
-
-ball_hit_char_brick_1_8:
-    jsr gameBg_hit_1
-    beq ball_hit_char_hit
-    lda gameBg_redPaintColors+gameBg_redPaintColors_8
-    beq ball_hit_char_brick_1_8_c
-    dec gameBg_redPaintColors+gameBg_redPaintColors_8
-ball_hit_char_brick_1_8_c:    
-    jmp ball_hit_char_hit_brick
-
-ball_hit_char_brick_1_9:
-    jsr gameBg_hit_1
-    beq ball_hit_char_hit
-    lda gameBg_redPaintColors+gameBg_redPaintColors_9
-    beq ball_hit_char_brick_1_9_c
-    dec gameBg_redPaintColors+gameBg_redPaintColors_9
-ball_hit_char_brick_1_9_c:    
-    jmp ball_hit_char_hit_brick
-
-
-ball_hit_char_brick_hardbrick:
-    jsr gameBg_hit_2
-    lda gameBg_redPaintColors+gameBg_redPaintColors_12
-    beq ball_hit_char_brick_hardbrick_c
-    dec gameBg_redPaintColors+gameBg_redPaintColors_12
-ball_hit_char_brick_hardbrick_c:    
-    jmp ball_hit_char_hit
-
-ball_hit_char_brick_hardbrick_2:
-    jsr gameBg_hit_2
-    lda gameBg_redPaintColors+gameBg_redPaintColors_10
-    beq ball_hit_char_brick_hardbrick_2_c
-    dec gameBg_redPaintColors+gameBg_redPaintColors_10
-ball_hit_char_brick_hardbrick_2_c:    
-    jmp ball_hit_char_hit
-
-
 
 ball_hit_bonus_1:
     jsr gameBg_hit_bonus_1
@@ -767,6 +683,7 @@ ball_hit_char_brick_2:
 ball_hit_char_brick_2_do
     jsr gameBg_hit_2
 
+;Hit something that is not a brick
 ball_hit_char_hit:
     lda #1    
     rts

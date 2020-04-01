@@ -252,21 +252,21 @@ game_anim_update:
     rol a     ; 2 -> 4   6 -> 12
     rol a     ; 4 -> 8  12 -> 24
     tax
-    lda $36f8,x    ;120 = 288 = 8*36    new: 223*8 =  
+    lda $37c0,x    ;120 = 288 = 8*36    new: 223*8 =  
     sta $3100
-    lda $36f9,x
+    lda $37c1,x
     sta $3101
-    lda $36fa,x
+    lda $37c2,x
     sta $3102
-    lda $36fb,x
+    lda $37c3,x
     sta $3103
-    lda $36fc,x
+    lda $37c4,x
     sta $3104
-    lda $36fd,x
+    lda $37c5,x
     sta $3105
-    lda $36fe,x
+    lda $37c6,x
     sta $3106
-    lda $36ff,x
+    lda $37c7,x
     sta $3107
 
     ;bonus animation
