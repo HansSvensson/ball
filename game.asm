@@ -126,8 +126,8 @@ game_isr_prepare_cont:
 ; MID  = once every frame
 ; FAST = twice a frame
 game_isr_game:
-   lda #2
-   sta $d020
+   ;lda #2
+   ;sta $d020
    lda $d01f
    sta ball_temp_d01f
    lda $d01e
@@ -182,7 +182,7 @@ ball_update_round1_fin:
    jsr ball_update
    ldx #10
    jsr ball_update
-   jmp game_rest_every
+   ;jmp game_rest_every
 ball_update_round2_fin:   
    ;Update the rest-------
 game_rest:
@@ -210,8 +210,8 @@ game_isrAfterUpdate:
    jsr game_deinit
     
 gameContiniue:
-   lda #0
-   sta $d020
+   ;lda #0
+   ;sta $d020
    jsr sound_setIsr
    asl $d019
    rti

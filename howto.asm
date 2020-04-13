@@ -40,7 +40,7 @@ howto_row18       .enc screen
 howto_quit       .enc screen
                  .text "             press fire                 "
 howto_version    .enc screen
-                 .text "            version##001                "
+                 .text "            version##002                "
 
 row1 = $400
 row2 = row1 + 40

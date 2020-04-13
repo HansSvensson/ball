@@ -493,11 +493,11 @@ gameBg_empty_not:
 ;second    0x12 - 0x21
 ; third    0x12 - 0x31
 ;                                        NORMAL BRICKS SET 1                                                                NORMAL BRICKS SET 2                                                                NORMAL BRICKS SET 3                                                           
-;                          ++++++++      -------------------------------------------------------------------------------    ------------------------------------------------------------------------------     -------------------------------------------------------------------------------
-                        ;    0    1        2    3   4    5    6    7    8    9    A    B    C    D    E    F   10   11       12   13   14   15   16   17   18   19   1a   1b   1c   1d   1e   1f   20   21       22   23   24   25   26   27   28   29   2a   2b   2c   2d   2e   2f   30   31                         
-gamebg_dubble_brick:.byte    0,   1,       0,   0,  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,       0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,       0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0      
-gamebg_field_color: .byte    0,   6,       0,   1,  2,   3,   4,   5,   6,   7,   8,   9,  $a,  $b,  $c,  $d,  $e,  $f,       0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  $a,  $b,  $c,  $d,  $e,  $f,       0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  $a,  $b,  $c,  $d,  $e,  $f      
-gamebg_field_char:  .byte  $20, $20,     $C0, $C1,$C2, $C3, $C4, $C5, $C6, $C7, $C8, $C9, $Ca, $Cb, $Cc, $Cd, $Ce, $Cf,     $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da, $db, $dc, $dd, $de, $df,     $e0, $e1, $e2, $e3, $e4, $e5, $e6, $e7, $e8, $e9, $ea, $eb, $ec, $ed, $ee, $ef      
+;                          ++++++++      -------------------------------------------------------------------------------    ------------------------------------------------------------------------------     -------------------------------------------------------------------------------  -----------------------
+                        ;    0    1        2    3   4    5    6    7    8    9    A    B    C    D    E    F   10   11       12   13   14   15   16   17   18   19   1a   1b   1c   1d   1e   1f   20   21       22   23   24   25   26   27   28   29   2a   2b   2c   2d   2e   2f   30       31   32   33   34   35                         
+gamebg_dubble_brick:.byte    0,   1,       0,   0,  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,       0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,       0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,       0,   0,   0,   0,   0      
+gamebg_field_color: .byte    0,   6,       0,   1,  2,   3,   4,   5,   6,   7,   8,   9,  $a,  $b,  $c,  $d,  $e,  $f,       0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  $a,  $b,  $c,  $d,  $e,  $f,       0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  $a,  $b,  $c,  $d,  $e,      $2,  $5,  $4,  $7,  $3      
+gamebg_field_char:  .byte  $20, $20,     $C0, $C1,$C2, $C3, $C4, $C5, $C6, $C7, $C8, $C9, $Ca, $Cb, $Cc, $Cd, $Ce, $Cf,     $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da, $db, $dc, $dd, $de, $df,     $e0, $e1, $e2, $e3, $e4, $e5, $e6, $e7, $e8, $e9, $ea, $eb, $ec, $ed, $ee,     $80, $82, $84, $88, $86      
 
 ;C64 färger:              CHARS
 ;-----------              -----
@@ -545,7 +545,7 @@ gameBg_redPaintColors_8  = 7
 gameBg_redPaintColors_9  = 8
 gameBg_redPaintColors_10 = 9
                            ;2 3 4 5 6 7 12  8 9 10
-gameBg_redPaintColors .byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+gameBg_redPaintColors .byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0
 
 gameBg_color:  .byte 0
 gameBg_color_2:.byte 0
@@ -795,7 +795,7 @@ gameBg_print_copyCounter:
     sta gameBg_redPaintColors,x
     inx
     iny
-    cpx #48
+    cpx #51
     bne gameBg_print_copyCounter
     rts
 
@@ -978,81 +978,32 @@ gameBg_drawSingleColor4_cont:
 
 
 ;-------Check repaint, HERE WE MAP INDEX TO BRICKS------
+
 gameBg_checkRepaint:
-    lda gameBg_redPaintColors
-    bne gameBg_checkRepaint_1
-    lda #2
-    sta gameBg_colorRePaint
-    jsr gameBg_drawSingleColor
+    txa
+    pha
+    tya
+    pha
 
-gameBg_checkRepaint_1:
-    lda gameBg_redPaintColors+1
-    bne gameBg_checkRepaint_2
-    lda #3
-    sta gameBg_colorRePaint
+    ldx #1
+gameBg_checkRepaint_loop:
+    inx
+    cpx #51
+    beq gameBg_checkRepaint_end
+    lda gameBg_redPaintColors,x
+    bne gameBg_checkRepaint_loop
+    stx gameBg_colorRePaint
     jsr gameBg_drawSingleColor
-
-gameBg_checkRepaint_2:
-    lda gameBg_redPaintColors+2
-    bne gameBg_checkRepaint_3
-    lda #4
-    sta gameBg_colorRePaint
-    jsr gameBg_drawSingleColor
-
-gameBg_checkRepaint_3:
-    lda gameBg_redPaintColors+3
-    bne gameBg_checkRepaint_4
-    lda #5
-    sta gameBg_colorRePaint
-    jsr gameBg_drawSingleColor
-
-gameBg_checkRepaint_4:
-    lda gameBg_redPaintColors+4
-    bne gameBg_checkRepaint_5
-    lda #6
-    sta gameBg_colorRePaint
-    jsr gameBg_drawSingleColor
-
-gameBg_checkRepaint_5:
-    lda gameBg_redPaintColors+5
-    bne gameBg_checkRepaint_6
-    lda #7
-    sta gameBg_colorRePaint
-    jsr gameBg_drawSingleColor
-
-gameBg_checkRepaint_6:
-    lda gameBg_redPaintColors+6
-    bne gameBg_checkRepaint_7
-    lda #12
-    sta gameBg_colorRePaint
-    jsr gameBg_drawSingleColor
-
-gameBg_checkRepaint_7:
-    lda gameBg_redPaintColors+7
-    bne gameBg_checkRepaint_8
-    lda #8
-    sta gameBg_colorRePaint
-    jsr gameBg_drawSingleColor
-
-gameBg_checkRepaint_8:
-    lda gameBg_redPaintColors+8
-    bne gameBg_checkRepaint_9
-    lda #9
-    sta gameBg_colorRePaint
-    jsr gameBg_drawSingleColor
-
-gameBg_checkRepaint_9:
-    lda gameBg_redPaintColors+9
-    bne gameBg_checkRepaint_end
-    lda #10
-    sta gameBg_colorRePaint
-    jsr gameBg_drawSingleColor
-
+    ldx gameBg_colorRePaint
+    jmp gameBg_checkRepaint_loop
 
 gameBg_checkRepaint_end:
     jsr gameBg_refillColorCounter
+    pla
+    tay
+    pla
+    tax
     rts
-
 
 gameBg_refillColorCounter:
     tya
@@ -1070,7 +1021,7 @@ gameBg_refillColorCounterLoop:
     sta gameBg_redPaintColors,y
 gameBg_refillColorCounterInc    
     iny
-    cpy #10
+    cpy #48
     bne gameBg_refillColorCounterLoop
     pla
     tay

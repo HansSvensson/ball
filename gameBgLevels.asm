@@ -26,6 +26,7 @@ gamebg_field_tech0:      .byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+                         .byte $ff,$ff,$ff
 
 ;gamebg_field_tech1_bonus:.byte $a5,4,  $c2,4 
 ;gamebg_field_tech1:      .byte 0, 0, 0, 0, 0, 0, 0, 0, 0,13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,13, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -100,9 +101,10 @@ gamebg_field_bashball_1: .byte 0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
                          .byte 0,0,0,0,0,0,0,0,2, 2,2,0,0,3,3,3,0,0,4,4,4,4,0,0,5,5,5,0,0,6,6,6, 0,0,0,0,0,0,0,0
                          .byte 0,0,0,0,0,0,0,0,2, 2,2,0,0,3,3,3,0,0,4,4,4,4,0,0,5,5,5,0,0,6,6,6, 0,0,0,0,0,0,0,0
                          .byte 0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+                         .byte $ff, 60, 60, 60, 72, 60, 60,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-                         .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+                         .byte $ff,$ff,$ff
 
 gamebg_field_iball_bonus: .byte $a4,4,  $c3,4 
 gamebg_field_iball:      .byte 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0
@@ -127,9 +129,10 @@ gamebg_field_iball:      .byte 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1
                          .byte 0, 0, 0, 0, 0, 0, 0,12, 2, 0, 0, 3, 3, 0, 0, 4, 4, 0, 0, 5, 5, 0, 0, 6, 6, 0, 0, 8, 8, 0, 0, 7,10, 0, 0, 0, 0, 0, 0, 0
                          .byte 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 3, 3, 0, 0, 4, 4, 0, 0, 5, 5, 0, 0, 6, 6, 0, 0, 8, 8, 0, 0, 7, 7, 0, 0, 0, 0, 0, 0, 0
                          .byte 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0
+                         .byte $ff,$ff, 30, 60, 60, 58,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-                         .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+                         .byte $ff,$ff,$ff
 
 gamebg_field_ball2_bonus: .byte $a4,4,  $c3,4                                           ;  
 gamebg_field_ball2:      .byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 8, 0, 0, 6, 0, 0, 0, 0, 6, 0, 0, 8, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -157,6 +160,7 @@ gamebg_field_ball2:      .byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 8, 0, 0
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+                         .byte $ff,$ff,$ff
 
 gamebg_field_ball3_bonus: .byte $a4,4,  $c3,4 
 gamebg_field_ball3:      .byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -184,6 +188,7 @@ gamebg_field_ball3:      .byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
                          .byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+                         .byte $ff,$ff,$ff
 
 ;gamebg_field_ball2_bonus: .byte $a4,4,  $c3,4 
 ;gamebg_field_iball2:     .byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

@@ -61,7 +61,7 @@ bonus_update_end:
 bonus_insert_frameCnt: .byte 1
 bonus_insert_secCnt:   .byte 1
 bonus_insert_pos       .byte 0,0,0,0
-bonus_insertlist       .byte 20,16,17,18,19
+bonus_insertlist       .byte $35,$31,$32,$33,$34 ;20,16,17,18,19
 bonus_insertlist_len   = #5
 bonus_insertlist_cnt   .byte 0
 bonus_insert_current   .byte 0

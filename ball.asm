@@ -546,6 +546,8 @@ ball_hit_cord_Lo .byte   0, 40, 80, 120, 160, 200, 240,  24,  64, 104, 144, 184,
 
 ;Check if char at input X=col Y=row. This Function returnes in ACC.
 ball_hit_char:
+    cmp #$ff
+    beq ball_hit_char_no_hit
     stx main_temp_pointer         ;We must preserve the X-value, calling this functio 5 times.
     lda ball_hit_cord_Lo,y        ;With Y-reg we want to get the start address for the line, then we add X-reg to that
     clc                           ;that way we know which char the sprites is above. Remember C64 ACC 8bit, addresses 16bit :)
@@ -668,6 +670,7 @@ ball_hit_char_others:
 
     cmp #$60                      ;hit hard bricks
     bcc ball_hit_char_brick_2
+ball_hit_char_no_hit:    
     lda #0
     rts
 
@@ -708,53 +711,6 @@ ball_hit_char_hit_brick_unstopable:
 ball_hit_bg:
     stx main_temp_x          ;Store X in temp variable!!!  
 
-    ;Input X-vilken boll det handlar om.
-
-    ;--Handle X-coordinate
-    txa                                          
-    lsr a
-    tay      
-    lda $d010                ;If sprite is on the right part of the screen above pixel 255
-    and ball_bitfield,y
-    beq ball_hit_bg_x_less_FF
-
-ball_hit_bg_x_over_FF    ;ruta 30 börjar på pixel 252 ->  d000,x pixel 0-3 = 0, 4-b = 1, osv
-    lda $d000,x          ;256 equals column 30 and 4 pixels chars  (240 + 4 + c)    
-    clc
-    adc #4
-    lsr a
-    lsr a
-    lsr a
-    clc
-    adc #$1e
-    pha
-    
-    jmp ball_hit_bg_y
-    
-ball_hit_bg_x_less_FF:
-    lda $d000,x              ;Also add sprite X value converted to Char cord (40*25) in Reg X
-    clc
-    adc #$F4                 ;Screen start at 24, sprite center 12 pixel => 0xF4
-    bcc ball_hit_bg_none
-    clc
-    lsr a
-    lsr a
-    lsr a
-    cmp #0
-    beq ball_hit_bg_none
-    pha
-
-ball_hit_bg_y:
-    lda $d001,x              ;We Want sprites Y value converted to Char cord (40*25) in REG Y
-    clc
-    adc #$D8                 ;Screen start at 50, sprite center 12 pixel => 0xD8
-    lsr a
-    lsr a
-    lsr a
-    tay
-
-
-
 ;output -> A = X position    Y = Y postion    
 
 
@@ -783,7 +739,7 @@ ball_hit_bg_y:
 
 
 ball_hit_check_right_down:
-    pla
+    jsr ball_hit_bg_down
     tax
     dex
     jsr ball_hit_bg_right
@@ -792,7 +748,7 @@ ball_hit_check_right_down:
     jsr ball_hit_bg_bottom
     jmp ball_hit_check_end
 ball_hit_check_right_up:
-    pla
+    jsr ball_hit_bg_up
     tax
     dex
     jsr ball_hit_bg_right
@@ -801,7 +757,7 @@ ball_hit_check_right_up:
     jsr ball_hit_bg_top
     jmp ball_hit_check_end
 ball_hit_check_left_up:
-    pla
+    jsr ball_hit_bg_up
     tax
     jsr ball_hit_bg_left
     cmp NONE
@@ -809,7 +765,7 @@ ball_hit_check_left_up:
     jsr ball_hit_bg_top
     jmp ball_hit_check_end
 ball_hit_check_left_down:
-    pla
+    jsr ball_hit_bg_down
     tax
     jsr ball_hit_bg_left
     cmp NONE
@@ -817,12 +773,12 @@ ball_hit_check_left_down:
     jsr ball_hit_bg_bottom
     jmp ball_hit_check_end
 ball_hit_check_left_straight:
-    pla
+    jsr ball_hit_bg_down
     tax
     jsr ball_hit_bg_left
     jmp ball_hit_check_end
 ball_hit_check_right_straight:
-    pla
+    jsr ball_hit_bg_down
     tax
     jsr ball_hit_bg_right
     jmp ball_hit_check_end
@@ -880,6 +836,112 @@ ball_hit_bg_none:
     lda NONE
     ldx main_temp_x
     rts
+
+
+ 
+ball_hit_bg_down:
+
+    ldx main_temp_x
+    txa
+
+    lsr a
+    tay      
+    lda $d010                ;If sprite is on the right part of the screen above pixel 255
+    and ball_bitfield,y
+    beq ball_hit_bg_x_less_FF_down
+
+ball_hit_bg_x_over_FF_down    ;ruta 30 börjar på pixel 252 ->  d000,x pixel 0-3 = 0, 4-b = 1, osv
+    lda $d000,x          ;256 equals column 30 and 4 pixels chars  (240 + 4 + c)    
+    clc
+    adc #8
+    lsr a
+    lsr a
+    lsr a
+    clc
+    adc #$1e
+    pha
+    
+    jmp ball_hit_bg_y_down
+    
+ball_hit_bg_x_less_FF_down:
+    lda $d000,x              ;Also add sprite X value converted to Char cord (40*25) in Reg X
+    clc
+    adc #$F8                 ;Screen start at 24, sprite center 12 pixel => 0xF4
+    bcc ball_hit_bg_x_none
+    clc
+    lsr a
+    lsr a
+    lsr a
+    cmp #0
+    beq ball_hit_bg_x_none
+    pha
+
+ball_hit_bg_y_down:
+    lda $d001,x              ;We Want sprites Y value converted to Char cord (40*25) in REG Y
+    clc
+    adc #$D6                 ;Screen start at 50, sprite center 12 pixel => 0xD8
+    lsr a
+    lsr a
+    lsr a
+    tay
+    pla
+    rts
+
+
+
+ball_hit_bg_up:
+
+    ldx main_temp_x
+    txa
+
+    lsr a
+    tay      
+    lda $d010                ;If sprite is on the right part of the screen above pixel 255
+    and ball_bitfield,y
+    beq ball_hit_bg_x_less_FF_up
+
+ball_hit_bg_x_over_FF_up    ;ruta 30 börjar på pixel 252 ->  d000,x pixel 0-3 = 0, 4-b = 1, osv
+    lda $d000,x          ;256 equals column 30 and 4 pixels chars  (240 + 4 + c)    
+    clc
+    adc #8
+    lsr a
+    lsr a
+    lsr a
+    clc
+    adc #$1e
+    pha
+    
+    jmp ball_hit_bg_y_up
+    
+ball_hit_bg_x_less_FF_up:
+    lda $d000,x              ;Also add sprite X value converted to Char cord (40*25) in Reg X
+    clc
+    adc #$F8                 ;Screen start at 24, sprite center 12 pixel => 0xF4
+    bcc ball_hit_bg_x_none
+    clc
+    lsr a
+    lsr a
+    lsr a
+    cmp #0
+    beq ball_hit_bg_x_none
+    pha
+
+ball_hit_bg_y_up:
+    lda $d001,x              ;We Want sprites Y value converted to Char cord (40*25) in REG Y
+    clc
+    adc #$Dc                 ;Screen start at 50, sprite center 12 pixel => 0xD8
+    lsr a
+    lsr a
+    lsr a
+    tay
+ 
+    pla
+    rts  
+
+ball_hit_bg_x_none:
+    lda #$ff
+    ldy #$ff
+    rts    
 ;----------------End Of BALL_HIT_BG-----------------
 
 

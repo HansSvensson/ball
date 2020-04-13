@@ -50,8 +50,8 @@ sound_isr:
     tya
     pha
     php
-    lda #4
-    sta $d020
+    ;lda #4
+    ;sta $d020
     lda sound_delay_cnt
     cmp sound_delay_lim
     beq sound_isr_cont
@@ -80,8 +80,8 @@ sound_isr_rand:
     pla
     tax
     pla
-    lda #0
-    sta $d020
+   ; lda #0
+   ; sta $d020
     rti
     
 sound_isr_only:
@@ -119,7 +119,7 @@ sound_playBrick:
     sta $12ef
     lda #0
     sta $12e0
-    inc $d020
+    ;inc $d020
 sound_playBrick_end:    
     rts
 sound_playPlayer1Claim:
